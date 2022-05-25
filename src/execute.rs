@@ -19,10 +19,7 @@ pub fn execute_buy_spaceship(
     )?;
 
 
-    let messages: Vec<CosmosMsg> = vec![];
-
     Ok(Response::new()
-        .add_messages(messages)
         .add_attribute("action", "buy_spaceship")
         .add_attribute("query", nft_info.extension.unwrap().price.to_string())
     )
