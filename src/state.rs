@@ -22,6 +22,8 @@ pub struct Trait {
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct Metadata {
+    pub unit_denom: String,
+    pub price: u128,
     pub image: Option<String>,
     pub image_data: Option<String>,
     pub external_url: Option<String>,

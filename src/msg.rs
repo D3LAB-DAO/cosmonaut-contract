@@ -1,6 +1,4 @@
 use cosmwasm_std::Addr;
-use cw20::Cw20ReceiveMsg;
-use cw721::Cw721ReceiveMsg;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -19,8 +17,10 @@ pub struct ContractInitInfo {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ExecuteMsg {
-    Cw20ReceiveMsg(Cw20ReceiveMsg),
-    Cw721ReceiveMsg(Cw721ReceiveMsg),
+    BuyNft {
+        original_owner: String,
+        nft_id: String,
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

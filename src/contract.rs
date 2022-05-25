@@ -120,8 +120,8 @@ pub fn execute(
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
     match msg {
-        ExecuteMsg::Cw20ReceiveMsg(cw20_receive_msg) => {
-            execute_buy_spaceship(deps, info, cw20_receive_msg)
+        ExecuteMsg::BuyNft { nft_id, original_owner } => {
+            execute_buy_spaceship(deps, info, nft_id, original_owner)
         }
         _ => Ok(Response::new()),
     }

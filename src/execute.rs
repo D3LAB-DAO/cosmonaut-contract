@@ -1,49 +1,31 @@
-use crate::state::{Extension, CONFIG};
+use crate::state::{CONFIG, Extension};
 use crate::ContractError;
-use cosmwasm_std::{from_binary, to_binary, CosmosMsg, DepsMut, MessageInfo, Response, WasmMsg};
-use cw20::Cw20ReceiveMsg;
-use cw721_base::{ExecuteMsg as Cw721ExecuteMsg, MintMsg};
+use cw721::{Cw721Query, Cw721QueryMsg, NftInfoResponse};
+use cosmwasm_std::{to_binary, CosmosMsg, DepsMut, MessageInfo, Response, WasmMsg, WasmQuery, QuerierWrapper};
 
 pub fn execute_buy_spaceship(
     deps: DepsMut,
     info: MessageInfo,
-    cw20_receive_msg: Cw20ReceiveMsg,
+    nft_id: String,
+    original_owner: String,
 ) -> Result<Response, ContractError> {
-    let cw20_contract_addr = info.sender.to_string();
-    let message_from_cw20: Cw721ExecuteMsg<Extension> = from_binary(&cw20_receive_msg.msg)?;
-    let mut messages: Vec<CosmosMsg> = vec![];
-
     let config = CONFIG.load(deps.storage)?;
-    match config.spaceship_cw721_contract.addr.clone() {
-        Some(addr) => {
-            if cw20_contract_addr != addr {
-                return Err(ContractError::InvalidContract {});
-            }
-        }
-        None => {
-            return Err(ContractError::InvalidContract {});
-        }
-    }
-    let cw721_contract_addr = config.spaceship_cw721_contract.addr.unwrap();
 
-    if let Cw721ExecuteMsg::Mint(mint_msg) = message_from_cw20 {
-        let mint_new_nft_msg = MintMsg {
-            token_id: mint_msg.token_id,
-            owner: mint_msg.owner,
-            token_uri: mint_msg.token_uri,
-            extension: mint_msg.extension,
-        };
+    let nft_info: NftInfoResponse<Extension> = deps.querier.query_wasm_smart(
+        config.spaceship_cw721_contract.addr.unwrap().to_string(),
+        &to_binary(&Cw721QueryMsg::NftInfo {
+            token_id: nft_id
+        })?,
+    )?;
 
-        messages.push(CosmosMsg::Wasm(WasmMsg::Execute {
-            contract_addr: cw721_contract_addr.to_string(),
-            msg: to_binary(&mint_new_nft_msg)?,
-            funds: vec![],
-        }));
-    }
+
+    let mut messages: Vec<CosmosMsg> = vec![];
 
     Ok(Response::new()
         .add_messages(messages)
-        .add_attribute("action", "buy_spaceship"))
+        .add_attribute("action", "buy_spaceship")
+        .add_attribute("query", nft_info.extension.unwrap().price.to_string())
+    )
 }
 
 // pub fn execute_buy_supplies(
