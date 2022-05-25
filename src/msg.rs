@@ -1,3 +1,4 @@
+use cosmwasm_std::Addr;
 use cw20::Cw20ReceiveMsg;
 use cw721::Cw721ReceiveMsg;
 use schemars::JsonSchema;
@@ -11,7 +12,7 @@ pub struct InstantiateMsg {
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct ContractInitInfo {
-    pub addr: String,
+    pub addr: Addr,
     pub code_id: u64,
 }
 

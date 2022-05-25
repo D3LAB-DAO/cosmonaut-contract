@@ -3,6 +3,6 @@ mod error;
 mod execute;
 pub mod msg;
 pub mod state;
-mod tests;
+mod test;
 
 pub use crate::error::ContractError;

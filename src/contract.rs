@@ -1,18 +1,16 @@
 use crate::error::ContractError;
-use crate::execute::{execute_buy_spaceship, execute_buy_supplies};
-use crate::msg::{CountResponse, ExecuteMsg, InstantiateMsg, QueryMsg};
+use crate::execute::{execute_buy_spaceship};
+use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{Config, CONFIG};
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
 use cosmwasm_std::{
-    to_binary, Addr, Binary, CosmosMsg, Deps, DepsMut, Empty, Env, MessageInfo, Response,
+    to_binary, Binary, CosmosMsg, Deps, DepsMut, Empty, Env, MessageInfo, Response,
     StdResult, Uint128, WasmMsg,
 };
 use cw2::set_contract_version;
-use cw20::{Cw20Coin, Cw20ReceiveMsg, MinterResponse};
+use cw20::{Cw20Coin, MinterResponse};
 use cw20_base::msg::InstantiateMsg as Cw20InstantiateMsg;
-use cw20_base::state::MinterData;
-use cw721::Cw721ReceiveMsg;
 use cw721_base::msg::InstantiateMsg as Cw721InstantiateMsg;
 
 // version info for migration info
@@ -67,14 +65,12 @@ pub fn instantiate(
         label: "spaceship nft".to_string(),
     });
 
-    Ok(
-        Response::new()
-            .add_messages([instantiate_cw20_contract, instantiate_cw721_contract])
-            .add_attribute("action", "instantiate")
-            .add_attribute("sender", info.sender)
-            .add_attribute("cw20_address", msg.money_cw20_contract.addr)
-            .add_attribute("cw721_address", msg.spaceship_cw721_contract.addr)
-    )
+    Ok(Response::new()
+        .add_messages([instantiate_cw20_contract, instantiate_cw721_contract])
+        .add_attribute("action", "instantiate")
+        .add_attribute("sender", info.sender)
+        .add_attribute("cw20_address", msg.money_cw20_contract.addr)
+        .add_attribute("cw721_address", msg.spaceship_cw721_contract.addr))
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -93,7 +89,7 @@ pub fn execute(
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
-pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+pub fn query(_deps: Deps, _env: Env, _msg: QueryMsg) -> StdResult<Binary> {
     // match msg {
     //
     // }
