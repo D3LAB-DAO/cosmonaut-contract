@@ -1,13 +1,13 @@
 use crate::state::{CONFIG, Extension};
 use crate::ContractError;
-use cw721::{Cw721Query, Cw721QueryMsg, NftInfoResponse};
-use cosmwasm_std::{to_binary, CosmosMsg, DepsMut, MessageInfo, Response, WasmMsg, WasmQuery, QuerierWrapper};
+use cw721::{Cw721QueryMsg, NftInfoResponse};
+use cosmwasm_std::{to_binary, CosmosMsg, DepsMut, MessageInfo, Response};
 
 pub fn execute_buy_spaceship(
     deps: DepsMut,
-    info: MessageInfo,
+    _info: MessageInfo,
     nft_id: String,
-    original_owner: String,
+    _original_owner: String,
 ) -> Result<Response, ContractError> {
     let config = CONFIG.load(deps.storage)?;
 
@@ -19,7 +19,7 @@ pub fn execute_buy_spaceship(
     )?;
 
 
-    let mut messages: Vec<CosmosMsg> = vec![];
+    let messages: Vec<CosmosMsg> = vec![];
 
     Ok(Response::new()
         .add_messages(messages)

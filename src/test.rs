@@ -3,7 +3,7 @@ mod tests {
     use crate::contract::{instantiate, execute};
     use crate::msg::{ContractInitInfo, ExecuteMsg, InstantiateMsg};
     use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
-    use cosmwasm_std::{attr, Addr, DepsMut};
+    use cosmwasm_std::{attr, DepsMut};
 
     const ADDR1: &str = "juno18zfp9u7zxg3gel4r3txa2jqxme7jkw7d972flm";
     // const addr2: &str = "cosmos18zfp9u7zxg3gel4r3txa2jqxme7jkw7dnvfjc8";

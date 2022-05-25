@@ -13,6 +13,7 @@ use cw20::{Cw20Coin, MinterResponse};
 use cw20_base::msg::InstantiateMsg as Cw20InstantiateMsg;
 use cw721_base::msg::InstantiateMsg as Cw721InstantiateMsg;
 use cw_utils::parse_reply_instantiate_data;
+// use cw_multi_test::{App, Contract, ContractWrapper};
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:cosmonaut-contract";
@@ -123,7 +124,6 @@ pub fn execute(
         ExecuteMsg::BuyNft { nft_id, original_owner } => {
             execute_buy_spaceship(deps, info, nft_id, original_owner)
         }
-        _ => Ok(Response::new()),
     }
 }
 
