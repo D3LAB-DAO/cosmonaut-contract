@@ -1,7 +1,7 @@
 use crate::state::{CONFIG, Extension};
 use crate::ContractError;
 use cw721::{Cw721QueryMsg, NftInfoResponse};
-use cosmwasm_std::{to_binary, CosmosMsg, DepsMut, MessageInfo, Response};
+use cosmwasm_std::{to_binary, CosmosMsg, DepsMut, MessageInfo, Response, Addr};
 
 pub fn execute_buy_spaceship(
     deps: DepsMut,
@@ -12,7 +12,7 @@ pub fn execute_buy_spaceship(
     let config = CONFIG.load(deps.storage)?;
 
     let nft_info: NftInfoResponse<Extension> = deps.querier.query_wasm_smart(
-        config.spaceship_cw721_contract.addr.unwrap().to_string(),
+        Addr::unchecked(config.spaceship_cw721_contract.addr.unwrap()),
         &to_binary(&Cw721QueryMsg::NftInfo {
             token_id: nft_id
         })?,
