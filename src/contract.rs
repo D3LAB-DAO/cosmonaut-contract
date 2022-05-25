@@ -4,10 +4,7 @@ use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{Config, CONFIG};
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::{
-    to_binary, Binary, CosmosMsg, Deps, DepsMut, Empty, Env, MessageInfo, Response,
-    StdResult, Uint128, WasmMsg,
-};
+use cosmwasm_std::{to_binary, Binary, Deps, DepsMut,  Env, MessageInfo, Response, StdResult, Uint128, WasmMsg, SubMsg};
 use cw2::set_contract_version;
 use cw20::{Cw20Coin, MinterResponse};
 use cw20_base::msg::InstantiateMsg as Cw20InstantiateMsg;
@@ -32,7 +29,7 @@ pub fn instantiate(
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
     CONFIG.save(deps.storage, &config)?;
 
-    let instantiate_cw20_contract: CosmosMsg<Empty> = CosmosMsg::Wasm(WasmMsg::Instantiate {
+    let instantiate_cw20_contract: SubMsg = SubMsg::reply_on_success(WasmMsg::Instantiate {
         admin: Option::from(info.sender.to_string()),
         code_id: msg.money_cw20_contract.code_id,
         msg: to_binary(&Cw20InstantiateMsg {
@@ -51,9 +48,9 @@ pub fn instantiate(
         })?,
         funds: vec![],
         label: "mars token for money".to_string(),
-    });
+    }, 0);
 
-    let instantiate_cw721_contract: CosmosMsg<Empty> = CosmosMsg::Wasm(WasmMsg::Instantiate {
+    let instantiate_cw721_contract: SubMsg = SubMsg::reply_on_success(WasmMsg::Instantiate {
         admin: Option::from(info.sender.to_string()),
         code_id: msg.spaceship_cw721_contract.code_id,
         msg: to_binary(&Cw721InstantiateMsg {
@@ -63,14 +60,12 @@ pub fn instantiate(
         })?,
         funds: vec![],
         label: "spaceship nft".to_string(),
-    });
+    }, 1);
 
     Ok(Response::new()
-        .add_messages([instantiate_cw20_contract, instantiate_cw721_contract])
+        .add_submessages([instantiate_cw20_contract, instantiate_cw721_contract])
         .add_attribute("action", "instantiate")
-        .add_attribute("sender", info.sender)
-        .add_attribute("cw20_address", msg.money_cw20_contract.addr)
-        .add_attribute("cw721_address", msg.spaceship_cw721_contract.addr))
+        .add_attribute("sender", info.sender))
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]

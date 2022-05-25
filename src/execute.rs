@@ -14,9 +14,17 @@ pub fn execute_buy_spaceship(
     let mut messages: Vec<CosmosMsg> = vec![];
 
     let config = CONFIG.load(deps.storage)?;
-    if cw20_contract_addr != config.spaceship_cw721_contract.addr {
-        return Err(ContractError::InvalidContract {});
+    match config.spaceship_cw721_contract.addr.clone() {
+        Some(addr) => {
+            if cw20_contract_addr != addr {
+                return Err(ContractError::InvalidContract {});
+            }
+        }
+        None => {
+            return Err(ContractError::InvalidContract {});
+        }
     }
+    let cw721_contract_addr = config.spaceship_cw721_contract.addr.unwrap();
 
     if let Cw721ExecuteMsg::Mint(mint_msg) = message_from_cw20 {
         let mint_new_nft_msg = MintMsg {
@@ -27,7 +35,7 @@ pub fn execute_buy_spaceship(
         };
 
         messages.push(CosmosMsg::Wasm(WasmMsg::Execute {
-            contract_addr: config.spaceship_cw721_contract.addr.to_string(),
+            contract_addr: cw721_contract_addr.to_string(),
             msg: to_binary(&mint_new_nft_msg)?,
             funds: vec![],
         }));

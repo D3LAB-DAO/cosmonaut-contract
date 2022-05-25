@@ -13,11 +13,11 @@ mod tests {
     fn setup(deps: DepsMut) {
         let instantiate_msg = InstantiateMsg {
             money_cw20_contract: ContractInitInfo {
-                addr: Addr::unchecked(CW20_CONTRACT),
+                addr: Option::from(Addr::unchecked(CW20_CONTRACT)),
                 code_id: 1,
             },
             spaceship_cw721_contract: ContractInitInfo {
-                addr: Addr::unchecked(CW721_CONTRACT),
+                addr: Option::from(Addr::unchecked(CW721_CONTRACT)),
                 code_id: 2,
             },
         };
@@ -28,9 +28,7 @@ mod tests {
             instantiate_res.attributes,
             [
                 attr("action", "instantiate"),
-                attr("sender", ADDR1),
-                attr("cw20_address", CW20_CONTRACT),
-                attr("cw721_address", CW721_CONTRACT)
+                attr("sender", ADDR1)
             ]
         );
     }

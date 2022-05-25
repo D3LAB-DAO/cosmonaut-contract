@@ -12,7 +12,7 @@ pub struct InstantiateMsg {
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct ContractInitInfo {
-    pub addr: Addr,
+    pub addr: Option<Addr>,
     pub code_id: u64,
 }
 
