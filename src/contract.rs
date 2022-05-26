@@ -1,11 +1,15 @@
-use std::fmt;
 use crate::error::ContractError;
-use crate::execute::{execute_buy_spaceship, execute_mint_to_cw721_contract, execute_set_minter_to_cw721_contract};
+use crate::execute::{
+    execute_buy_spaceship, execute_mint_to_cw721_contract, execute_set_minter_to_cw721_contract,
+};
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
-use crate::state::{Config, CONFIG};
+use crate::state::{Config, Extension, CONFIG};
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::{to_binary, Addr, Binary, Deps, DepsMut, Env, MessageInfo, Reply, Response, StdError, StdResult, SubMsg, Uint128, WasmMsg, CustomMsg};
+use cosmwasm_std::{
+    to_binary, Addr, Binary, Deps, DepsMut, Env, MessageInfo, Reply, Response, StdError, StdResult,
+    SubMsg, Uint128, WasmMsg,
+};
 use cw2::set_contract_version;
 use cw20::{Cw20Coin, MinterResponse};
 use cw20_base::msg::InstantiateMsg as Cw20InstantiateMsg;
@@ -13,7 +17,7 @@ use cw721_base::msg::InstantiateMsg as Cw721InstantiateMsg;
 use cw_multi_test::{Contract, ContractWrapper};
 use cw_utils::parse_reply_instantiate_data;
 use schemars::JsonSchema;
-
+use std::fmt;
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:cosmonaut-contract";
@@ -79,8 +83,7 @@ pub fn instantiate(
     Ok(Response::new()
         .add_submessages([instantiate_cw20_contract, instantiate_cw721_contract])
         .add_attribute("action", "instantiate")
-        .add_attribute("sender", info.sender)
-    )
+        .add_attribute("sender", info.sender))
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -119,18 +122,15 @@ pub fn execute(
     deps: DepsMut,
     _env: Env,
     info: MessageInfo,
-    msg: ExecuteMsg,
+    msg: ExecuteMsg<Extension>,
 ) -> Result<Response, ContractError> {
     match msg {
-        ExecuteMsg::BuyNft { nft_id, original_owner } => {
-            execute_buy_spaceship(deps, nft_id, original_owner)
-        }
-        ExecuteMsg::Mint(mint_msg) => {
-            execute_mint_to_cw721_contract(deps, info, mint_msg)
-        }
-        ExecuteMsg::SetMinter { minter } => {
-            execute_set_minter_to_cw721_contract(deps, minter)
-        }
+        ExecuteMsg::BuyNft {
+            nft_id,
+            original_owner,
+        } => execute_buy_spaceship(deps, nft_id, original_owner),
+        ExecuteMsg::Mint(mint_msg) => execute_mint_to_cw721_contract(deps, info, mint_msg),
+        ExecuteMsg::SetMinter { minter } => execute_set_minter_to_cw721_contract(deps, minter),
     }
 }
 
@@ -143,9 +143,10 @@ pub fn query(_deps: Deps, _env: Env, _msg: QueryMsg) -> StdResult<Binary> {
 }
 
 pub fn contract<C>() -> Box<dyn Contract<C>>
-    where
-        C: Clone + fmt::Debug + PartialEq + JsonSchema + 'static,
+where
+    C: Clone + fmt::Debug + PartialEq + JsonSchema + 'static,
 {
-    let contract = ContractWrapper::new_with_empty(execute, instantiate, query).with_reply_empty(reply);
+    let contract =
+        ContractWrapper::new_with_empty(execute, instantiate, query).with_reply_empty(reply);
     Box::new(contract)
 }

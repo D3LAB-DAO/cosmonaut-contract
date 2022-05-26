@@ -2,7 +2,6 @@ use cosmwasm_std::Addr;
 use cw721_base::MintMsg;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use crate::state::{Extension, Metadata};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {
@@ -18,14 +17,14 @@ pub struct ContractInitInfo {
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
-pub enum ExecuteMsg {
+pub enum ExecuteMsg<T> {
     BuyNft {
         original_owner: String,
         nft_id: String,
     },
-    Mint(MintMsg<Extension>),
+    Mint(MintMsg<T>),
     SetMinter {
-        minter: String
+        minter: String,
     },
 }
 

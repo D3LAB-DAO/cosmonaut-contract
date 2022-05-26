@@ -1,52 +1,49 @@
 #[cfg(test)]
 mod tests {
-    use crate::contract::{instantiate, execute, query, reply};
-    use crate::msg::{ContractInitInfo, ExecuteMsg, InstantiateMsg};
-    use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info, MockApi};
-    use cosmwasm_std::{Addr, attr, Attribute, coin, coins, CustomMsg, DepsMut, Empty, Event, Response, StdResult, Uint128};
-    use cw20::Cw20Coin;
-    use cw721_base::ExecuteMsg::Mint;
-    use cw721_base::MintMsg;
-    use cw_multi_test::{App, BankKeeper, Contract, ContractWrapper, custom_app, Executor, WasmKeeper};
-    use cosmonaut_cw20;
-    use cosmonaut_cw721;
     use crate::contract;
-    use crate::msg::ExecuteMsg::SetMinter;
-    use crate::state::{CONFIG, Extension, Metadata};
+    use crate::msg::{ContractInitInfo, ExecuteMsg, InstantiateMsg};
+    use crate::state::{Extension, Metadata};
+    use cosmwasm_std::{coin, coins, Addr, Empty};
+    use cw721_base::MintMsg;
+    use cw_multi_test::{custom_app, Executor};
 
     const ADDR1: &str = "juno18zfp9u7zxg3gel4r3txa2jqxme7jkw7d972flm";
-    const ADDR2: &str = "cosmos18zfp9u7zxg3gel4r3txa2jqxme7jkw7dnvfjc8";
-
 
     #[test]
     fn test_execute() {
         let init_funds = vec![coin(100000, "atom")];
-        let mut app = custom_app::<ExecuteMsg, Empty, _>(|router, _, storage| {
+        let mut app = custom_app::<ExecuteMsg<Extension>, Empty, _>(|router, _, storage| {
             router
                 .bank
                 .init_balance(storage, &Addr::unchecked(ADDR1), init_funds)
                 .unwrap();
         });
-        let mut deps = mock_dependencies();
 
         let cw20_code_id = app.store_code(cosmonaut_cw20::contract::contract());
         let cw721_code_id = app.store_code(cosmonaut_cw721::contract::contract());
         let main_contract_id = app.store_code(contract::contract());
 
         let instantiate_msg = InstantiateMsg {
-            money_cw20_contract: ContractInitInfo { addr: None, code_id: cw20_code_id },
-            spaceship_cw721_contract: ContractInitInfo { addr: None, code_id: cw721_code_id },
+            money_cw20_contract: ContractInitInfo {
+                addr: None,
+                code_id: cw20_code_id,
+            },
+            spaceship_cw721_contract: ContractInitInfo {
+                addr: None,
+                code_id: cw721_code_id,
+            },
         };
 
-        let contract_addr = app.instantiate_contract(
-            main_contract_id,
-            Addr::unchecked(ADDR1.clone()),
-            &instantiate_msg,
-            &coins(1000, "atom"),
-            "main contract",
-            Option::from(ADDR1.to_string()),
-        ).unwrap();
-
+        let contract_addr = app
+            .instantiate_contract(
+                main_contract_id,
+                Addr::unchecked(ADDR1),
+                &instantiate_msg,
+                &coins(1000, "atom"),
+                "main contract",
+                Option::from(ADDR1.to_string()),
+            )
+            .unwrap();
 
         let execute_mint_msg = ExecuteMsg::Mint(MintMsg {
             token_id: "1".to_string(),
@@ -67,15 +64,13 @@ mod tests {
             }),
         });
 
-
-        let res = app.execute_contract(
-            Addr::unchecked(ADDR1).clone(),
-            contract_addr.clone(),
+        app.execute_contract(
+            Addr::unchecked(ADDR1),
+            contract_addr,
             &execute_mint_msg,
-            &[])
-            .unwrap();
-
-
+            &[],
+        )
+        .unwrap();
         // let msg = cosmonaut_cw20::msg::InstantiateMsg {
         //     name: "MARS".to_string(),
         //     symbol: "mars".to_string(),
