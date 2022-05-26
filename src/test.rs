@@ -5,9 +5,36 @@ mod tests {
     use crate::state::{Extension, Metadata};
     use cosmwasm_std::{coin, coins, Addr, Empty};
     use cw721_base::MintMsg;
-    use cw_multi_test::{custom_app, Executor};
+    use cw_multi_test::{Contract, ContractWrapper, custom_app, Executor};
 
     const ADDR1: &str = "juno18zfp9u7zxg3gel4r3txa2jqxme7jkw7d972flm";
+
+    fn mock_cw20_contract() -> Box<dyn Contract<ExecuteMsg<Extension>>> {
+        let contract = ContractWrapper::new(
+            cosmonaut_cw20::contract::execute,
+            cosmonaut_cw20::contract::instantiate,
+            cosmonaut_cw20::contract::query,
+        );
+        Box::new(contract)
+    }
+
+    fn mock_cw721_contract() -> Box<dyn Contract<ExecuteMsg<Extension>>> {
+        let contract = ContractWrapper::new(
+            cosmonaut_cw721::contract::execute,
+            cosmonaut_cw721::contract::instantiate,
+            cosmonaut_cw721::contract::query,
+        );
+        Box::new(contract)
+    }
+
+    fn mock_main_contract() -> Box<dyn Contract<ExecuteMsg<Extension>>> {
+        let contract = ContractWrapper::new(
+            contract::execute,
+            contract::instantiate,
+            contract::query,
+        );
+        Box::new(contract)
+    }
 
     #[test]
     fn test_execute() {
@@ -19,9 +46,9 @@ mod tests {
                 .unwrap();
         });
 
-        let cw20_code_id = app.store_code(cosmonaut_cw20::contract::contract());
-        let cw721_code_id = app.store_code(cosmonaut_cw721::contract::contract());
-        let main_contract_id = app.store_code(contract::contract());
+        let cw20_code_id = app.store_code(mock_cw20_contract());
+        let cw721_code_id = app.store_code(mock_cw721_contract());
+        let main_contract_id = app.store_code(mock_main_contract());
 
         let instantiate_msg = InstantiateMsg {
             money_cw20_contract: ContractInitInfo {
@@ -70,7 +97,7 @@ mod tests {
             &execute_mint_msg,
             &[],
         )
-        .unwrap();
+            .unwrap();
         // let msg = cosmonaut_cw20::msg::InstantiateMsg {
         //     name: "MARS".to_string(),
         //     symbol: "mars".to_string(),

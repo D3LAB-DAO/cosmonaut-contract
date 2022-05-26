@@ -14,10 +14,7 @@ use cw2::set_contract_version;
 use cw20::{Cw20Coin, MinterResponse};
 use cw20_base::msg::InstantiateMsg as Cw20InstantiateMsg;
 use cw721_base::msg::InstantiateMsg as Cw721InstantiateMsg;
-use cw_multi_test::{Contract, ContractWrapper};
 use cw_utils::parse_reply_instantiate_data;
-use schemars::JsonSchema;
-use std::fmt;
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:cosmonaut-contract";
@@ -140,13 +137,4 @@ pub fn query(_deps: Deps, _env: Env, _msg: QueryMsg) -> StdResult<Binary> {
     //
     // }
     unimplemented!()
-}
-
-pub fn contract<C>() -> Box<dyn Contract<C>>
-where
-    C: Clone + fmt::Debug + PartialEq + JsonSchema + 'static,
-{
-    let contract =
-        ContractWrapper::new_with_empty(execute, instantiate, query).with_reply_empty(reply);
-    Box::new(contract)
 }

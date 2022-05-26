@@ -59,9 +59,8 @@ serde = { version = "1.0", default-features = false, features = ["derive"] }
 thiserror = { version = "1.0" }
 cosmonaut-cw20 = {path="contracts/cosmonaut-cw20"}
 cosmonaut-cw721 = {path="contracts/cosmonaut-cw721"}
-cw-multi-test = "0.13.2"
 
 [dev-dependencies]
 cosmwasm-schema = { version = "1.0.0" }
-
+cw-multi-test = "0.13.2"
 
