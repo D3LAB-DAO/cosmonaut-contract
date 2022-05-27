@@ -9,7 +9,7 @@ mod tests {
 
     const ADDR1: &str = "juno18zfp9u7zxg3gel4r3txa2jqxme7jkw7d972flm";
 
-    fn mock_cw20_contract() -> Box<dyn Contract<ExecuteMsg<Extension>>> {
+    fn mock_cw20_contract() -> Box<dyn Contract<Empty>> {
         let contract = ContractWrapper::new(
             cosmonaut_cw20::contract::execute,
             cosmonaut_cw20::contract::instantiate,
@@ -18,7 +18,7 @@ mod tests {
         Box::new(contract)
     }
 
-    fn mock_cw721_contract() -> Box<dyn Contract<ExecuteMsg<Extension>>> {
+    fn mock_cw721_contract() -> Box<dyn Contract<Empty>> {
         let contract = ContractWrapper::new(
             cosmonaut_cw721::contract::execute,
             cosmonaut_cw721::contract::instantiate,
@@ -27,19 +27,19 @@ mod tests {
         Box::new(contract)
     }
 
-    fn mock_main_contract() -> Box<dyn Contract<ExecuteMsg<Extension>>> {
+    fn mock_main_contract() -> Box<dyn Contract<Empty>> {
         let contract = ContractWrapper::new(
             contract::execute,
             contract::instantiate,
             contract::query,
-        );
+        ).with_reply(contract::reply);
         Box::new(contract)
     }
 
     #[test]
     fn test_execute() {
         let init_funds = vec![coin(100000, "atom")];
-        let mut app = custom_app::<ExecuteMsg<Extension>, Empty, _>(|router, _, storage| {
+        let mut app = custom_app::<Empty, Empty, _>(|router, _, storage| {
             router
                 .bank
                 .init_balance(storage, &Addr::unchecked(ADDR1), init_funds)
