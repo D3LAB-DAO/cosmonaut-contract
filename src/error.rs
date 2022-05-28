@@ -17,4 +17,7 @@ pub enum ContractError {
 
     #[error("NotEnoughToken")]
     NotEnoughToken {},
+
+    #[error("DuplicatedContract")]
+    DuplicatedContract {},
 }

@@ -10,7 +10,7 @@ mod tests {
     use cosmonaut_cw20::msg::ExecuteMsg::IncreaseAllowance;
     use cosmonaut_cw20::msg::MinterResponse;
     use cosmonaut_cw721::state::{Extension, Luggage, Metadata};
-    use crate::msg::ExecuteMsg::BuyNft;
+    use crate::msg::ExecuteMsg::{AddLuggageContract, BuyNft};
 
     const ADDR1: &str = "juno18zfp9u7zxg3gel4r3txa2jqxme7jkw7d972flm";
 
@@ -95,6 +95,7 @@ mod tests {
                         cap: None,
                     }),
                     marketing: None,
+                    total_supply: None,
                 },
                 &coins(1000, "atom"),
                 "main contract",
@@ -118,6 +119,19 @@ mod tests {
                 ]),
             }),
         });
+
+        let add_luggage_contract_msg: ExecuteMsg<Extension> = AddLuggageContract {
+            address: oil_cw20_contract_addr.to_string(),
+            denom: "oil".to_string(),
+            code_id: 4,
+        };
+
+        let add_luggage_contract_res = app.execute_contract(
+            Addr::unchecked(ADDR1),
+            contract_addr.clone(),
+            &add_luggage_contract_msg,
+            &[],
+        ).unwrap();
 
         let increase_allowance_msg = IncreaseAllowance {
             spender: contract_addr.to_string(),
@@ -180,7 +194,5 @@ mod tests {
             owner_of_1_res.owner,
             ADDR1.to_string()
         );
-
-        let
     }
 }

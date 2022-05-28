@@ -1,5 +1,5 @@
 use crate::error::ContractError;
-use crate::execute::{execute_buy_spaceship, execute_load_luggage_to_nft, execute_mint_to_cw721_contract, execute_set_minter_to_cw721_contract};
+use crate::execute::{execute_add_luggage_contract, execute_buy_spaceship, execute_load_luggage_to_nft, execute_mint_to_cw721_contract, execute_set_minter_to_cw721_contract};
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{Config, CONFIG};
 #[cfg(not(feature = "library"))]
@@ -33,7 +33,7 @@ pub fn instantiate(
     let config = Config {
         money_cw20_contract: msg.clone().money_cw20_contract,
         spaceship_cw721_contract: msg.clone().spaceship_cw721_contract,
-        luggage_contracts: None
+        luggage_contracts: vec![],
     };
 
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
@@ -133,7 +133,12 @@ pub fn execute(
             token_id,
             denom,
             amount
-        } => execute_load_luggage_to_nft(deps, info, token_id, denom, amount)
+        } => execute_load_luggage_to_nft(deps, info, token_id, denom, amount),
+        ExecuteMsg::AddLuggageContract {
+            address,
+            denom,
+            code_id
+        } => execute_add_luggage_contract(deps, address, denom, code_id)
     }
 }
 

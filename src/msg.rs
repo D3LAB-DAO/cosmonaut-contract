@@ -1,7 +1,9 @@
 use cosmwasm_std::Addr;
+use cw20::Cw20Coin;
 use cw721_base::MintMsg;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use cosmonaut_cw20::msg::MinterResponse;
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {
@@ -27,7 +29,9 @@ pub enum ExecuteMsg<T> {
         minter: String,
     },
     AddLuggageContract {
-        address: String
+        address: String,
+        denom: String,
+        code_id: u64,
     },
     LoadLuggage {
         token_id: String,

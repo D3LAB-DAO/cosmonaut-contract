@@ -1,10 +1,13 @@
 use crate::msg::ExecuteMsg;
-use crate::state::{CONFIG};
+use crate::state::{CONFIG, LuggageContractInfo};
 use crate::ContractError;
 use cosmwasm_std::{to_binary, CosmosMsg, DepsMut, MessageInfo, Response, WasmMsg, Uint128, Addr, StdResult};
+use cw20::Cw20Coin;
 use cw721::{Cw721QueryMsg, NftInfoResponse};
 use cw721_base::{MintMsg};
 use cosmonaut_cw20::msg as cosmonaut_cw20_msg;
+use cosmonaut_cw20::msg::MinterResponse;
+use cosmonaut_cw20::state::TokenInfo;
 use cosmonaut_cw721::msg as cosmonaut_cw721_msg;
 use cosmonaut_cw721::state::{Extension, Metadata};
 
@@ -149,3 +152,38 @@ pub fn execute_load_luggage_to_nft(
         add_attribute("amount", amount.to_string())
         .add_messages([burn_cw20_money_msg_wrap, load_luggage_msg_wrap]))
 }
+
+pub fn execute_add_luggage_contract(
+    deps: DepsMut,
+    address: String,
+    denom: String,
+    code_id: u64,
+) -> Result<Response, ContractError> {
+    let config = CONFIG.load(deps.storage)?;
+    let duplicated_contracts: Vec<LuggageContractInfo> = config.luggage_contracts
+        .into_iter()
+        .filter(|c| c.denom == denom || c.code_id == code_id)
+        .collect();
+
+    if !duplicated_contracts.is_empty() {
+        return Err(ContractError::DuplicatedContract {});
+    }
+
+    CONFIG.update(
+        deps.storage,
+        |mut config| -> StdResult<_> {
+            config.luggage_contracts.push(LuggageContractInfo {
+                address: address.clone(),
+                denom,
+                code_id,
+            });
+            Ok(config)
+        },
+    )?;
+
+    Ok(Response::new()
+        .add_attribute("action", "add_luggage_contract")
+        .add_attribute("addr", address)
+    )
+}
+
