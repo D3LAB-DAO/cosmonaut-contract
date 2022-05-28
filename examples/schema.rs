@@ -4,7 +4,7 @@ use std::fs::create_dir_all;
 use cosmwasm_schema::{export_schema, remove_schemas, schema_for};
 
 use cosmonaut_contract::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
-use cosmonaut_contract::state::{Config};
+use cosmonaut_contract::state::Config;
 use cosmonaut_cw721::state::Extension;
 
 fn main() {

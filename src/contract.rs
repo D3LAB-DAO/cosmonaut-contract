@@ -1,7 +1,12 @@
 use crate::error::ContractError;
-use crate::execute::{execute_add_luggage_contract, execute_buy_spaceship, execute_load_luggage_to_nft, execute_mint_to_cw721_contract, execute_set_minter_to_cw721_contract};
+use crate::execute::{
+    execute_add_luggage_contract, execute_buy_spaceship, execute_load_luggage_to_nft,
+    execute_mint_to_cw721_contract, execute_set_minter_to_cw721_contract,
+};
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+use crate::query::query_money_contract;
 use crate::state::{Config, CONFIG};
+use cosmonaut_cw721::state::Extension;
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
 use cosmwasm_std::{
@@ -13,8 +18,6 @@ use cw20::{Cw20Coin, MinterResponse};
 use cw20_base::msg::InstantiateMsg as Cw20InstantiateMsg;
 use cw721_base::msg::InstantiateMsg as Cw721InstantiateMsg;
 use cw_utils::parse_reply_instantiate_data;
-use cosmonaut_cw721::state::Extension;
-use crate::query::query_money_contract;
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:cosmonaut-contract";
@@ -132,21 +135,19 @@ pub fn execute(
         ExecuteMsg::LoadLuggage {
             token_id,
             denom,
-            amount
+            amount,
         } => execute_load_luggage_to_nft(deps, info, token_id, denom, amount),
         ExecuteMsg::AddLuggageContract {
             address,
             denom,
-            code_id
-        } => execute_add_luggage_contract(deps, address, denom, code_id)
+            code_id,
+        } => execute_add_luggage_contract(deps, address, denom, code_id),
     }
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
-        QueryMsg::MoneyContract {} => {
-            query_money_contract(deps)
-        }
+        QueryMsg::MoneyContract {} => query_money_contract(deps),
     }
 }

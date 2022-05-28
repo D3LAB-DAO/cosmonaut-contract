@@ -1,9 +1,7 @@
 use cosmwasm_std::Addr;
-use cw20::Cw20Coin;
 use cw721_base::MintMsg;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use cosmonaut_cw20::msg::MinterResponse;
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {
@@ -43,7 +41,7 @@ pub enum ExecuteMsg<T> {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum QueryMsg {
-    MoneyContract {}
+    MoneyContract {},
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

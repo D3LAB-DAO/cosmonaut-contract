@@ -20,4 +20,7 @@ pub enum ContractError {
 
     #[error("DuplicatedContract")]
     DuplicatedContract {},
+
+    #[error("TokenNotFound")]
+    TokenNotFound {},
 }
