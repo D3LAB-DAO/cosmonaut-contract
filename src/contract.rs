@@ -1,9 +1,7 @@
 use crate::error::ContractError;
-use crate::execute::{
-    execute_buy_spaceship, execute_mint_to_cw721_contract, execute_set_minter_to_cw721_contract,
-};
+use crate::execute::{execute_buy_spaceship, execute_load_luggage_to_nft, execute_mint_to_cw721_contract, execute_set_minter_to_cw721_contract};
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
-use crate::state::{Config, Extension, CONFIG};
+use crate::state::{Config, CONFIG};
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
 use cosmwasm_std::{
@@ -15,6 +13,8 @@ use cw20::{Cw20Coin, MinterResponse};
 use cw20_base::msg::InstantiateMsg as Cw20InstantiateMsg;
 use cw721_base::msg::InstantiateMsg as Cw721InstantiateMsg;
 use cw_utils::parse_reply_instantiate_data;
+use cosmonaut_cw721::state::Extension;
+use crate::query::query_money_contract;
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:cosmonaut-contract";
@@ -33,6 +33,7 @@ pub fn instantiate(
     let config = Config {
         money_cw20_contract: msg.clone().money_cw20_contract,
         spaceship_cw721_contract: msg.clone().spaceship_cw721_contract,
+        luggage_contracts: None
     };
 
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
@@ -43,15 +44,15 @@ pub fn instantiate(
             admin: Option::from(info.sender.to_string()),
             code_id: msg.money_cw20_contract.code_id,
             msg: to_binary(&Cw20InstantiateMsg {
-                name: "mars".to_string(),
-                symbol: "MARS".to_string(),
+                name: "MARS".to_string(),
+                symbol: "mars".to_string(),
                 decimals: 6,
                 initial_balances: vec![Cw20Coin {
                     address: info.sender.to_string(),
                     amount: Uint128::new(1000000),
                 }],
                 mint: Option::from(MinterResponse {
-                    minter: info.sender.to_string(),
+                    minter: env.contract.address.to_string(),
                     cap: None,
                 }),
                 marketing: None,
@@ -125,16 +126,22 @@ pub fn execute(
         ExecuteMsg::BuyNft {
             nft_id,
             original_owner,
-        } => execute_buy_spaceship(deps, nft_id, original_owner),
+        } => execute_buy_spaceship(deps, info, nft_id, original_owner),
         ExecuteMsg::Mint(mint_msg) => execute_mint_to_cw721_contract(deps, info, mint_msg),
         ExecuteMsg::SetMinter { minter } => execute_set_minter_to_cw721_contract(deps, minter),
+        ExecuteMsg::LoadLuggage {
+            token_id,
+            denom,
+            amount
+        } => execute_load_luggage_to_nft(deps, info, token_id, denom, amount)
     }
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
-pub fn query(_deps: Deps, _env: Env, _msg: QueryMsg) -> StdResult<Binary> {
-    // match msg {
-    //
-    // }
-    unimplemented!()
+pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    match msg {
+        QueryMsg::MoneyContract {} => {
+            query_money_contract(deps)
+        }
+    }
 }

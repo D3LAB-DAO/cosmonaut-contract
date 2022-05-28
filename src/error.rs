@@ -11,4 +11,10 @@ pub enum ContractError {
 
     #[error("InvalidContract")]
     InvalidContract {},
+
+    #[error("InvalidToken")]
+    InvalidToken {},
+
+    #[error("NotEnoughToken")]
+    NotEnoughToken {},
 }

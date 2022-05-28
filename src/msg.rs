@@ -26,17 +26,23 @@ pub enum ExecuteMsg<T> {
     SetMinter {
         minter: String,
     },
+    AddLuggageContract {
+        address: String
+    },
+    LoadLuggage {
+        token_id: String,
+        denom: String,
+        amount: u128,
+    },
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum QueryMsg {
-    // GetCount returns the current count as a json-encoded number
-    GetCount {},
+    MoneyContract {}
 }
 
-// We define a custom struct for each query response
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-pub struct CountResponse {
-    pub count: i32,
+pub struct MoneyContractResponse {
+    pub address: Addr,
 }
