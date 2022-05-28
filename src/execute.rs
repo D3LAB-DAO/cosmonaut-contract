@@ -1,6 +1,6 @@
+use crate::error::ContractError;
 use crate::msg::ExecuteMsg;
 use crate::state::{LuggageContractInfo, CONFIG};
-use crate::ContractError;
 use cosmonaut_cw20::msg as cosmonaut_cw20_msg;
 use cosmonaut_cw721::msg as cosmonaut_cw721_msg;
 use cosmonaut_cw721::state::{Extension, Metadata};
