@@ -23,4 +23,7 @@ pub enum ContractError {
 
     #[error("TokenNotFound")]
     TokenNotFound {},
+
+    #[error("NotEnoughCoin")]
+    NotEnoughCoin {},
 }

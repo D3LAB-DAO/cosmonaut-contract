@@ -18,6 +18,9 @@ pub struct ContractInitInfo {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ExecuteMsg<T> {
+    BuyMoneyToken {
+        amount: u128,
+    },
     BuyNft {
         original_owner: String,
         nft_id: String,

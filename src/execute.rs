@@ -4,7 +4,10 @@ use crate::state::{LuggageContractInfo, CONFIG};
 use cosmonaut_cw20::msg as cosmonaut_cw20_msg;
 use cosmonaut_cw721::msg as cosmonaut_cw721_msg;
 use cosmonaut_cw721::state::{Extension, Metadata};
-use cosmwasm_std::{to_binary, CosmosMsg, DepsMut, MessageInfo, Response, StdResult, Uint128, WasmMsg, Deps, Addr};
+use cosmwasm_std::{
+    coin, to_binary, Addr, CosmosMsg, Deps, DepsMut, MessageInfo, Response, StdResult, Uint128,
+    WasmMsg,
+};
 use cw721::{Cw721QueryMsg, NftInfoResponse, OwnerOfResponse};
 use cw721_base::{MintMsg, QueryMsg};
 
@@ -264,14 +267,52 @@ fn check_is_sender_owner_of_nft(
 
     if owner_of_query_res.owner != *sender
         && owner_of_query_res
-        .approvals
-        .into_iter()
-        .filter(|a| a.spender == *sender)
-        .count()
-        == 0
+            .approvals
+            .into_iter()
+            .filter(|a| a.spender == *sender)
+            .count()
+            == 0
     {
         return Err(ContractError::Unauthorized {});
     }
 
     Ok(())
+}
+
+pub fn execute_buy_money_token(
+    deps: DepsMut,
+    info: MessageInfo,
+    amount: u128,
+) -> Result<Response, ContractError> {
+    let config = CONFIG.load(deps.storage)?;
+    let income_asset = info.funds;
+
+    let atom_income = income_asset
+        .into_iter()
+        .find(|coin| coin.denom == "uatom")
+        .unwrap_or_else(|| coin(0, "uatom"));
+
+    if atom_income.amount.u128() < amount {
+        return Err(ContractError::NotEnoughCoin {});
+    }
+
+    let mint_token_msg = CosmosMsg::Wasm(WasmMsg::Execute {
+        contract_addr: config
+            .money_cw20_contract
+            .addr
+            .as_ref()
+            .unwrap()
+            .to_string(),
+        msg: to_binary(&cosmonaut_cw20_msg::ExecuteMsg::Mint {
+            recipient: info.sender.to_string(),
+            amount: Uint128::new(amount),
+        })?,
+        funds: vec![],
+    });
+
+    Ok(Response::new()
+        .add_attribute("action", "buy_money_token".to_string())
+        .add_attribute("sender", info.sender.to_string())
+        .add_attribute("amount", amount.to_string())
+        .add_message(mint_token_msg))
 }

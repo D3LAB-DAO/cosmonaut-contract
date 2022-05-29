@@ -1,11 +1,8 @@
 use crate::error::ContractError;
 use crate::execute::{
-    execute_add_luggage_contract,
-    execute_buy_spaceship,
-    execute_load_luggage_to_nft,
-    execute_mint_to_cw721_contract,
-    execute_set_minter_to_cw721_contract,
-    execute_unload_luggage_from_nft
+    execute_add_luggage_contract, execute_buy_money_token, execute_buy_spaceship,
+    execute_load_luggage_to_nft, execute_mint_to_cw721_contract,
+    execute_set_minter_to_cw721_contract, execute_unload_luggage_from_nft,
 };
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::query::query_money_contract;
@@ -56,7 +53,7 @@ pub fn instantiate(
                 decimals: 6,
                 initial_balances: vec![Cw20Coin {
                     address: info.sender.to_string(),
-                    amount: Uint128::new(1000000),
+                    amount: Uint128::new(100),
                 }],
                 mint: Option::from(MinterResponse {
                     minter: env.contract.address.to_string(),
@@ -153,8 +150,9 @@ pub fn execute(
         ExecuteMsg::UnLoadLuggage {
             token_id,
             denom,
-            amount
-        } => execute_unload_luggage_from_nft(deps, info, token_id, denom, amount)
+            amount,
+        } => execute_unload_luggage_from_nft(deps, info, token_id, denom, amount),
+        ExecuteMsg::BuyMoneyToken { amount } => execute_buy_money_token(deps, info, amount),
     }
 }
 
