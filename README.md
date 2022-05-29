@@ -11,9 +11,14 @@ cargo test
    instantiated.
 3. Mint a spaceship with cw721. The main contract will be the owner.
 4. Store and instantiate cw20 contracts for other luggage to load to spaceship.
-5. Instantiate and execute 'AddLuggageContract' to save info of them.
-6. Increase allowance of money token for main contract to buy spaceship nft.
-7. Execute buy nft.
-8. Increase allowance of luggage token for main contract to buy spaceship nft.
-9. Execute load luggage.
-10. Query balance of money and luggage tokens.
+5. Buy money token with native token like uatom
+6. Instantiate and execute 'AddLuggageContract' to save info of them.
+7. Increase allowance of money token for main contract to buy spaceship nft.
+8. Execute buy nft.
+9. Increase allowance of luggage token for main contract to buy spaceship nft.
+10. Execute load luggage.
+11. Query balance of money and luggage tokens.
+
+## TODO
+
+Buy other luggage tokens with cw20 money tokens

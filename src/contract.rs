@@ -53,7 +53,7 @@ pub fn instantiate(
                 decimals: 6,
                 initial_balances: vec![Cw20Coin {
                     address: info.sender.to_string(),
-                    amount: Uint128::new(100),
+                    amount: Uint128::zero(),
                 }],
                 mint: Option::from(MinterResponse {
                     minter: env.contract.address.to_string(),
