@@ -1,7 +1,9 @@
 #[cfg(test)]
 mod tests {
     use crate::contract;
-    use crate::msg::ExecuteMsg::{AddLuggageContract, BuyMoneyToken, LoadLuggage, UnLoadLuggage};
+    use crate::msg::ExecuteMsg::{
+        AddLuggageContract, BuyLuggageToken, BuyMoneyToken, LoadLuggage, UnLoadLuggage,
+    };
     use crate::msg::{
         ContractInitInfo, ExecuteMsg, InstantiateMsg, MoneyContractResponse, QueryMsg,
     };
@@ -9,7 +11,6 @@ mod tests {
     use cosmonaut_cw20::msg::{BalanceResponse, MinterResponse};
     use cosmonaut_cw721::state::{Extension, Luggage, Metadata};
     use cosmwasm_std::{coin, Addr, Coin, Empty, Uint128};
-    use cw20::Cw20Coin;
     use cw721::Cw721QueryMsg::NftInfo;
     use cw721::NftInfoResponse;
     use cw721_base::MintMsg;
@@ -78,14 +79,14 @@ mod tests {
             )
             .unwrap();
 
-        let buy_money_token_msg: ExecuteMsg<Extension> = BuyMoneyToken { amount: 1000 };
+        let buy_money_token_msg: ExecuteMsg<Extension> = BuyMoneyToken { amount: 2000 };
         app.execute_contract(
             Addr::unchecked(ADDR1),
             contract_addr.clone(),
             &buy_money_token_msg,
-            &[coin(1000, "uatom")],
+            &[coin(2000, "uatom")],
         )
-            .unwrap();
+        .unwrap();
 
         let query_balance_of_addr = app
             .wrap()
@@ -93,12 +94,12 @@ mod tests {
             .unwrap();
 
         // Init : 5000
-        // Buy money token 1000
-        // 4000 left
+        // Buy money token 2000
+        // 3000 left
         assert_eq!(
             query_balance_of_addr,
             Coin {
-                amount: Uint128::new(4000),
+                amount: Uint128::new(3000),
                 denom: "uatom".to_string(),
             }
         );
@@ -111,10 +112,7 @@ mod tests {
                     name: "OIL".to_string(),
                     symbol: "oil".to_string(),
                     decimals: 6,
-                    initial_balances: vec![Cw20Coin {
-                        address: ADDR1.to_string(),
-                        amount: Uint128::new(1000),
-                    }],
+                    initial_balances: vec![],
                     mint: Option::from(MinterResponse {
                         minter: contract_addr.to_string(),
                         cap: None,
@@ -140,7 +138,7 @@ mod tests {
             &add_luggage_contract_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let execute_mint_msg = ExecuteMsg::Mint(MintMsg {
             token_id: "1".to_string(),
@@ -160,7 +158,7 @@ mod tests {
             &execute_mint_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let query_money_contract_addr = QueryMsg::MoneyContract {};
         let money_contract_addr: MoneyContractResponse = app
@@ -178,7 +176,34 @@ mod tests {
             },
             &[],
         )
-            .unwrap();
+        .unwrap();
+
+        let increase_money_allowance_msg = IncreaseAllowance {
+            spender: contract_addr.to_string(),
+            amount: Uint128::new(1000),
+            expires: None,
+        };
+
+        app.execute_contract(
+            Addr::unchecked(ADDR1),
+            money_contract_addr.clone().address,
+            &increase_money_allowance_msg,
+            &[],
+        )
+        .unwrap();
+
+        let buy_luggage_token_msg: ExecuteMsg<Extension> = BuyLuggageToken {
+            denom: "oil".to_string(),
+            amount: 1000,
+        };
+
+        app.execute_contract(
+            Addr::unchecked(ADDR1),
+            contract_addr.clone(),
+            &buy_luggage_token_msg,
+            &[],
+        )
+        .unwrap();
 
         let buy_nft_msg: ExecuteMsg<Extension> = ExecuteMsg::BuyNft {
             original_owner: contract_addr.to_string(),
@@ -191,7 +216,7 @@ mod tests {
             &buy_nft_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let query_nft_msg = cw721::Cw721QueryMsg::OwnerOf {
             token_id: "1".to_string(),
@@ -218,7 +243,7 @@ mod tests {
             &increase_allowance_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let load_luggage_msg: ExecuteMsg<Extension> = LoadLuggage {
             token_id: "1".to_string(),
@@ -226,14 +251,13 @@ mod tests {
             amount: 1000,
         };
 
-        app
-            .execute_contract(
-                Addr::unchecked(ADDR1),
-                contract_addr.clone(),
-                &load_luggage_msg,
-                &[],
-            )
-            .unwrap();
+        app.execute_contract(
+            Addr::unchecked(ADDR1),
+            contract_addr.clone(),
+            &load_luggage_msg,
+            &[],
+        )
+        .unwrap();
 
         let query_nft_info_msg = NftInfo {
             token_id: "1".to_string(),
@@ -281,7 +305,7 @@ mod tests {
             &unload_luggage_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let query_balance_res: BalanceResponse = app
             .wrap()
@@ -291,16 +315,15 @@ mod tests {
         // ADDR1 unloaded 100 oil, so balance is 100
         assert_eq!(query_balance_res.balance.to_string(), "100");
 
-
         let query_balance_of_main_contract = app
             .wrap()
             .query_balance(Addr::unchecked(contract_addr), "uatom")
             .unwrap();
-        // ADDR1 bought 1000 cw20 money token with 1000 atom, main contract's atom balance is 1000
+        // ADDR1 bought 2000 cw20 money token with 2000 atom, main contract's atom balance is 2000
         assert_eq!(
             query_balance_of_main_contract,
             Coin {
-                amount: Uint128::new(1000),
+                amount: Uint128::new(2000),
                 denom: "uatom".to_string(),
             }
         );
@@ -316,6 +339,6 @@ mod tests {
             .unwrap();
 
         // ADDR1 bought a nft which is 500 money token, balance is 500
-        assert_eq!(query_cw20_money_balance_res.balance, Uint128::new(500))
+        assert_eq!(query_cw20_money_balance_res.balance, Uint128::new(500));
     }
 }

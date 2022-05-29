@@ -267,11 +267,11 @@ fn check_is_sender_owner_of_nft(
 
     if owner_of_query_res.owner != *sender
         && owner_of_query_res
-            .approvals
-            .into_iter()
-            .filter(|a| a.spender == *sender)
-            .count()
-            == 0
+        .approvals
+        .into_iter()
+        .filter(|a| a.spender == *sender)
+        .count()
+        == 0
     {
         return Err(ContractError::Unauthorized {});
     }
@@ -315,4 +315,46 @@ pub fn execute_buy_money_token(
         .add_attribute("sender", info.sender.to_string())
         .add_attribute("amount", amount.to_string())
         .add_message(mint_token_msg))
+}
+
+pub fn execute_buy_luggage_token(
+    deps: DepsMut,
+    info: MessageInfo,
+    denom: String,
+    amount: u128,
+) -> Result<Response, ContractError> {
+    let config = CONFIG.load(deps.storage)?;
+    let target_contract_addr = config
+        .luggage_contracts
+        .into_iter()
+        .find(|c| c.denom == denom);
+
+    if target_contract_addr.is_none() {
+        return Err(ContractError::TokenNotFound {});
+    }
+
+    let mint_target_token_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
+        contract_addr: target_contract_addr.unwrap().address,
+        msg: to_binary(&cosmonaut_cw20_msg::ExecuteMsg::Mint {
+            recipient: info.sender.to_string(),
+            amount: Uint128::new(amount),
+        })?,
+        funds: vec![],
+    });
+
+    let burn_money_token_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
+        contract_addr: config.money_cw20_contract.addr.unwrap().to_string(),
+        msg: to_binary(&cosmonaut_cw20_msg::ExecuteMsg::BurnFrom {
+            owner: info.sender.to_string(),
+            amount: Uint128::new(amount),
+        })?,
+        funds: vec![],
+    });
+
+    Ok(Response::new()
+        .add_attribute("action", "buy_luggage_token")
+        .add_attribute("sender", info.sender.to_string())
+        .add_attribute("denom", denom)
+        .add_attribute("amount", amount.to_string())
+        .add_messages([mint_target_token_msg_wrap, burn_money_token_msg_wrap]))
 }

@@ -1,7 +1,7 @@
 use crate::error::ContractError;
 use crate::execute::{
-    execute_add_luggage_contract, execute_buy_money_token, execute_buy_spaceship,
-    execute_load_luggage_to_nft, execute_mint_to_cw721_contract,
+    execute_add_luggage_contract, execute_buy_luggage_token, execute_buy_money_token,
+    execute_buy_spaceship, execute_load_luggage_to_nft, execute_mint_to_cw721_contract,
     execute_set_minter_to_cw721_contract, execute_unload_luggage_from_nft,
 };
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
@@ -153,6 +153,9 @@ pub fn execute(
             amount,
         } => execute_unload_luggage_from_nft(deps, info, token_id, denom, amount),
         ExecuteMsg::BuyMoneyToken { amount } => execute_buy_money_token(deps, info, amount),
+        ExecuteMsg::BuyLuggageToken { denom, amount } => {
+            execute_buy_luggage_token(deps, info, denom, amount)
+        }
     }
 }
 

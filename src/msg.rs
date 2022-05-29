@@ -29,6 +29,10 @@ pub enum ExecuteMsg<T> {
     SetMinter {
         minter: String,
     },
+    BuyLuggageToken {
+        denom: String,
+        amount: u128,
+    },
     AddLuggageContract {
         address: String,
         denom: String,
