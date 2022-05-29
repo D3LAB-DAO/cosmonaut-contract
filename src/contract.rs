@@ -1,7 +1,11 @@
 use crate::error::ContractError;
 use crate::execute::{
-    execute_add_luggage_contract, execute_buy_spaceship, execute_load_luggage_to_nft,
-    execute_mint_to_cw721_contract, execute_set_minter_to_cw721_contract,
+    execute_add_luggage_contract,
+    execute_buy_spaceship,
+    execute_load_luggage_to_nft,
+    execute_mint_to_cw721_contract,
+    execute_set_minter_to_cw721_contract,
+    execute_unload_luggage_from_nft
 };
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::query::query_money_contract;
@@ -126,22 +130,31 @@ pub fn execute(
     msg: ExecuteMsg<Extension>,
 ) -> Result<Response, ContractError> {
     match msg {
-        ExecuteMsg::BuyNft {
-            nft_id,
-            original_owner,
-        } => execute_buy_spaceship(deps, info, nft_id, original_owner),
-        ExecuteMsg::Mint(mint_msg) => execute_mint_to_cw721_contract(deps, info, mint_msg),
-        ExecuteMsg::SetMinter { minter } => execute_set_minter_to_cw721_contract(deps, minter),
-        ExecuteMsg::LoadLuggage {
-            token_id,
-            denom,
-            amount,
-        } => execute_load_luggage_to_nft(deps, info, token_id, denom, amount),
         ExecuteMsg::AddLuggageContract {
             address,
             denom,
             code_id,
         } => execute_add_luggage_contract(deps, address, denom, code_id),
+
+        ExecuteMsg::BuyNft {
+            nft_id,
+            original_owner,
+        } => execute_buy_spaceship(deps, info, nft_id, original_owner),
+
+        ExecuteMsg::Mint(mint_msg) => execute_mint_to_cw721_contract(deps, info, mint_msg),
+
+        ExecuteMsg::SetMinter { minter } => execute_set_minter_to_cw721_contract(deps, minter),
+
+        ExecuteMsg::LoadLuggage {
+            token_id,
+            denom,
+            amount,
+        } => execute_load_luggage_to_nft(deps, info, token_id, denom, amount),
+        ExecuteMsg::UnLoadLuggage {
+            token_id,
+            denom,
+            amount
+        } => execute_unload_luggage_from_nft(deps, info, token_id, denom, amount)
     }
 }
 

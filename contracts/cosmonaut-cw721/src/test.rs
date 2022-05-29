@@ -2,7 +2,7 @@
 mod tests {
     use crate::contract::{execute, instantiate, query};
     use crate::msg::ExecuteMsg;
-    use crate::state::{Extension, MARSContract, Metadata};
+    use crate::state::{CosmonautContract, Extension, Metadata};
     use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
     use cosmwasm_std::{attr, from_binary, DepsMut, Response};
     use cw721::{Approval, ApprovalsResponse, NftInfoResponse, NumTokensResponse, OwnerOfResponse};
@@ -15,8 +15,8 @@ mod tests {
     const STRANGER: &str = "juno17zfp9u7zxg3gel4r3txa2jqxme7jkw7d972flm";
     const STRANGER2: &str = "juno16zfp9u7zxg3gel4r3txa2jqxme7jkw7d972flm";
 
-    fn setup_contract(deps: DepsMut) -> MARSContract {
-        let contract = MARSContract::default();
+    fn setup_contract(deps: DepsMut) -> CosmonautContract {
+        let contract = CosmonautContract::default();
         let msg = InstantiateMsg {
             name: "mars".to_string(),
             symbol: "MARS".to_string(),

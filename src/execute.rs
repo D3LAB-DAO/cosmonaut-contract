@@ -4,9 +4,7 @@ use crate::state::{LuggageContractInfo, CONFIG};
 use cosmonaut_cw20::msg as cosmonaut_cw20_msg;
 use cosmonaut_cw721::msg as cosmonaut_cw721_msg;
 use cosmonaut_cw721::state::{Extension, Metadata};
-use cosmwasm_std::{
-    to_binary, CosmosMsg, DepsMut, MessageInfo, Response, StdResult, Uint128, WasmMsg,
-};
+use cosmwasm_std::{to_binary, CosmosMsg, DepsMut, MessageInfo, Response, StdResult, Uint128, WasmMsg, Deps, Addr};
 use cw721::{Cw721QueryMsg, NftInfoResponse, OwnerOfResponse};
 use cw721_base::{MintMsg, QueryMsg};
 
@@ -138,26 +136,9 @@ pub fn execute_load_luggage_to_nft(
         return Err(ContractError::TokenNotFound {});
     }
 
-    let owner_of_query_res: OwnerOfResponse = deps.querier.query_wasm_smart(
-        config.spaceship_cw721_contract.addr.as_ref().unwrap(),
-        &QueryMsg::OwnerOf {
-            token_id: token_id.clone(),
-            include_expired: Option::from(false),
-        },
-    )?;
+    check_is_sender_owner_of_nft(deps.as_ref(), &info.sender, &token_id)?;
 
-    if owner_of_query_res.owner != info.sender
-        && owner_of_query_res
-            .approvals
-            .into_iter()
-            .filter(|a| a.spender == info.sender)
-            .count()
-            == 0
-    {
-        return Err(ContractError::Unauthorized {});
-    }
-
-    let burn_cw20_money_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
+    let burn_cw20_token_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
         contract_addr: target_contract_addr.unwrap().address,
         msg: to_binary(&cosmonaut_cw20_msg::ExecuteMsg::BurnFrom {
             owner: info.sender.to_string(),
@@ -184,7 +165,56 @@ pub fn execute_load_luggage_to_nft(
         .add_attribute("token_id", &token_id)
         .add_attribute("denom", &denom)
         .add_attribute("amount", amount.to_string())
-        .add_messages([burn_cw20_money_msg_wrap, load_luggage_msg_wrap]))
+        .add_messages([burn_cw20_token_msg_wrap, load_luggage_msg_wrap]))
+}
+
+pub fn execute_unload_luggage_from_nft(
+    deps: DepsMut,
+    info: MessageInfo,
+    token_id: String,
+    denom: String,
+    amount: u128,
+) -> Result<Response, ContractError> {
+    let config = CONFIG.load(deps.storage)?;
+    let target_contract_addr = config
+        .luggage_contracts
+        .into_iter()
+        .find(|c| c.denom == denom);
+
+    if target_contract_addr.is_none() {
+        return Err(ContractError::TokenNotFound {});
+    }
+
+    check_is_sender_owner_of_nft(deps.as_ref(), &info.sender, &token_id)?;
+
+    let mint_cw20_token_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
+        contract_addr: target_contract_addr.unwrap().address,
+        msg: to_binary(&cosmonaut_cw20_msg::ExecuteMsg::Mint {
+            recipient: info.sender.to_string(),
+            amount: Uint128::new(amount),
+        })?,
+        funds: vec![],
+    });
+
+    let unload_luggage_msg: cosmonaut_cw721_msg::ExecuteMsg<Extension> =
+        cosmonaut_cw721_msg::ExecuteMsg::UnloadLuggage {
+            token_id: token_id.clone(),
+            denom: denom.clone(),
+            amount,
+        };
+
+    let unload_luggage_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
+        contract_addr: config.spaceship_cw721_contract.addr.unwrap().to_string(),
+        msg: to_binary(&unload_luggage_msg)?,
+        funds: vec![],
+    });
+
+    Ok(Response::new()
+        .add_attribute("action", "unload_luggage")
+        .add_attribute("token_id", &token_id)
+        .add_attribute("denom", &denom)
+        .add_attribute("amount", amount.to_string())
+        .add_messages([mint_cw20_token_msg_wrap, unload_luggage_msg_wrap]))
 }
 
 pub fn execute_add_luggage_contract(
@@ -215,4 +245,33 @@ pub fn execute_add_luggage_contract(
     Ok(Response::new()
         .add_attribute("action", "add_luggage_contract")
         .add_attribute("addr", address))
+}
+
+fn check_is_sender_owner_of_nft(
+    deps: Deps,
+    sender: &Addr,
+    token_id: &str,
+) -> Result<(), ContractError> {
+    let config = CONFIG.load(deps.storage)?;
+
+    let owner_of_query_res: OwnerOfResponse = deps.querier.query_wasm_smart(
+        config.spaceship_cw721_contract.addr.as_ref().unwrap(),
+        &QueryMsg::OwnerOf {
+            token_id: token_id.to_string(),
+            include_expired: Option::from(false),
+        },
+    )?;
+
+    if owner_of_query_res.owner != *sender
+        && owner_of_query_res
+        .approvals
+        .into_iter()
+        .filter(|a| a.spender == *sender)
+        .count()
+        == 0
+    {
+        return Err(ContractError::Unauthorized {});
+    }
+
+    Ok(())
 }

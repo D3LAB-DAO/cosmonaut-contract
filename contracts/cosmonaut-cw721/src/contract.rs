@@ -6,10 +6,11 @@ use crate::error::ContractError;
 use crate::execute::{
     execute_approve, execute_approve_all, execute_burn, execute_load_luggage, execute_mint,
     execute_revoke, execute_revoke_all, execute_send_nft, execute_set_minter, execute_transfer_nft,
+    execute_unload_luggage,
 };
 use crate::msg::ExecuteMsg;
 use crate::query::{query_approved_for_all, query_nft_info, query_num_tokens, query_owner_of};
-use crate::state::{Extension, MARSContract};
+use crate::state::{CosmonautContract, Extension};
 use cw2::set_contract_version;
 use cw721_base::{InstantiateMsg, QueryMsg};
 
@@ -24,7 +25,7 @@ pub fn instantiate(
     msg: InstantiateMsg,
 ) -> StdResult<Response> {
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
-    MARSContract::default().instantiate(deps, env, info.clone(), msg)?;
+    CosmonautContract::default().instantiate(deps, env, info.clone(), msg)?;
     Ok(Response::new()
         .add_attribute("action", "instantiate")
         .add_attribute("sender", info.sender.to_string()))
@@ -67,6 +68,11 @@ pub fn execute(
             denom,
             amount,
         } => execute_load_luggage(deps, token_id, denom, amount),
+        ExecuteMsg::UnloadLuggage {
+            token_id,
+            denom,
+            amount,
+        } => execute_unload_luggage(deps, token_id, denom, amount),
     }
 }
 

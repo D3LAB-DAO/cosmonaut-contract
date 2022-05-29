@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     use crate::contract;
-    use crate::msg::ExecuteMsg::{AddLuggageContract, LoadLuggage};
+    use crate::msg::ExecuteMsg::{AddLuggageContract, LoadLuggage, UnLoadLuggage};
     use crate::msg::{
         ContractInitInfo, ExecuteMsg, InstantiateMsg, MoneyContractResponse, QueryMsg,
     };
@@ -113,7 +113,7 @@ mod tests {
                 name: Option::from("Spaceship".to_string()),
                 luggage: vec![Luggage {
                     denom: "oil".to_string(),
-                    amount: Uint128::new(10),
+                    amount: Uint128::new(0),
                 }],
             }),
         });
@@ -130,7 +130,7 @@ mod tests {
             &add_luggage_contract_msg,
             &[],
         )
-        .unwrap();
+            .unwrap();
 
         let _increase_allowance_msg = IncreaseAllowance {
             spender: contract_addr.to_string(),
@@ -144,7 +144,7 @@ mod tests {
             &execute_mint_msg,
             &[],
         )
-        .unwrap();
+            .unwrap();
 
         let query_money_contract_addr = QueryMsg::MoneyContract {};
         let money_contract_addr: MoneyContractResponse = app
@@ -167,7 +167,7 @@ mod tests {
             },
             &[],
         )
-        .unwrap();
+            .unwrap();
 
         let buy_nft_msg: ExecuteMsg<Extension> = ExecuteMsg::BuyNft {
             original_owner: contract_addr.to_string(),
@@ -180,7 +180,7 @@ mod tests {
             &buy_nft_msg,
             &[],
         )
-        .unwrap();
+            .unwrap();
 
         let query_nft_msg = cw721::Cw721QueryMsg::OwnerOf {
             token_id: "1".to_string(),
@@ -206,7 +206,7 @@ mod tests {
             &increase_allowance_msg,
             &[],
         )
-        .unwrap();
+            .unwrap();
 
         let load_luggage_msg: ExecuteMsg<Extension> = LoadLuggage {
             token_id: "1".to_string(),
@@ -217,7 +217,7 @@ mod tests {
         let _load_luggage_res = app
             .execute_contract(
                 Addr::unchecked(ADDR1),
-                contract_addr,
+                contract_addr.clone(),
                 &load_luggage_msg,
                 &[],
             )
@@ -239,7 +239,7 @@ mod tests {
                 name: Option::from("Spaceship".to_string()),
                 luggage: vec![Luggage {
                     denom: "oil".to_string(),
-                    amount: Uint128::new(1010),
+                    amount: Uint128::new(1000),
                 }],
             }
         );
@@ -253,6 +253,29 @@ mod tests {
             .query_wasm_smart("contract3".to_string(), &query_balance_msg)
             .unwrap();
 
-        assert_eq!(query_balance_res.balance.to_string(), "9000")
+        assert_eq!(query_balance_res.balance.to_string(), "9000");
+
+        let unload_luggage_msg: ExecuteMsg<Extension> = UnLoadLuggage {
+            token_id: "1".to_string(),
+            denom: "oil".to_string(),
+            amount: 100,
+        };
+
+        app
+            .execute_contract(
+                Addr::unchecked(ADDR1),
+                contract_addr,
+                &unload_luggage_msg,
+                &[],
+            )
+            .unwrap();
+
+
+        let query_balance_res: BalanceResponse = app
+            .wrap()
+            .query_wasm_smart("contract3".to_string(), &query_balance_msg)
+            .unwrap();
+
+        assert_eq!(query_balance_res.balance.to_string(), "9100");
     }
 }

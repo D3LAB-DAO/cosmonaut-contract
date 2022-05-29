@@ -36,6 +36,11 @@ pub enum ExecuteMsg<T> {
         denom: String,
         amount: u128,
     },
+    UnLoadLuggage {
+        token_id: String,
+        denom: String,
+        amount: u128,
+    },
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

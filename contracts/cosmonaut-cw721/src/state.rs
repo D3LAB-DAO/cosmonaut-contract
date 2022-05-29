@@ -6,7 +6,7 @@ use cw721_base::state::Cw721Contract;
 use cw_storage_plus::Item;
 
 pub type Extension = Option<Metadata>;
-pub type MARSContract<'a> = Cw721Contract<'a, Extension, Empty>;
+pub type CosmonautContract<'a> = Cw721Contract<'a, Extension, Empty>;
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct State {

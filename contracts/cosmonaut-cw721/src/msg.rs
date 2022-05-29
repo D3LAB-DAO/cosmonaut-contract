@@ -48,4 +48,10 @@ pub enum ExecuteMsg<T> {
         denom: String,
         amount: u128,
     },
+
+    UnloadLuggage {
+        token_id: String,
+        denom: String,
+        amount: u128,
+    },
 }
