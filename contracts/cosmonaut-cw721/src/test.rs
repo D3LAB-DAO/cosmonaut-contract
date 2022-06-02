@@ -36,7 +36,8 @@ mod tests {
             unit_denom: "mars".to_string(),
             price: 1000,
             name: None,
-            luggage: vec![],
+            freight: vec![],
+            health: 0,
         };
         let mint_msg = MintMsg {
             token_id: "1".to_string(),
@@ -349,7 +350,7 @@ mod tests {
                     unit_denom: "mars".to_string(),
                     price: 1000,
                     name: None,
-                    luggage: vec![],
+                    freight: vec![],
                 }),
             }
         )

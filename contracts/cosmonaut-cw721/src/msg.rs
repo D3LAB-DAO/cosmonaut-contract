@@ -43,15 +43,21 @@ pub enum ExecuteMsg<T> {
         minter: String,
     },
 
-    LoadLuggage {
+    LoadFreight {
+        token_id: String,
+        denom: String,
+        amount: u128,
+        unit_weight: u128,
+    },
+
+    UnloadFreight {
         token_id: String,
         denom: String,
         amount: u128,
     },
 
-    UnloadLuggage {
+    DecreaseHealth {
         token_id: String,
-        denom: String,
-        amount: u128,
+        value: u128,
     },
 }

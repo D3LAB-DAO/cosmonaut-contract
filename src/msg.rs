@@ -29,24 +29,29 @@ pub enum ExecuteMsg<T> {
     SetMinter {
         minter: String,
     },
-    BuyLuggageToken {
+    BuyFreightToken {
         denom: String,
         amount: u128,
     },
-    AddLuggageContract {
+    AddFreightContract {
         address: String,
         denom: String,
         code_id: u64,
     },
-    LoadLuggage {
+    LoadFreight {
+        token_id: String,
+        denom: String,
+        amount: u128,
+        unit_weight: u128,
+    },
+    UnLoadFreight {
         token_id: String,
         denom: String,
         amount: u128,
     },
-    UnLoadLuggage {
+    PlayGame {
         token_id: String,
-        denom: String,
-        amount: u128,
+        epoch: u64,
     },
 }
 

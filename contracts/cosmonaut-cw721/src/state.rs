@@ -15,9 +15,10 @@ pub struct State {
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-pub struct Luggage {
+pub struct Freight {
     pub denom: String,
     pub amount: Uint128,
+    pub unit_weight: u128,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
@@ -25,7 +26,8 @@ pub struct Metadata {
     pub unit_denom: String,
     pub price: u128,
     pub name: Option<String>,
-    pub luggage: Vec<Luggage>,
+    pub freight: Vec<Freight>,
+    pub health: u128,
 }
 
 pub const STATE: Item<State> = Item::new("state");

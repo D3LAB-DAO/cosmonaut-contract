@@ -1,13 +1,14 @@
 use crate::error::ContractError;
 use crate::execute::{
-    execute_add_luggage_contract, execute_buy_luggage_token, execute_buy_money_token,
-    execute_buy_spaceship, execute_load_luggage_to_nft, execute_mint_to_cw721_contract,
-    execute_set_minter_to_cw721_contract, execute_unload_luggage_from_nft,
+    execute_add_freight_contract, execute_buy_freight_token, execute_buy_money_token,
+    execute_buy_spaceship, execute_load_freight_to_nft, execute_mint_to_cw721_contract,
+    execute_play_game, execute_set_minter_to_cw721_contract, execute_unload_freight_from_nft,
 };
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::query::query_money_contract;
 use crate::state::{Config, CONFIG};
 use cosmonaut_cw721::state::Extension;
+
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
 use cosmwasm_std::{
@@ -37,7 +38,7 @@ pub fn instantiate(
     let config = Config {
         money_cw20_contract: msg.clone().money_cw20_contract,
         spaceship_cw721_contract: msg.clone().spaceship_cw721_contract,
-        luggage_contracts: vec![],
+        freight_contracts: vec![],
     };
 
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
@@ -122,16 +123,16 @@ fn handle_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Response> {
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn execute(
     deps: DepsMut,
-    _env: Env,
+    env: Env,
     info: MessageInfo,
     msg: ExecuteMsg<Extension>,
 ) -> Result<Response, ContractError> {
     match msg {
-        ExecuteMsg::AddLuggageContract {
+        ExecuteMsg::AddFreightContract {
             address,
             denom,
             code_id,
-        } => execute_add_luggage_contract(deps, address, denom, code_id),
+        } => execute_add_freight_contract(deps, address, denom, code_id),
 
         ExecuteMsg::BuyNft {
             nft_id,
@@ -142,20 +143,22 @@ pub fn execute(
 
         ExecuteMsg::SetMinter { minter } => execute_set_minter_to_cw721_contract(deps, minter),
 
-        ExecuteMsg::LoadLuggage {
+        ExecuteMsg::LoadFreight {
             token_id,
             denom,
             amount,
-        } => execute_load_luggage_to_nft(deps, info, token_id, denom, amount),
-        ExecuteMsg::UnLoadLuggage {
+            unit_weight,
+        } => execute_load_freight_to_nft(deps, info, token_id, denom, amount, unit_weight),
+        ExecuteMsg::UnLoadFreight {
             token_id,
             denom,
             amount,
-        } => execute_unload_luggage_from_nft(deps, info, token_id, denom, amount),
+        } => execute_unload_freight_from_nft(deps, info, token_id, denom, amount),
         ExecuteMsg::BuyMoneyToken { amount } => execute_buy_money_token(deps, info, amount),
-        ExecuteMsg::BuyLuggageToken { denom, amount } => {
-            execute_buy_luggage_token(deps, info, denom, amount)
+        ExecuteMsg::BuyFreightToken { denom, amount } => {
+            execute_buy_freight_token(deps, info, denom, amount)
         }
+        ExecuteMsg::PlayGame { token_id, epoch } => execute_play_game(deps, env, token_id, epoch),
     }
 }
 

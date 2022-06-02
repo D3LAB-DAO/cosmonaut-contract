@@ -4,9 +4,9 @@ use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response,
 
 use crate::error::ContractError;
 use crate::execute::{
-    execute_approve, execute_approve_all, execute_burn, execute_load_luggage, execute_mint,
-    execute_revoke, execute_revoke_all, execute_send_nft, execute_set_minter, execute_transfer_nft,
-    execute_unload_luggage,
+    execute_approve, execute_approve_all, execute_burn, execute_decrease_health,
+    execute_load_freight, execute_mint, execute_revoke, execute_revoke_all, execute_send_nft,
+    execute_set_minter, execute_transfer_nft, execute_unload_freight,
 };
 use crate::msg::ExecuteMsg;
 use crate::query::{query_approved_for_all, query_nft_info, query_num_tokens, query_owner_of};
@@ -63,16 +63,20 @@ pub fn execute(
         }
         ExecuteMsg::RevokeAll { operator } => execute_revoke_all(deps, env, info, operator),
         ExecuteMsg::SetMinter { minter } => execute_set_minter(deps, info, minter),
-        ExecuteMsg::LoadLuggage {
+        ExecuteMsg::LoadFreight {
             token_id,
             denom,
             amount,
-        } => execute_load_luggage(deps, token_id, denom, amount),
-        ExecuteMsg::UnloadLuggage {
+            unit_weight,
+        } => execute_load_freight(deps, token_id, denom, amount, unit_weight),
+        ExecuteMsg::UnloadFreight {
             token_id,
             denom,
             amount,
-        } => execute_unload_luggage(deps, token_id, denom, amount),
+        } => execute_unload_freight(deps, token_id, denom, amount),
+        ExecuteMsg::DecreaseHealth { token_id, value } => {
+            execute_decrease_health(deps, info, env, token_id, value)
+        }
     }
 }
 

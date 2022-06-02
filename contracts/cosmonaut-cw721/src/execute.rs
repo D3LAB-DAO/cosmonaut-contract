@@ -1,4 +1,4 @@
-use crate::state::{CosmonautContract, Extension, Luggage};
+use crate::state::{CosmonautContract, Extension, Freight};
 use crate::ContractError;
 use cosmwasm_std::{Addr, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint128};
 use cw721::Cw721ReceiveMsg;
@@ -36,7 +36,7 @@ pub fn execute_send_nft(
         token_id: token_id.to_string(),
         msg,
     }
-    .into_cosmos_msg(&contract_addr)?;
+        .into_cosmos_msg(&contract_addr)?;
 
     Ok(Response::new()
         .add_attribute("action", "transfer")
@@ -53,16 +53,22 @@ fn _transfer(
     sender: &Addr,
     recipient: &str,
 ) -> Result<(), ContractError> {
-    let mars_contract = CosmonautContract::default();
-    let token = mars_contract.tokens.may_load(deps.storage, token_id)?;
+    let cosmonaut_contract = CosmonautContract::default();
+    let token = cosmonaut_contract.tokens.may_load(deps.storage, token_id)?;
 
     if token.is_none() {
         return Err(ContractError::NotFound {});
     }
 
-    check_can_send(&mars_contract, deps.as_ref(), env, sender, &token.unwrap())?;
+    check_can_send(
+        &cosmonaut_contract,
+        deps.as_ref(),
+        env,
+        sender,
+        &token.unwrap(),
+    )?;
     let recipient_addr = deps.api.addr_validate(recipient)?;
-    mars_contract.tokens.update(
+    cosmonaut_contract.tokens.update(
         deps.storage,
         token_id,
         |old_token_info: Option<TokenInfo<Extension>>| -> StdResult<_> {
@@ -81,8 +87,8 @@ pub fn execute_mint(
     info: MessageInfo,
     mint_msg: MintMsg<Extension>,
 ) -> Result<Response, ContractError> {
-    let mars_contract = CosmonautContract::default();
-    let response = mars_contract.mint(deps, env, info, mint_msg).unwrap();
+    let cosmonaut_contract = CosmonautContract::default();
+    let response = cosmonaut_contract.mint(deps, env, info, mint_msg).unwrap();
     Ok(response)
 }
 
@@ -205,10 +211,10 @@ fn update_approvals(
     add: bool,
     expires: Option<Expiration>,
 ) -> Result<Response, ContractError> {
-    let mars_contract = CosmonautContract::default();
-    let mut token = mars_contract.tokens.load(deps.storage, token_id)?;
+    let cosmonaut_contract = CosmonautContract::default();
+    let mut token = cosmonaut_contract.tokens.load(deps.storage, token_id)?;
 
-    check_can_approve(deps.as_ref(), env, info, &token, &mars_contract)?;
+    check_can_approve(deps.as_ref(), env, info, &token, &cosmonaut_contract)?;
     let spender_addr = deps.api.addr_validate(spender)?;
 
     token.approvals = token
@@ -227,7 +233,9 @@ fn update_approvals(
         };
         token.approvals.push(approval);
     }
-    mars_contract.tokens.save(deps.storage, token_id, &token)?;
+    cosmonaut_contract
+        .tokens
+        .save(deps.storage, token_id, &token)?;
     Ok(Response::new())
 }
 
@@ -283,10 +291,10 @@ pub fn execute_set_minter(
     minter: String,
 ) -> Result<Response, ContractError> {
     let minter_addr = deps.api.addr_validate(&minter)?;
-    let mars_contract = CosmonautContract::default();
+    let cosmonaut_contract = CosmonautContract::default();
 
-    if mars_contract.minter(deps.as_ref())?.minter == info.sender {
-        mars_contract.minter.save(deps.storage, &minter_addr)?;
+    if cosmonaut_contract.minter(deps.as_ref())?.minter == info.sender {
+        cosmonaut_contract.minter.save(deps.storage, &minter_addr)?;
     } else {
         return Err(ContractError::Unauthorized {});
     }
@@ -297,26 +305,28 @@ pub fn execute_set_minter(
         .add_attribute("minter", minter))
 }
 
-pub fn execute_load_luggage(
+pub fn execute_load_freight(
     deps: DepsMut,
     token_id: String,
     denom: String,
     amount: u128,
+    unit_weight: u128,
 ) -> Result<Response, ContractError> {
     let contract = CosmonautContract::default();
     let mut token = contract.tokens.load(deps.storage, &token_id)?;
     let mut extension = token.extension.unwrap();
 
-    let candidate_idx = extension.luggage.iter().position(|l| l.denom == denom);
+    let candidate_idx = extension.freight.iter().position(|l| l.denom == denom);
     if let Some(idx) = candidate_idx {
-        extension.luggage[idx].amount = extension.luggage[idx]
+        extension.freight[idx].amount = extension.freight[idx]
             .amount
             .checked_add(Uint128::new(amount))
             .unwrap();
     } else {
-        extension.luggage.push(Luggage {
+        extension.freight.push(Freight {
             denom: denom.clone(),
             amount: Uint128::new(amount),
+            unit_weight,
         })
     }
 
@@ -324,13 +334,14 @@ pub fn execute_load_luggage(
     contract.tokens.save(deps.storage, &token_id, &token)?;
 
     Ok(Response::new()
-        .add_attribute("action", "load_luggage")
+        .add_attribute("action", "load_freight")
         .add_attribute("token_id", token_id)
-        .add_attribute("luggage", denom)
-        .add_attribute("amount", amount.to_string()))
+        .add_attribute("freight", denom)
+        .add_attribute("amount", amount.to_string())
+        .add_attribute("unit_weight", unit_weight.to_string()))
 }
 
-pub fn execute_unload_luggage(
+pub fn execute_unload_freight(
     deps: DepsMut,
     token_id: String,
     denom: String,
@@ -340,12 +351,12 @@ pub fn execute_unload_luggage(
     let mut token = contract.tokens.load(deps.storage, &token_id)?;
     let mut extension = token.extension.unwrap();
 
-    let candidate_idx = extension.luggage.iter().position(|l| l.denom == denom);
+    let candidate_idx = extension.freight.iter().position(|l| l.denom == denom);
     if let Some(idx) = candidate_idx {
-        if extension.luggage[idx].amount.u128() - amount == 0 {
-            extension.luggage.remove(idx);
+        if extension.freight[idx].amount.u128() - amount == 0 {
+            extension.freight.remove(idx);
         } else {
-            extension.luggage[idx].amount = extension.luggage[idx]
+            extension.freight[idx].amount = extension.freight[idx]
                 .amount
                 .checked_sub(Uint128::new(amount))
                 .unwrap();
@@ -359,6 +370,39 @@ pub fn execute_unload_luggage(
     Ok(Response::new()
         .add_attribute("action", "unload_lugagge")
         .add_attribute("token_id", token_id)
-        .add_attribute("luggage", denom)
+        .add_attribute("freight", denom)
         .add_attribute("amount", amount.to_string()))
+}
+
+pub fn execute_decrease_health(
+    deps: DepsMut,
+    info: MessageInfo,
+    env: Env,
+    token_id: String,
+    value: u128,
+) -> Result<Response, ContractError> {
+    let cosmonaut_contract = CosmonautContract::default();
+    let mut token = cosmonaut_contract.tokens.load(deps.storage, &token_id)?;
+
+    check_can_send(
+        &cosmonaut_contract,
+        deps.as_ref(),
+        &env,
+        &info.sender,
+        &token,
+    )?;
+    let mut extension = token.extension.unwrap();
+
+    extension.health = extension.health.saturating_sub(value);
+    token.extension = Extension::from(extension);
+    cosmonaut_contract
+        .tokens
+        .save(deps.storage, &token_id, &token)?;
+
+    Ok(Response::new()
+        .add_attribute("action", "decrease_health")
+        .add_attribute("sender", info.sender.to_string())
+        .add_attribute("token_id", token_id.to_string())
+        .add_attribute("value", value.to_string())
+    )
 }
