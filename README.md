@@ -1,10 +1,16 @@
-# cw-multi-test used to test interaction among contracts
+## cw-multi-test used to test interaction among contracts
 
 ```shell
 cargo test
 ```
 
-# Workflow
+## Build contracts
+docker run --rm -v "$(pwd)":/code \
+--mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
+--mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+cosmwasm/workspace-optimizer-arm64:0.12.6
+
+## Workflow
 
 1. Store cw20 for money, cw721 for nft(spaceship).
 2. Instantiate the main contract. During this, money and spaceship contracts' addresses will be stored after
@@ -19,4 +25,5 @@ cargo test
 10. Increase allowance of freight token for main contract to buy spaceship nft.
 11. Execute load freight.
 12. Query balance of money and freight tokens.
+13. Play game with pseudo-random
 

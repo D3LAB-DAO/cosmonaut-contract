@@ -1,0 +1,2 @@
+59c05dd861d4f9b2660eae8c092c5bcb21ed99f99f512b11323d5cce4884fe0c  target/wasm32-unknown-unknown/release/cosmonaut_cw20.wasm
+24ee9507074d611e6cfd32fd28f64c5712032239949db1322a86b0434238929c  target/wasm32-unknown-unknown/release/cosmonaut_cw721.wasm
