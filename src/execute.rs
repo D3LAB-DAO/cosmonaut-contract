@@ -10,8 +10,8 @@ use cosmwasm_std::{
 };
 use cw721::{Cw721QueryMsg, NftInfoResponse, OwnerOfResponse};
 use cw721_base::{MintMsg, QueryMsg};
-use rand::rngs::StdRng;
-use rand::{Rng, SeedableRng};
+// use rand::rngs::StdRng;
+// use rand::{Rng, SeedableRng};
 
 const MAX_TOTAL_WEIGHT: u128 = 1000 * 100000;
 
@@ -371,7 +371,7 @@ pub fn execute_play_game(
     token_id: String,
     epoch: u64,
 ) -> Result<Response, ContractError> {
-    let mut seed = StdRng::seed_from_u64(env.block.time.nanos());
+    // let mut seed = StdRng::seed_from_u64(env.block.time.nanos());
     let config = CONFIG.load(deps.storage)?;
 
     let nft_info: NftInfoResponse<Metadata> = deps.querier.query_wasm_smart(
@@ -396,8 +396,8 @@ pub fn execute_play_game(
     let mut count = 0;
 
     for _ in 0..epoch {
-        let num: u128 = seed.gen_range(0..=(MAX_TOTAL_WEIGHT - total_freight_weight));
-
+        // let num: u128 = seed.gen_range(0..=(MAX_TOTAL_WEIGHT - total_freight_weight));
+        let num = total_freight_weight;
         if (num as f64 / MAX_TOTAL_WEIGHT as f64) < 0.5 {
             count += 1;
         }
