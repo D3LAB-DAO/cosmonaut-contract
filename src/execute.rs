@@ -10,10 +10,9 @@ use cosmwasm_std::{
 };
 use cw721::{Cw721QueryMsg, NftInfoResponse, OwnerOfResponse};
 use cw721_base::{MintMsg, QueryMsg};
-// use rand::rngs::StdRng;
-// use rand::{Rng, SeedableRng};
+use std::ops::{Add, Div, Rem};
 
-const MAX_TOTAL_WEIGHT: u128 = 1000 * 100000;
+const MAX_FREIGHT_WEIGHT: u128 = 1000 * 1000;
 
 pub fn execute_mint_to_cw721_contract(
     deps: DepsMut,
@@ -134,6 +133,9 @@ pub fn execute_load_freight_to_nft(
     amount: u128,
     unit_weight: u128,
 ) -> Result<Response, ContractError> {
+    if amount * unit_weight > MAX_FREIGHT_WEIGHT {
+        return Err(ContractError::FrightOverloaded {});
+    }
     let config = CONFIG.load(deps.storage)?;
     let target_contract_addr = config
         .freight_contracts
@@ -371,7 +373,6 @@ pub fn execute_play_game(
     token_id: String,
     epoch: u64,
 ) -> Result<Response, ContractError> {
-    // let mut seed = StdRng::seed_from_u64(env.block.time.nanos());
     let config = CONFIG.load(deps.storage)?;
 
     let nft_info: NftInfoResponse<Metadata> = deps.querier.query_wasm_smart(
@@ -393,20 +394,27 @@ pub fn execute_play_game(
         .map(|f| f.unit_weight * f.unit_weight)
         .sum();
 
-    let mut count = 0;
+    let mut decrease_value = Uint128::zero();
+    let mut random_number = Uint128::zero();
+    let mut spaceship_speed = Uint128::zero();
 
     for _ in 0..epoch {
-        // let num: u128 = seed.gen_range(0..=(MAX_TOTAL_WEIGHT - total_freight_weight));
-        let num = total_freight_weight;
-        if (num as f64 / MAX_TOTAL_WEIGHT as f64) < 0.5 {
-            count += 1;
+        let timestamp_int_nanos = Uint128::new(u128::from(env.block.time.nanos()));
+        let total_health = Uint128::new(nft_info.extension.health);
+        let step = total_health.div(Uint128::new(epoch as u128));
+        random_number = timestamp_int_nanos.rem(Uint128::new(MAX_FREIGHT_WEIGHT));
+        spaceship_speed = Uint128::new(MAX_FREIGHT_WEIGHT)
+            - Uint128::new(MAX_FREIGHT_WEIGHT)
+                .multiply_ratio(total_freight_weight.clone(), MAX_FREIGHT_WEIGHT);
+        if random_number > spaceship_speed {
+            decrease_value = decrease_value.add(step)
         }
     }
 
     let decrease_health_msg: cosmonaut_cw721_msg::ExecuteMsg<Extension> =
         cosmonaut_cw721_msg::ExecuteMsg::DecreaseHealth {
             token_id,
-            value: count,
+            value: decrease_value.u128(),
         };
 
     let decrease_health_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
@@ -422,6 +430,9 @@ pub fn execute_play_game(
 
     Ok(Response::new()
         .add_attribute("action", "play_game")
-        .add_attribute("decrease_value", count.to_string())
+        .add_attribute("decrease_value", decrease_value.to_string())
+        .add_attribute("random_number", random_number.to_string())
+        .add_attribute("spaceship_speed", spaceship_speed.to_string())
+        .add_attribute("nanos", env.block.time.nanos().to_string())
         .add_message(decrease_health_msg_wrap))
 }
