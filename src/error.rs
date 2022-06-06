@@ -26,4 +26,7 @@ pub enum ContractError {
 
     #[error("NotEnoughCoin")]
     NotEnoughCoin {},
+
+    #[error("FrightOverloaded")]
+    FrightOverloaded {},
 }

@@ -10,7 +10,7 @@ mod tests {
     use cosmonaut_cw20::msg::ExecuteMsg::IncreaseAllowance;
     use cosmonaut_cw20::msg::{BalanceResponse, MinterResponse};
     use cosmonaut_cw721::state::{Extension, Freight, Metadata};
-    use cosmwasm_std::{coin, Addr, Coin, Empty, Uint128, BlockInfo};
+    use cosmwasm_std::{coin, Addr, BlockInfo, Coin, Empty, Uint128};
     use cw721::Cw721QueryMsg::NftInfo;
     use cw721::NftInfoResponse;
     use cw721_base::MintMsg;
@@ -91,7 +91,7 @@ mod tests {
             &buy_money_token_msg,
             &[coin(2000, "uatom")],
         )
-            .unwrap();
+        .unwrap();
 
         let query_balance_of_addr = app
             .wrap()
@@ -143,7 +143,7 @@ mod tests {
             &add_freight_contract_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let execute_mint_msg = ExecuteMsg::Mint(MintMsg {
             token_id: "1".to_string(),
@@ -154,7 +154,7 @@ mod tests {
                 price: 500,
                 name: Option::from("Spaceship".to_string()),
                 freight: vec![],
-                health: 10,
+                health: 30,
             }),
         });
 
@@ -164,7 +164,7 @@ mod tests {
             &execute_mint_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let query_money_contract_addr = QueryMsg::MoneyContract {};
         let money_contract_addr: MoneyContractResponse = app
@@ -182,7 +182,7 @@ mod tests {
             },
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let increase_money_allowance_msg = IncreaseAllowance {
             spender: contract_addr.to_string(),
@@ -196,7 +196,7 @@ mod tests {
             &increase_money_allowance_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let buy_freight_token_msg: ExecuteMsg<Extension> = BuyFreightToken {
             denom: "oil".to_string(),
@@ -209,7 +209,7 @@ mod tests {
             &buy_freight_token_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let buy_nft_msg: ExecuteMsg<Extension> = ExecuteMsg::BuyNft {
             original_owner: contract_addr.to_string(),
@@ -222,7 +222,7 @@ mod tests {
             &buy_nft_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let query_nft_msg = cw721::Cw721QueryMsg::OwnerOf {
             token_id: "1".to_string(),
@@ -249,13 +249,13 @@ mod tests {
             &increase_allowance_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let load_freight_msg: ExecuteMsg<Extension> = LoadFreight {
             token_id: "1".to_string(),
             denom: "oil".to_string(),
             amount: 1000,
-            unit_weight: 100,
+            unit_weight: 840,
         };
 
         app.execute_contract(
@@ -264,7 +264,7 @@ mod tests {
             &load_freight_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let query_nft_info_msg = NftInfo {
             token_id: "1".to_string(),
@@ -284,9 +284,9 @@ mod tests {
                 freight: vec![Freight {
                     denom: "oil".to_string(),
                     amount: Uint128::new(1000),
-                    unit_weight: 100,
+                    unit_weight: 840,
                 }],
-                health: 10,
+                health: 30,
             }
         );
 
@@ -314,7 +314,7 @@ mod tests {
             &unload_freight_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let query_balance_res: BalanceResponse = app
             .wrap()
@@ -350,18 +350,20 @@ mod tests {
         // ADDR1 bought a nft which is 500 money token, balance is 500
         assert_eq!(query_cw20_money_balance_res.balance, Uint128::new(500));
 
-        let approve_nft_msg: cosmonaut_cw721::msg::ExecuteMsg<Extension> = cosmonaut_cw721::msg::ExecuteMsg::Approve {
-            spender: contract_addr.to_string(),
-            token_id: "1".to_string(),
-            expires: None,
-        };
+        let approve_nft_msg: cosmonaut_cw721::msg::ExecuteMsg<Extension> =
+            cosmonaut_cw721::msg::ExecuteMsg::Approve {
+                spender: contract_addr.to_string(),
+                token_id: "1".to_string(),
+                expires: None,
+            };
 
         app.execute_contract(
             Addr::unchecked(ADDR1),
             Addr::unchecked("contract2".to_string()),
             &approve_nft_msg,
             &[],
-        ).unwrap();
+        )
+        .unwrap();
 
         let play_game_msg: ExecuteMsg<Extension> = ExecuteMsg::PlayGame {
             token_id: "1".to_string(),
@@ -373,41 +375,18 @@ mod tests {
             contract_addr.clone(),
             &play_game_msg,
             &[],
-        ).unwrap();
-
-        let query_nft_info_msg = NftInfo {
-            token_id: "1".to_string(),
-        };
-        let query_nft_info_res: NftInfoResponse<Extension> = app
-            .wrap()
-            .query_wasm_smart("contract2".to_string(), &query_nft_info_msg)
-            .unwrap();
-
-        assert_eq!(
-            query_nft_info_res.extension.unwrap().health,
-            7
-        );
-
-        app.update_block(next_block);
-
-        app.execute_contract(
-            Addr::unchecked(ADDR1),
-            contract_addr,
-            &play_game_msg,
-            &[],
-        ).unwrap();
-
-        let query_nft_info_msg = NftInfo {
-            token_id: "1".to_string(),
-        };
-        let query_nft_info_res: NftInfoResponse<Extension> = app
-            .wrap()
-            .query_wasm_smart("contract2".to_string(), &query_nft_info_msg)
-            .unwrap();
-
-        assert_eq!(
-            query_nft_info_res.extension.unwrap().health,
-            3
         )
+        .unwrap();
+
+        let query_nft_info_msg = NftInfo {
+            token_id: "1".to_string(),
+        };
+        let query_nft_info_res: NftInfoResponse<Extension> = app
+            .wrap()
+            .query_wasm_smart("contract2".to_string(), &query_nft_info_msg)
+            .unwrap();
+
+        assert_eq!(query_nft_info_res.extension.unwrap().health, 0);
+        app.update_block(next_block);
     }
 }

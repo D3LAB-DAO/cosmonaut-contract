@@ -59,8 +59,6 @@ serde = { version = "1.0", default-features = false, features = ["derive"] }
 thiserror = { version = "1.0" }
 cosmonaut-cw20 = {path="contracts/cosmonaut-cw20", features=["library"]}
 cosmonaut-cw721 = {path="contracts/cosmonaut-cw721", features=["library"]}
-rand = "0.8.5"
-getrandom = { version = "0.2.6", features = ["js"] }
 
 [dev-dependencies]
 cosmwasm-schema = { version = "1.0.0" }

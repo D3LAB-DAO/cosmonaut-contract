@@ -36,7 +36,7 @@ pub fn execute_send_nft(
         token_id: token_id.to_string(),
         msg,
     }
-        .into_cosmos_msg(&contract_addr)?;
+    .into_cosmos_msg(&contract_addr)?;
 
     Ok(Response::new()
         .add_attribute("action", "transfer")
@@ -403,6 +403,5 @@ pub fn execute_decrease_health(
         .add_attribute("action", "decrease_health")
         .add_attribute("sender", info.sender.to_string())
         .add_attribute("token_id", token_id.to_string())
-        .add_attribute("value", value.to_string())
-    )
+        .add_attribute("value", value.to_string()))
 }
