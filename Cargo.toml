@@ -21,3 +21,8 @@ panic = 'abort'
 incremental = false
 overflow-checks = true
 
+[dependencies]
+cosmonaut-cw20 = {path= "contracts/cosmonaut-cw20", features=["library"]}
+cosmonaut-cw721 = {path= "contracts/cosmonaut-cw721", features=["library"]}
+cosmonaut-main = {path="contracts/cosmonaut-main", features=["library"]}
+
