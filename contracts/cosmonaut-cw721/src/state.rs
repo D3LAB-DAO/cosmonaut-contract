@@ -21,6 +21,7 @@ pub struct Freight {
     pub unit_weight: u128,
 }
 
+// custom metadata for cw721 extension
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct Metadata {
     pub unit_denom: String,
