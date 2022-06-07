@@ -8,8 +8,8 @@ edition = "2021"
 [workspace]
 members = [
   "contracts/*",
-  "packages/*"
 ]
+
 
 [profile.release]
 opt-level = 3
