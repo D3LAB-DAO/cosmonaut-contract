@@ -22,7 +22,16 @@ incremental = false
 overflow-checks = true
 
 [dependencies]
+serde = { version = "1.0.137", default-features = false, features = ["derive"] }
+cosmwasm-std = { version = "1.0.0" }
 cosmonaut-cw20 = {path= "contracts/cosmonaut-cw20", features=["library"]}
+cw721-base = { version = "0.13.2", features = ["library"] }
 cosmonaut-cw721 = {path= "contracts/cosmonaut-cw721", features=["library"]}
 cosmonaut-main = {path="contracts/cosmonaut-main", features=["library"]}
+cw-multi-test = "0.13.2"
+
+[dev-dependencies]
+cosmwasm-schema = { version = "1.0.0" }
+
+
 

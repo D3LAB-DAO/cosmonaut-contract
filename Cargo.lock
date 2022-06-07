@@ -66,6 +66,11 @@ dependencies = [
  "cosmonaut-cw20",
  "cosmonaut-cw721",
  "cosmonaut-main",
+ "cosmwasm-schema",
+ "cosmwasm-std",
+ "cw-multi-test",
+ "cw721-base",
+ "serde",
 ]
 
 [[package]]
