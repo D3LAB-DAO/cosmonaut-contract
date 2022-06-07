@@ -5,19 +5,52 @@ cargo test
 ```
 
 ## Build contracts
+
 for apple silicon
+
 ```shell
 docker run --rm -v "$(pwd)":/code \
 --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
 --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
 cosmwasm/workspace-optimizer-arm64:0.12.6
 ```
+
 for other architectures
+
 ```shell
 docker run --rm -v "$(pwd)":/code \
 --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
 --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
 cosmwasm/workspace-optimizer:0.12.6
+```
+
+## Store wasm files
+
+```shell
+docker exec -it wasmd wasmd tx wasm store "/cosmonaut_cw20.wasm" \
+ --gas-prices 0.1ucosm --gas auto --gas-adjustment 1.3 -y -b block \
+ --chain-id testing --from validator --output json
+```
+
+```shell
+docker exec -it wasmd wasmd tx wasm store "/cosmonaut_cw721.wasm" \
+--gas-prices 0.1ucosm --gas auto --gas-adjustment 1.3 -y -b block \
+--chain-id testing --from validator --output json
+```
+
+```shell
+docker exec -it wasmd wasmd tx wasm store "/cosmonaut_main.wasm" \
+--gas-prices 0.1ucosm --gas auto --gas-adjustment 1.3 -y -b block \
+--chain-id testing --from validator --output json
+```
+
+## Init contract
+money cw20 contract and spaceship cw721 contracts will be instantiated automatically
+```shell
+docker exec -it wasmd wasmd tx wasm instantiate 3 \
+'{"money_cw20_contract":{"addr":"","code_id":1},"spaceship_cw721_contract":{"addr":"","code_id":2}}' \
+--label "main contract" --admin wasm1g88fguh42fndm09cqjx2sgma0auz25jjjexmfg  --amount 1000000ucosm \
+--from validator --chain-id testing --gas-prices 0.1ucosm --gas auto --gas-adjustment 1.3 -b block -y
 ```
 
 ## Workflow
