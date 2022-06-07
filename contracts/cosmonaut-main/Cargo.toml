@@ -41,5 +41,4 @@ cosmonaut-cw721 = {path= "../cosmonaut-cw721", features=["library"]}
 
 [dev-dependencies]
 cosmwasm-schema = { version = "1.0.0" }
-cw-multi-test = "0.13.2"
 

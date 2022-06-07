@@ -9,6 +9,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "08f9b8508dccb7687a1d6c4ce66b2b0ecef467c94667de27d8d7fe1f8d2a9cdc"
 
 [[package]]
+name = "base"
+version = "0.1.0"
+dependencies = [
+ "cosmwasm-std",
+ "cw-multi-test",
+ "serde",
+]
+
+[[package]]
 name = "base16ct"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -63,13 +72,12 @@ checksum = "e4c78c047431fee22c1a7bb92e00ad095a02a983affe4d8a72e2a2c62c1b94f3"
 name = "cosmonaut-contract"
 version = "0.1.0"
 dependencies = [
- "cosmonaut-cw20",
- "cosmonaut-cw721",
- "cosmonaut-main",
+ "base",
  "cosmwasm-schema",
  "cosmwasm-std",
- "cw-multi-test",
- "cw721-base",
+ "cw20-money",
+ "cw721-spaceship",
+ "main-contract",
  "serde",
 ]
 
@@ -117,7 +125,6 @@ dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std",
  "cosmwasm-storage",
- "cw-multi-test",
  "cw-storage-plus 0.13.4",
  "cw-utils",
  "cw2",
@@ -333,6 +340,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "cw20-money"
+version = "0.1.0"
+dependencies = [
+ "base",
+ "cosmonaut-cw20",
+ "cosmonaut-cw721",
+ "cosmonaut-main",
+ "cosmwasm-std",
+ "cw-multi-test",
+]
+
+[[package]]
 name = "cw721"
 version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -358,6 +377,19 @@ dependencies = [
  "schemars",
  "serde",
  "thiserror",
+]
+
+[[package]]
+name = "cw721-spaceship"
+version = "0.1.0"
+dependencies = [
+ "base",
+ "cosmonaut-cw20",
+ "cosmonaut-cw721",
+ "cosmonaut-main",
+ "cosmwasm-std",
+ "cw-multi-test",
+ "cw721-base",
 ]
 
 [[package]]
@@ -554,6 +586,18 @@ name = "libc"
 version = "0.2.126"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "349d5a591cd28b49e1d1037471617a32ddcda5731b99419008085f72d5a53836"
+
+[[package]]
+name = "main-contract"
+version = "0.1.0"
+dependencies = [
+ "base",
+ "cosmonaut-cw20",
+ "cosmonaut-cw721",
+ "cosmonaut-main",
+ "cosmwasm-std",
+ "cw-multi-test",
+]
 
 [[package]]
 name = "opaque-debug"
