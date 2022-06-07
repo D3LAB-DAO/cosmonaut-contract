@@ -38,7 +38,7 @@ fn create_cw721_execute_msgs(
 
 pub fn execute_cw721_all_msg(
     mut app: BasicApp,
-    contract_addr: Addr,
+    contract_addr: &str,
     admin: &str,
     recipient: &str,
     stranger: &str,
@@ -47,7 +47,7 @@ pub fn execute_cw721_all_msg(
 
     let cw721_execute_msgs = create_cw721_execute_msgs(admin, recipient, stranger);
     for msg in cw721_execute_msgs {
-        let execute_res = execute_contract::<ExecuteMsg<cosmonautExtension>>(app, &contract_addr, msg, &[], admin);
+        let execute_res = execute_contract::<ExecuteMsg<cosmonautExtension>>(app, &Addr::unchecked(contract_addr), msg, &[], admin);
         for attr in execute_res.app_response.events {
             println!("{:?}", attr.attributes);
         };

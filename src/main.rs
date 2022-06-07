@@ -6,6 +6,7 @@ use cw20_money::instantiate::instantiate_cw20_money_contract;
 use cw721_spaceship::init::mock_cw721_contract;
 use cw721_spaceship::instantiate::instantiate_spaceship_nft_contract;
 use cw721_spaceship::execute::execute_cw721_all_msg;
+use cw721_spaceship::query::query_nft_info;
 
 use main_contract::init::mock_main_contract;
 
@@ -43,5 +44,6 @@ fn main() {
     let cw721_contract_addr = cw721_spaceship_instantiate_res.addr;
     let _cw20_contract_addr = cw20_money_instantiate_res.addr;
 
-    execute_cw721_all_msg(app, cw721_contract_addr, ADDR1, ADDR2, ADDR3);
+    app = execute_cw721_all_msg(app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3);
+    query_nft_info(app, cw721_contract_addr.as_ref());
 }

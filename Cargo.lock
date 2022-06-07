@@ -389,6 +389,7 @@ dependencies = [
  "cosmonaut-main",
  "cosmwasm-std",
  "cw-multi-test",
+ "cw721",
  "cw721-base",
 ]
 
