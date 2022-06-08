@@ -35,7 +35,7 @@ mod execute {
             }],
             mint: Option::from(mint_msg),
             marketing: None,
-            total_supply: None
+            total_supply: None,
         };
 
         instantiate(deps.as_mut(), env.clone(), info.clone(), _msg).unwrap();
@@ -110,7 +110,7 @@ mod execute {
             }],
             mint: Option::from(mint_spec),
             marketing: None,
-            total_supply: None
+            total_supply: None,
         };
 
         instantiate(deps.as_mut(), env.clone(), info.clone(), _msg).unwrap();
@@ -184,7 +184,7 @@ mod execute {
             }],
             mint: Option::from(mint_spec),
             marketing: None,
-            total_supply: None
+            total_supply: None,
         };
 
         instantiate(deps.as_mut(), env.clone(), info.clone(), _msg).unwrap();
@@ -302,7 +302,7 @@ mod execute {
             }],
             mint: Option::from(mint_spec),
             marketing: None,
-            total_supply: None
+            total_supply: None,
         };
 
         instantiate(deps.as_mut(), env.clone(), info.clone(), _msg).unwrap();

@@ -1,4 +1,4 @@
-use cosmwasm_std::{Empty};
+use cosmwasm_std::Empty;
 use cw_multi_test::{Contract, ContractWrapper};
 
 pub fn mock_cw20_contract() -> Box<dyn Contract<Empty>> {

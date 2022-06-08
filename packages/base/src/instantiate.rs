@@ -1,8 +1,8 @@
+use crate::result::InstantiateResult;
 use cosmwasm_std::Addr;
 use cw_multi_test::{BasicApp, Executor};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
-use crate::result::{InstantiateResult};
 
 pub fn instantiate_contract<T>(
     mut app: BasicApp,
@@ -12,8 +12,8 @@ pub fn instantiate_contract<T>(
     admin: &str,
     label: &str,
 ) -> InstantiateResult
-    where
-        T: Serialize + DeserializeOwned + Clone,
+where
+    T: Serialize + DeserializeOwned + Clone,
 {
     let contract_addr = app
         .instantiate_contract(

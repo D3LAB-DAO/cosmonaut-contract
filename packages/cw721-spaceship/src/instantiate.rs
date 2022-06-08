@@ -1,6 +1,6 @@
-use cw_multi_test::BasicApp;
 use base::instantiate::instantiate_contract;
 use base::result::InstantiateResult;
+use cw_multi_test::BasicApp;
 
 pub fn instantiate_spaceship_nft_contract(
     app: BasicApp,

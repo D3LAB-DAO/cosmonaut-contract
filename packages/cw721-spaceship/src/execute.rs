@@ -1,7 +1,7 @@
+use base::execute::execute_contract;
+use cosmonaut_cw721::state::Extension as cosmonautExtension;
 use cosmwasm_std::Addr;
 use cw_multi_test::BasicApp;
-use cosmonaut_cw721::state::Extension as cosmonautExtension;
-use base::execute::execute_contract;
 
 fn create_cw721_execute_msgs(
     admin: &str,
@@ -30,10 +30,7 @@ fn create_cw721_execute_msgs(
         token_id: "1".to_string(),
     };
 
-    vec![
-        mint_msg,
-        transfer_nft_msg,
-    ]
+    vec![mint_msg, transfer_nft_msg]
 }
 
 pub fn execute_cw721_all_msg(
@@ -47,10 +44,16 @@ pub fn execute_cw721_all_msg(
 
     let cw721_execute_msgs = create_cw721_execute_msgs(admin, recipient, stranger);
     for msg in cw721_execute_msgs {
-        let execute_res = execute_contract::<ExecuteMsg<cosmonautExtension>>(app, &Addr::unchecked(contract_addr), msg, &[], admin);
+        let execute_res = execute_contract::<ExecuteMsg<cosmonautExtension>>(
+            app,
+            &Addr::unchecked(contract_addr),
+            msg,
+            &[],
+            admin,
+        );
         for attr in execute_res.app_response.events {
             println!("{:?}", attr.attributes);
-        };
+        }
         println!();
         app = execute_res.app
     }
