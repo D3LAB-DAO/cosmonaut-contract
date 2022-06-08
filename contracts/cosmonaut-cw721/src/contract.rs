@@ -63,17 +63,20 @@ pub fn execute(
         }
         ExecuteMsg::RevokeAll { operator } => execute_revoke_all(deps, env, info, operator),
         ExecuteMsg::SetMinter { minter } => execute_set_minter(deps, info, minter),
+        // msg to load cw20 token data on nft
         ExecuteMsg::LoadFreight {
             token_id,
             denom,
             amount,
             unit_weight,
         } => execute_load_freight(deps, token_id, denom, amount, unit_weight),
+        // msg to unload cw20 token data on nft
         ExecuteMsg::UnloadFreight {
             token_id,
             denom,
             amount,
         } => execute_unload_freight(deps, token_id, denom, amount),
+        // msg to decrease health when playing games
         ExecuteMsg::DecreaseHealth { token_id, value } => {
             execute_decrease_health(deps, info, env, token_id, value)
         }

@@ -48,7 +48,8 @@ docker cp artifacts/$WAWM_FILE wasmd:/cosmonaut_cw20.wasm
 
 # Store wasm file into docker container
 ```shell
-docker exec -it wasmd wasmd tx wasm store "/cosmonaut_cw20.wasm" --gas-prices 0.1ucosm --gas auto --gas-adjustment 1.3 -y -b block --chain-id testing --from validator --output json
+docker exec -it wasmd wasmd tx wasm store "/cosmonaut_cw20.wasm" --gas-prices 0.1ucosm \
+--gas auto --gas-adjustment 1.3 -y -b block --chain-id testing --from validator --output json
 ```
 enter password that you set as environment value PASSWORD for docker (-e option), for this example code: "xxxxxxxxx"
 

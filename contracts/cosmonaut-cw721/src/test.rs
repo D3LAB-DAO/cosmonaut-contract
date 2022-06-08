@@ -351,6 +351,7 @@ mod tests {
                     price: 1000,
                     name: None,
                     freight: vec![],
+                    health: 10
                 }),
             }
         )

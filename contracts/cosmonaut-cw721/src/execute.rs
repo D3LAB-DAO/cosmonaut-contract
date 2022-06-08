@@ -316,13 +316,17 @@ pub fn execute_load_freight(
     let mut token = contract.tokens.load(deps.storage, &token_id)?;
     let mut extension = token.extension.unwrap();
 
+    // iterate freight to find target cw20 by denom
     let candidate_idx = extension.freight.iter().position(|l| l.denom == denom);
+    // if there is token with given denom
     if let Some(idx) = candidate_idx {
+        // update token amount
         extension.freight[idx].amount = extension.freight[idx]
             .amount
             .checked_add(Uint128::new(amount))
             .unwrap();
     } else {
+        // if not, push a new freight data
         extension.freight.push(Freight {
             denom: denom.clone(),
             amount: Uint128::new(amount),
@@ -393,6 +397,7 @@ pub fn execute_decrease_health(
     )?;
     let mut extension = token.extension.unwrap();
 
+    // handle with negative overflow
     extension.health = extension.health.saturating_sub(value);
     token.extension = Extension::from(extension);
     cosmonaut_contract

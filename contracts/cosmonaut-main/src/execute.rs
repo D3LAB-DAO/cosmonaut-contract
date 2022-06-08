@@ -405,7 +405,7 @@ pub fn execute_play_game(
         random_number = timestamp_int_nanos.rem(Uint128::new(MAX_FREIGHT_WEIGHT));
         spaceship_speed = Uint128::new(MAX_FREIGHT_WEIGHT)
             - Uint128::new(MAX_FREIGHT_WEIGHT)
-                .multiply_ratio(total_freight_weight.clone(), MAX_FREIGHT_WEIGHT);
+                .multiply_ratio(total_freight_weight, MAX_FREIGHT_WEIGHT);
         if random_number > spaceship_speed {
             decrease_value = decrease_value.add(step)
         }
