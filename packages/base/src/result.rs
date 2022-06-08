@@ -1,7 +1,7 @@
+use cosmwasm_std::{Addr, Attribute};
+use cw_multi_test::BasicApp;
 use std::fs::OpenOptions;
 use std::io::Write;
-use cosmwasm_std::{Addr, Attribute};
-use cw_multi_test::{BasicApp};
 
 pub struct InstantiateResult {
     pub app: BasicApp,
@@ -38,7 +38,8 @@ impl Result for ExecuteAllResult {
         let file = OpenOptions::new()
             .create(true)
             .append(true)
-            .open(path).unwrap();
+            .open(path)
+            .unwrap();
         for attr in &self.total_attributes {
             serde_json::to_writer(&file, attr).unwrap();
         }
@@ -56,7 +57,8 @@ impl Result for QueryAllResult {
         let mut file = OpenOptions::new()
             .create(true)
             .append(true)
-            .open(path).unwrap();
+            .open(path)
+            .unwrap();
         for attr in &self.query_results {
             file.write_all(attr.as_bytes()).unwrap();
         }

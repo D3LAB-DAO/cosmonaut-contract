@@ -1,8 +1,8 @@
 use base::execute::execute_contract;
+use base::result::ExecuteAllResult;
 use cosmonaut_cw721::state::Extension as cosmonautExtension;
 use cosmwasm_std::{Addr, Attribute};
 use cw_multi_test::BasicApp;
-use base::result::{ExecuteAllResult};
 
 fn create_cw721_execute_msgs(
     admin: &str,
@@ -91,6 +91,6 @@ pub fn execute_cw721_all_msg(
 
     ExecuteAllResult {
         app,
-        total_attributes
+        total_attributes,
     }
 }
