@@ -6,7 +6,7 @@ use cw_multi_test::BasicApp;
 fn create_cw721_execute_msgs(
     admin: &str,
     recipient: &str,
-    _stranger: &str,
+    stranger: &str,
 ) -> Vec<cosmonaut_cw721::msg::ExecuteMsg<cosmonautExtension>> {
     use cosmonaut_cw721::msg::ExecuteMsg;
     use cosmonaut_cw721::state::{Extension, Metadata};
@@ -30,7 +30,38 @@ fn create_cw721_execute_msgs(
         token_id: "1".to_string(),
     };
 
-    vec![mint_msg, transfer_nft_msg]
+    let approve_nft_msg = ExecuteMsg::<Extension>::Approve {
+        spender: stranger.to_string(),
+        token_id: "1".to_string(),
+        expires: None,
+    };
+
+    let load_freight_msg = ExecuteMsg::<Extension>::LoadFreight {
+        token_id: "1".to_string(),
+        denom: "oil".to_string(),
+        amount: 10000,
+        unit_weight: 1,
+    };
+
+    let unload_freight_msg = ExecuteMsg::<Extension>::UnloadFreight {
+        token_id: "1".to_string(),
+        denom: "oil".to_string(),
+        amount: 5000,
+    };
+
+    let decrease_health_msg = ExecuteMsg::<Extension>::DecreaseHealth {
+        token_id: "1".to_string(),
+        value: 5,
+    };
+
+    vec![
+        mint_msg,
+        approve_nft_msg,
+        load_freight_msg,
+        unload_freight_msg,
+        decrease_health_msg,
+        transfer_nft_msg,
+    ]
 }
 
 pub fn execute_cw721_all_msg(
