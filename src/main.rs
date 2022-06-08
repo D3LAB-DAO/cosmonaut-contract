@@ -19,7 +19,7 @@ const ADDR3: &str = "wasm333rvne2lz6funpxxkk6yumc8ll4l3c2e3kk333";
 const DEFAULT_DIR: &str = "./output.json";
 
 fn main() {
-    let target_dir = &args().nth(1).unwrap_or(DEFAULT_DIR.to_string());
+    let target_dir: &str = &args().nth(1).unwrap_or(DEFAULT_DIR.to_string());
 
     let mut app = init_app(ADDR1);
 
