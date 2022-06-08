@@ -4,6 +4,7 @@ use cosmwasm_std::Addr;
 use cw721::{NftInfoResponse, NumTokensResponse, OwnerOfResponse};
 use cw721_base::msg::QueryMsg;
 use cw_multi_test::BasicApp;
+use base::result::{QueryAllResult};
 
 fn create_all_query_msgs() -> Vec<QueryMsg> {
     let nft_info_query_msg = QueryMsg::NftInfo {
@@ -27,8 +28,10 @@ fn create_all_query_msgs() -> Vec<QueryMsg> {
 pub fn query_all_cw721_msgs(
     app: BasicApp,
     contract_addr: &Addr,
-) -> BasicApp {
+) -> QueryAllResult {
     let cw721_query_msgs = create_all_query_msgs();
+    let mut query_results: Vec<String> = vec![];
+
     for msg in cw721_query_msgs {
         match msg {
             QueryMsg::OwnerOf {
@@ -43,12 +46,12 @@ pub fn query_all_cw721_msgs(
                         include_expired,
                     },
                 );
-                println!("{:?}", res);
+                query_results.push(serde_json::to_string(&res).unwrap());
             }
             QueryMsg::NftInfo { token_id } => {
                 let res: NftInfoResponse<Extension> =
                     query_contract(&app, contract_addr, &QueryMsg::NftInfo { token_id });
-                println!("{:?}", res);
+                query_results.push(serde_json::to_string(&res).unwrap());
             }
             QueryMsg::NumTokens {} => {
                 let res: NumTokensResponse = query_contract(
@@ -56,11 +59,13 @@ pub fn query_all_cw721_msgs(
                     contract_addr,
                     &QueryMsg::NumTokens {},
                 );
-                println!("{:?}", res);
+                query_results.push(serde_json::to_string(&res).unwrap());
             }
             _ => {}
         }
     }
 
-    app
+    QueryAllResult {
+        query_results
+    }
 }

@@ -8,7 +8,7 @@ use std::fmt::Debug;
 pub fn execute_contract<T>(
     mut app: BasicApp,
     contract_addr: &Addr,
-    msg: T,
+    msg: &T,
     send_funds: &[Coin],
     sender: &str,
 ) -> ExecuteResult
@@ -26,6 +26,6 @@ where
 
     ExecuteResult {
         app,
-        app_response: execute_res,
+        attributes: execute_res.events[1].clone().attributes,
     }
 }
