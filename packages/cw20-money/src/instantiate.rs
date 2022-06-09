@@ -1,5 +1,5 @@
-use cosmwasm_std::Addr;
 use base::instantiate::instantiate_contract;
+use cosmwasm_std::Addr;
 use cw_multi_test::BasicApp;
 
 pub fn instantiate_cw20_money_contract(

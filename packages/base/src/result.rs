@@ -1,7 +1,6 @@
-use cosmwasm_std::{Attribute};
+use cosmwasm_std::Attribute;
 use std::fs::OpenOptions;
 use std::io::Write;
-
 
 pub struct ExecuteAllResult {
     pub total_attributes: Vec<Vec<Attribute>>,

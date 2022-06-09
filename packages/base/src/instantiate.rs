@@ -11,16 +11,16 @@ pub fn instantiate_contract<T>(
     admin: &str,
     label: &str,
 ) -> Addr
-    where
-        T: Serialize + DeserializeOwned + Clone,
+where
+    T: Serialize + DeserializeOwned + Clone,
 {
-    app
-        .instantiate_contract(
-            code_id,
-            Addr::unchecked(sender),
-            &msg,
-            &[],
-            label,
-            Option::from(admin.to_string()),
-        ).unwrap()
+    app.instantiate_contract(
+        code_id,
+        Addr::unchecked(sender),
+        &msg,
+        &[],
+        label,
+        Option::from(admin.to_string()),
+    )
+    .unwrap()
 }

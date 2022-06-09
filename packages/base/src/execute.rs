@@ -11,8 +11,8 @@ pub fn execute_contract<T>(
     send_funds: &[Coin],
     sender: &str,
 ) -> Vec<Attribute>
-    where
-        T: Serialize + DeserializeOwned + Clone + Debug,
+where
+    T: Serialize + DeserializeOwned + Clone + Debug,
 {
     let execute_res = app
         .execute_contract(

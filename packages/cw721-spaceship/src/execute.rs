@@ -88,7 +88,5 @@ pub fn execute_cw721_all_msg(
         total_attributes.push(execute_res);
     }
 
-    ExecuteAllResult {
-        total_attributes
-    }
+    ExecuteAllResult { total_attributes }
 }

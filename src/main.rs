@@ -27,9 +27,12 @@ fn main() {
     let cw721_code_id = app.store_code(mock_cw721_contract());
     let _main_contract_id = app.store_code(mock_main_contract());
 
-    let cw721_contract_addr = instantiate_spaceship_nft_contract(&mut app, cw721_code_id, ADDR1, ADDR1, "cw721 nft");
-    let _cw20_contract_addr = instantiate_cw20_money_contract(&mut app, cw20_code_id, ADDR1, ADDR1, "cw20 money");
+    let cw721_contract_addr =
+        instantiate_spaceship_nft_contract(&mut app, cw721_code_id, ADDR1, ADDR1, "cw721 nft");
+    let _cw20_contract_addr =
+        instantiate_cw20_money_contract(&mut app, cw20_code_id, ADDR1, ADDR1, "cw20 money");
 
-    execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3).write_to_file(target_dir);
+    execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3)
+        .write_to_file(target_dir);
     query_all_cw721_msgs(&app, &cw721_contract_addr).write_to_file(target_dir);
 }
