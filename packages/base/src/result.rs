@@ -1,6 +1,6 @@
 use cosmwasm_std::Attribute;
 use std::fs::OpenOptions;
-use std::io::Write;
+use std::io::{IoSlice, Write};
 
 pub struct ExecuteAllResult {
     pub total_attributes: Vec<Vec<Attribute>>,
@@ -28,9 +28,7 @@ impl Result for ExecuteAllResult {
             .append(true)
             .open(path)
             .unwrap();
-        for attr in &self.total_attributes {
-            serde_json::to_writer(&file, attr).unwrap();
-        }
+        serde_json::to_writer_pretty(&file, &self.total_attributes).unwrap();
     }
 }
 
@@ -47,8 +45,17 @@ impl Result for QueryAllResult {
             .append(true)
             .open(path)
             .unwrap();
-        for attr in &self.query_results {
-            file.write_all(attr.as_bytes()).unwrap();
+
+        let mut idx = 0;
+
+        file.write_all("[".as_bytes()).unwrap();
+        for i in &self.query_results {
+            file.write_all(i.as_bytes()).unwrap();
+            if idx != &self.query_results.len() - 1 {
+                file.write_all(",\n".as_bytes());
+                idx += 1;
+            }
         }
+        file.write_all("]".as_bytes()).unwrap();
     }
 }
