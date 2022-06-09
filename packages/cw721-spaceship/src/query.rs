@@ -1,8 +1,8 @@
 use base::query::query_contract;
 use base::result::QueryAllResult;
 use cosmonaut_cw721::state::Extension;
-use cosmwasm_std::Addr;
-use cw721::{NftInfoResponse, NumTokensResponse, OwnerOfResponse, TokensResponse};
+use cosmwasm_std::{Addr};
+use cw721::{NftInfoResponse, NumTokensResponse, OwnerOfResponse, TokensResponse, ContractInfoResponse};
 use cw721_base::msg::QueryMsg;
 use cw_multi_test::BasicApp;
 
@@ -24,11 +24,14 @@ fn create_all_query_msgs(owner: &str) -> Vec<QueryMsg> {
         limit: Option::from(30),
     };
 
+    let contract_info_msg = QueryMsg::ContractInfo {};
+
     vec![
         nft_info_query_msg,
         owner_of_query_msg,
         num_tokens_msg,
         tokens_msg,
+        contract_info_msg,
     ]
 }
 
@@ -75,6 +78,14 @@ pub fn query_all_cw721_msgs(app: &BasicApp, contract_addr: &Addr, owner: &str, r
                         start_after,
                         limit,
                     },
+                );
+                query_results.push(serde_json::to_string(&res).unwrap());
+            }
+            QueryMsg::ContractInfo {} => {
+                let res: ContractInfoResponse = query_contract(
+                    app,
+                    contract_addr,
+                    &QueryMsg::ContractInfo {},
                 );
                 query_results.push(serde_json::to_string(&res).unwrap());
             }

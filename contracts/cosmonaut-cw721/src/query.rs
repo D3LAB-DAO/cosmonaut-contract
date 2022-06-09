@@ -1,9 +1,6 @@
 use crate::state::{CosmonautContract, Extension};
 use cosmwasm_std::{Deps, Env, StdResult};
-use cw721::{
-    ApprovalsResponse, Cw721Query, NftInfoResponse, NumTokensResponse, OwnerOfResponse,
-    TokensResponse,
-};
+use cw721::{ApprovalsResponse, ContractInfoResponse, Cw721Query, NftInfoResponse, NumTokensResponse, OwnerOfResponse, TokensResponse};
 
 pub fn query_owner_of(
     deps: Deps,
@@ -43,4 +40,11 @@ pub fn query_tokens(
 ) -> StdResult<TokensResponse> {
     let contract = CosmonautContract::default();
     contract.tokens(deps, owner, start_after, limit)
+}
+
+pub fn query_contract_info(
+    deps: Deps,
+) -> StdResult<ContractInfoResponse> {
+    let contract = CosmonautContract::default();
+    contract.contract_info(deps)
 }
