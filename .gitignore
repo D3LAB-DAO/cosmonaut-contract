@@ -15,4 +15,5 @@
 *.iml
 .idea
 
-output.json
+execute_output.json
+query_output.json
