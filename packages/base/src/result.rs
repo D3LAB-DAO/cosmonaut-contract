@@ -1,6 +1,6 @@
 use cosmwasm_std::Attribute;
 use std::fs::OpenOptions;
-use std::io::{IoSlice, Write};
+use std::io::Write;
 
 pub struct ExecuteAllResult {
     pub total_attributes: Vec<Vec<Attribute>>,
@@ -52,7 +52,7 @@ impl Result for QueryAllResult {
         for i in &self.query_results {
             file.write_all(i.as_bytes()).unwrap();
             if idx != &self.query_results.len() - 1 {
-                file.write_all(",\n".as_bytes());
+                file.write_all(",\n".as_bytes()).unwrap();
                 idx += 1;
             }
         }

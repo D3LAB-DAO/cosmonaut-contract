@@ -9,7 +9,9 @@ use crate::execute::{
     execute_set_minter, execute_transfer_nft, execute_unload_freight,
 };
 use crate::msg::ExecuteMsg;
-use crate::query::{query_approved_for_all, query_nft_info, query_num_tokens, query_owner_of};
+use crate::query::{
+    query_approved_for_all, query_nft_info, query_num_tokens, query_owner_of, query_tokens,
+};
 use crate::state::{CosmonautContract, Extension};
 use cw2::set_contract_version;
 use cw721_base::{InstantiateMsg, QueryMsg};
@@ -106,6 +108,11 @@ pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
         )?),
         QueryMsg::NftInfo { token_id } => to_binary(&query_nft_info(deps, token_id)?),
         QueryMsg::NumTokens {} => to_binary(&query_num_tokens(deps)?),
+        QueryMsg::Tokens {
+            owner,
+            start_after,
+            limit,
+        } => to_binary(&query_tokens(deps, owner, start_after, limit)?),
 
         _ => StdResult::Ok(Default::default()),
     }
