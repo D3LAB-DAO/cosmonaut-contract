@@ -1,19 +1,18 @@
-use crate::result::ExecuteResult;
-use cosmwasm_std::{Addr, Coin};
+use cosmwasm_std::{Addr, Attribute, Coin};
 use cw_multi_test::{BasicApp, Executor};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::fmt::Debug;
 
 pub fn execute_contract<T>(
-    mut app: BasicApp,
+    app: &mut BasicApp,
     contract_addr: &Addr,
     msg: &T,
     send_funds: &[Coin],
     sender: &str,
-) -> ExecuteResult
-where
-    T: Serialize + DeserializeOwned + Clone + Debug,
+) -> Vec<Attribute>
+    where
+        T: Serialize + DeserializeOwned + Clone + Debug,
 {
     let execute_res = app
         .execute_contract(
@@ -24,8 +23,5 @@ where
         )
         .unwrap();
 
-    ExecuteResult {
-        app,
-        attributes: execute_res.events[1].clone().attributes,
-    }
+    execute_res.events[1].clone().attributes
 }

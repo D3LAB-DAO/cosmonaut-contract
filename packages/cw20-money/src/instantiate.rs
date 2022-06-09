@@ -1,14 +1,14 @@
+use cosmwasm_std::Addr;
 use base::instantiate::instantiate_contract;
-use base::result::InstantiateResult;
 use cw_multi_test::BasicApp;
 
 pub fn instantiate_cw20_money_contract(
-    app: BasicApp,
+    app: &mut BasicApp,
     code_id: u64,
     sender: &str,
     admin: &str,
     label: &str,
-) -> InstantiateResult {
+) -> Addr {
     use cosmonaut_cw20::msg::{InstantiateMsg, MinterResponse};
 
     let cw20_init_msg = InstantiateMsg {

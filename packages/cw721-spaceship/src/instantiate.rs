@@ -1,14 +1,14 @@
+use cosmwasm_std::Addr;
 use base::instantiate::instantiate_contract;
-use base::result::InstantiateResult;
 use cw_multi_test::BasicApp;
 
 pub fn instantiate_spaceship_nft_contract(
-    app: BasicApp,
+    app: &mut BasicApp,
     code_id: u64,
     sender: &str,
     admin: &str,
     label: &str,
-) -> InstantiateResult {
+) -> Addr {
     use cw721_base::InstantiateMsg;
     let cw721_init_msg = InstantiateMsg {
         name: "spaceship".to_string(),

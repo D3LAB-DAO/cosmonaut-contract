@@ -1,20 +1,9 @@
-use cosmwasm_std::{Addr, Attribute};
-use cw_multi_test::BasicApp;
+use cosmwasm_std::{Attribute};
 use std::fs::OpenOptions;
 use std::io::Write;
 
-pub struct InstantiateResult {
-    pub app: BasicApp,
-    pub addr: Addr,
-}
-
-pub struct ExecuteResult {
-    pub app: BasicApp,
-    pub attributes: Vec<Attribute>,
-}
 
 pub struct ExecuteAllResult {
-    pub app: BasicApp,
     pub total_attributes: Vec<Vec<Attribute>>,
 }
 

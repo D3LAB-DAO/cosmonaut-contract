@@ -66,7 +66,7 @@ fn create_cw721_execute_msgs(
 }
 
 pub fn execute_cw721_all_msg(
-    mut app: BasicApp,
+    app: &mut BasicApp,
     contract_addr: &str,
     admin: &str,
     recipient: &str,
@@ -85,12 +85,10 @@ pub fn execute_cw721_all_msg(
             &[],
             admin,
         );
-        total_attributes.push(execute_res.attributes);
-        app = execute_res.app
+        total_attributes.push(execute_res);
     }
 
     ExecuteAllResult {
-        app,
-        total_attributes,
+        total_attributes
     }
 }
