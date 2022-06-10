@@ -4,6 +4,14 @@ use cw721::{
     AllNftInfoResponse, ApprovalsResponse, ContractInfoResponse, Cw721Query, NftInfoResponse,
     NumTokensResponse, OwnerOfResponse, TokensResponse,
 };
+use cw721_base::MinterResponse;
+
+pub fn query_minter(
+    deps: Deps
+) -> StdResult<MinterResponse> {
+    let contract = CosmonautContract::default();
+    contract.minter(deps)
+}
 
 pub fn query_owner_of(
     deps: Deps,
