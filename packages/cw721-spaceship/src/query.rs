@@ -1,14 +1,22 @@
 use base::query::query_contract;
 use base::result::QueryAllResult;
 use cosmonaut_cw721::state::Extension;
-use cosmwasm_std::{Addr};
-use cw721::{NftInfoResponse, NumTokensResponse, OwnerOfResponse, TokensResponse, ContractInfoResponse};
+use cosmwasm_std::Addr;
+use cw721::{
+    AllNftInfoResponse, ContractInfoResponse, NftInfoResponse, NumTokensResponse, OwnerOfResponse,
+    TokensResponse,
+};
 use cw721_base::msg::QueryMsg;
 use cw_multi_test::BasicApp;
 
 fn create_all_query_msgs(owner: &str) -> Vec<QueryMsg> {
     let nft_info_query_msg = QueryMsg::NftInfo {
         token_id: "1".to_string(),
+    };
+
+    let all_nft_info_query_msg = QueryMsg::AllNftInfo {
+        token_id: "1".to_string(),
+        include_expired: Option::from(true),
     };
 
     let owner_of_query_msg = QueryMsg::OwnerOf {
@@ -28,6 +36,7 @@ fn create_all_query_msgs(owner: &str) -> Vec<QueryMsg> {
 
     vec![
         nft_info_query_msg,
+        all_nft_info_query_msg,
         owner_of_query_msg,
         num_tokens_msg,
         tokens_msg,
@@ -35,7 +44,12 @@ fn create_all_query_msgs(owner: &str) -> Vec<QueryMsg> {
     ]
 }
 
-pub fn query_all_cw721_msgs(app: &BasicApp, contract_addr: &Addr, owner: &str, recipient: &str) -> QueryAllResult {
+pub fn query_all_cw721_msgs(
+    app: &BasicApp,
+    contract_addr: &Addr,
+    owner: &str,
+    recipient: &str,
+) -> QueryAllResult {
     let cw721_query_msgs = create_all_query_msgs(owner);
     let mut query_results: Vec<String> = vec![];
 
@@ -60,6 +74,20 @@ pub fn query_all_cw721_msgs(app: &BasicApp, contract_addr: &Addr, owner: &str, r
                     query_contract(app, contract_addr, &QueryMsg::NftInfo { token_id });
                 query_results.push(serde_json::to_string(&res).unwrap());
             }
+            QueryMsg::AllNftInfo {
+                token_id,
+                include_expired,
+            } => {
+                let res: AllNftInfoResponse<Extension> = query_contract(
+                    app,
+                    contract_addr,
+                    &QueryMsg::AllNftInfo {
+                        token_id,
+                        include_expired,
+                    },
+                );
+                query_results.push(serde_json::to_string(&res).unwrap());
+            }
             QueryMsg::NumTokens {} => {
                 let res: NumTokensResponse =
                     query_contract(app, contract_addr, &QueryMsg::NumTokens {});
@@ -82,11 +110,8 @@ pub fn query_all_cw721_msgs(app: &BasicApp, contract_addr: &Addr, owner: &str, r
                 query_results.push(serde_json::to_string(&res).unwrap());
             }
             QueryMsg::ContractInfo {} => {
-                let res: ContractInfoResponse = query_contract(
-                    app,
-                    contract_addr,
-                    &QueryMsg::ContractInfo {},
-                );
+                let res: ContractInfoResponse =
+                    query_contract(app, contract_addr, &QueryMsg::ContractInfo {});
                 query_results.push(serde_json::to_string(&res).unwrap());
             }
             _ => {}

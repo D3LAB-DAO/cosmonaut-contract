@@ -1,6 +1,9 @@
 use crate::state::{CosmonautContract, Extension};
 use cosmwasm_std::{Deps, Env, StdResult};
-use cw721::{ApprovalsResponse, ContractInfoResponse, Cw721Query, NftInfoResponse, NumTokensResponse, OwnerOfResponse, TokensResponse};
+use cw721::{
+    AllNftInfoResponse, ApprovalsResponse, ContractInfoResponse, Cw721Query, NftInfoResponse,
+    NumTokensResponse, OwnerOfResponse, TokensResponse,
+};
 
 pub fn query_owner_of(
     deps: Deps,
@@ -32,6 +35,16 @@ pub fn query_nft_info(deps: Deps, token_id: String) -> StdResult<NftInfoResponse
     contract.nft_info(deps, token_id)
 }
 
+pub fn query_all_nft_info(
+    deps: Deps,
+    env: Env,
+    token_id: String,
+    include_expired: bool,
+) -> StdResult<AllNftInfoResponse<Extension>> {
+    let contract = CosmonautContract::default();
+    contract.all_nft_info(deps, env, token_id, include_expired)
+}
+
 pub fn query_tokens(
     deps: Deps,
     owner: String,
@@ -42,9 +55,7 @@ pub fn query_tokens(
     contract.tokens(deps, owner, start_after, limit)
 }
 
-pub fn query_contract_info(
-    deps: Deps,
-) -> StdResult<ContractInfoResponse> {
+pub fn query_contract_info(deps: Deps) -> StdResult<ContractInfoResponse> {
     let contract = CosmonautContract::default();
     contract.contract_info(deps)
 }
