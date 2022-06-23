@@ -100,7 +100,7 @@ impl<T> From<ExecuteMsg<T>> for Cw721ExecuteMsg<T> {
                 Cw721ExecuteMsg::ApproveAll { operator, expires }
             }
             ExecuteMsg::RevokeAll { operator } => Cw721ExecuteMsg::RevokeAll { operator },
-            _ => panic!("cannot convert msg to Cw721ExecuteMsg")
+            _ => panic!("cannot convert msg to Cw721ExecuteMsg"),
         }
     }
 }

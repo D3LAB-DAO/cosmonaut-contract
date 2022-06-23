@@ -4,7 +4,7 @@ mod tests {
     use crate::msg::ExecuteMsg;
     use crate::state::{Extension, Metadata};
     use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
-    use cosmwasm_std::{attr, from_binary, DepsMut, Response, Empty};
+    use cosmwasm_std::{attr, from_binary, DepsMut, Empty, Response};
     use cw721::{Approval, ApprovalsResponse, NftInfoResponse, NumTokensResponse, OwnerOfResponse};
     use cw721_base::{Cw721Contract, InstantiateMsg, MintMsg, QueryMsg};
     use cw_utils::Expiration;

@@ -1,6 +1,6 @@
 use cosmwasm_std::StdError;
-use thiserror::Error;
 use cw721_base::ContractError as Cw721ContractError;
+use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum ContractError {
@@ -35,8 +35,10 @@ impl From<Cw721ContractError> for ContractError {
             Cw721ContractError::Unauthorized {} => ContractError::Unauthorized {},
             Cw721ContractError::Claimed {} => ContractError::Claimed {},
             Cw721ContractError::Expired {} => ContractError::Expired {},
-            Cw721ContractError::ApprovalNotFound { spender } => ContractError::ApprovalNotFound { spender },
-            _ => ContractError::Unimplemented {}
+            Cw721ContractError::ApprovalNotFound { spender } => {
+                ContractError::ApprovalNotFound { spender }
+            }
+            _ => ContractError::Unimplemented {},
         }
     }
 }

@@ -1,4 +1,4 @@
-use crate::state::{Extension};
+use crate::state::Extension;
 use cosmwasm_std::{Deps, Empty, Env, StdResult};
 use cw721::{
     AllNftInfoResponse, ApprovalsResponse, ContractInfoResponse, Cw721Query, NftInfoResponse,

@@ -1,9 +1,9 @@
+use crate::msg::ExecuteMsg;
 use crate::state::{Extension, Freight};
 use crate::ContractError;
 use cosmwasm_std::{Addr, Deps, DepsMut, Empty, Env, MessageInfo, Response, Uint128};
-use cw721_base::state::{TokenInfo};
-use cw721_base::{Cw721Contract};
-use crate::msg::ExecuteMsg;
+use cw721_base::state::TokenInfo;
+use cw721_base::Cw721Contract;
 
 pub trait BaseExecute {
     fn base_execute(
@@ -27,7 +27,7 @@ impl<'a> BaseExecute for Cw721Contract<'a, Extension, Empty> {
         let execute_res = self.execute(deps, env, info, cw721_msg);
         match execute_res {
             Ok(res) => Ok(res),
-            Err(err) => Err(ContractError::from(err))
+            Err(err) => Err(ContractError::from(err)),
         }
     }
 }

@@ -1,15 +1,17 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Empty};
+use cosmwasm_std::{
+    to_binary, Binary, Deps, DepsMut, Empty, Env, MessageInfo, Response, StdResult,
+};
 
 use crate::error::ContractError;
 use crate::execute as ExecHandler;
+use crate::execute::BaseExecute;
 use crate::msg::ExecuteMsg;
 use crate::query as QueryHandler;
-use crate::state::{Extension};
+use crate::state::Extension;
 use cw2::set_contract_version;
-use cw721_base::{InstantiateMsg, QueryMsg, Cw721Contract};
-use crate::execute::BaseExecute;
+use cw721_base::{Cw721Contract, InstantiateMsg, QueryMsg};
 
 const CONTRACT_NAME: &str = "crates.io:cosmonaut-cw721";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -56,8 +58,8 @@ pub fn execute(
         // msg to decrease health when playing games
         ExecuteMsg::DecreaseHealth { token_id, value } => {
             ExecHandler::execute_decrease_health(deps, info, env, token_id, value)
-        },
-        _ => cosmonaut_contract.base_execute(deps, env, info, msg)
+        }
+        _ => cosmonaut_contract.base_execute(deps, env, info, msg),
     }
 }
 
