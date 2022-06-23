@@ -39,14 +39,6 @@ pub fn execute(
     let cosmonaut_contract = Cw721Contract::default();
 
     match msg {
-        ExecuteMsg::TransferNft { .. } => cosmonaut_contract.base_execute(deps, env, info, msg),
-        ExecuteMsg::Mint { .. } => cosmonaut_contract.base_execute(deps, env, info, msg),
-        ExecuteMsg::SendNft { .. } => cosmonaut_contract.base_execute(deps, env, info, msg),
-        ExecuteMsg::Approve { .. } => cosmonaut_contract.base_execute(deps, env, info, msg),
-        ExecuteMsg::Revoke { .. } => cosmonaut_contract.base_execute(deps, env, info, msg),
-        ExecuteMsg::Burn { .. } => cosmonaut_contract.base_execute(deps, env, info, msg),
-        ExecuteMsg::ApproveAll { .. } => cosmonaut_contract.base_execute(deps, env, info, msg),
-        ExecuteMsg::RevokeAll { .. } => cosmonaut_contract.base_execute(deps, env, info, msg),
         ExecuteMsg::SetMinter { minter } => ExecHandler::execute_set_minter(deps, info, minter),
         // msg to load cw20 token data on nft
         ExecuteMsg::LoadFreight {
@@ -64,7 +56,8 @@ pub fn execute(
         // msg to decrease health when playing games
         ExecuteMsg::DecreaseHealth { token_id, value } => {
             ExecHandler::execute_decrease_health(deps, info, env, token_id, value)
-        }
+        },
+        _ => cosmonaut_contract.base_execute(deps, env, info, msg)
     }
 }
 
