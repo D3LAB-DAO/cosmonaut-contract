@@ -6,12 +6,9 @@ use cosmwasm_std::{
 use cw2::set_contract_version;
 
 use crate::error::ContractError;
-use crate::execute::{
-    execute_burn, execute_burn_from, execute_decrease_allowance, execute_increase_allowance,
-    execute_mint, execute_send, execute_transfer, execute_transfer_from,
-};
+use crate::execute as ExecHandler;
+use crate::query as QueryHandler;
 use crate::msg::{ExecuteMsg, InstantiateMsg, MigrateMsg, MinterResponse, QueryMsg};
-use crate::query::{query_allowance, query_balance, query_mint_info, query_token_info};
 use crate::state::{TokenInfo, BALANCES, TOKEN_INFO};
 
 const CONTRACT_NAME: &str = "crates.io:mars-tokens";
@@ -82,43 +79,44 @@ pub fn execute(
 ) -> Result<Response, ContractError> {
     match msg {
         ExecuteMsg::Transfer { recipient, amount } => {
-            execute_transfer(deps, info.sender, recipient, amount)
+            // execute_transfer(deps, info.sender, recipient, amount)
+            ExecHandler::execute_transfer(deps, info.sender, recipient, amount)
         }
         ExecuteMsg::Mint { recipient, amount } => {
-            execute_mint(deps, info.sender, recipient, amount)
+            ExecHandler::execute_mint(deps, info.sender, recipient, amount)
         }
         ExecuteMsg::Send {
             contract,
             amount,
             msg,
-        } => execute_send(deps, info.sender, contract, amount, msg),
+        } => ExecHandler::execute_send(deps, info.sender, contract, amount, msg),
         ExecuteMsg::IncreaseAllowance {
             spender,
             amount,
             expires,
-        } => execute_increase_allowance(deps, info.sender, spender, amount, expires),
+        } => ExecHandler::execute_increase_allowance(deps, info.sender, spender, amount, expires),
         ExecuteMsg::DecreaseAllowance {
             spender,
             amount,
             expires,
-        } => execute_decrease_allowance(deps, info.sender, spender, amount, expires),
+        } => ExecHandler::execute_decrease_allowance(deps, info.sender, spender, amount, expires),
         ExecuteMsg::TransferFrom {
             owner,
             recipient,
             amount,
-        } => execute_transfer_from(deps, env, info, owner, recipient, amount),
-        ExecuteMsg::Burn { amount } => execute_burn(deps, env, info, amount),
-        ExecuteMsg::BurnFrom { owner, amount } => execute_burn_from(deps, env, info, owner, amount),
+        } => ExecHandler::execute_transfer_from(deps, env, info, owner, recipient, amount),
+        ExecuteMsg::Burn { amount } => ExecHandler::execute_burn(deps, env, info, amount),
+        ExecuteMsg::BurnFrom { owner, amount } => ExecHandler::execute_burn_from(deps, env, info, owner, amount),
     }
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
-        QueryMsg::Balance { address } => query_balance(deps, address),
-        QueryMsg::TokenInfo {} => query_token_info(deps),
-        QueryMsg::MintInfo {} => query_mint_info(deps),
-        QueryMsg::Allowance { owner, spender } => query_allowance(deps, owner, spender),
+        QueryMsg::Balance { address } => QueryHandler::query_balance(deps, address),
+        QueryMsg::TokenInfo {} => QueryHandler::query_token_info(deps),
+        QueryMsg::MintInfo {} => QueryHandler::query_mint_info(deps),
+        QueryMsg::Allowance { owner, spender } => QueryHandler::query_allowance(deps, owner, spender),
     }
 }
 
