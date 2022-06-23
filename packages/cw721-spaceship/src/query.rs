@@ -6,8 +6,8 @@ use cw721::{
     AllNftInfoResponse, ContractInfoResponse, NftInfoResponse, NumTokensResponse, OwnerOfResponse,
     TokensResponse,
 };
-use cw721_base::MinterResponse;
 use cw721_base::msg::QueryMsg;
+use cw721_base::MinterResponse;
 use cw_multi_test::BasicApp;
 
 fn create_all_query_msgs(owner: &str) -> Vec<QueryMsg> {
@@ -59,13 +59,8 @@ pub fn query_all_cw721_msgs(
 
     for msg in cw721_query_msgs {
         match msg {
-            QueryMsg::Minter {
-            } => {
-                let res: MinterResponse = query_contract(
-                    app,
-                    contract_addr,
-                    &QueryMsg::Minter {},
-                );
+            QueryMsg::Minter {} => {
+                let res: MinterResponse = query_contract(app, contract_addr, &QueryMsg::Minter {});
                 query_results.push(serde_json::to_string(&res).unwrap());
             }
             QueryMsg::OwnerOf {

@@ -7,8 +7,8 @@ use cw2::set_contract_version;
 
 use crate::error::ContractError;
 use crate::execute as ExecHandler;
-use crate::query as QueryHandler;
 use crate::msg::{ExecuteMsg, InstantiateMsg, MigrateMsg, MinterResponse, QueryMsg};
+use crate::query as QueryHandler;
 use crate::state::{TokenInfo, BALANCES, TOKEN_INFO};
 
 const CONTRACT_NAME: &str = "crates.io:mars-tokens";
@@ -79,7 +79,6 @@ pub fn execute(
 ) -> Result<Response, ContractError> {
     match msg {
         ExecuteMsg::Transfer { recipient, amount } => {
-            // execute_transfer(deps, info.sender, recipient, amount)
             ExecHandler::execute_transfer(deps, info.sender, recipient, amount)
         }
         ExecuteMsg::Mint { recipient, amount } => {
@@ -106,7 +105,9 @@ pub fn execute(
             amount,
         } => ExecHandler::execute_transfer_from(deps, env, info, owner, recipient, amount),
         ExecuteMsg::Burn { amount } => ExecHandler::execute_burn(deps, env, info, amount),
-        ExecuteMsg::BurnFrom { owner, amount } => ExecHandler::execute_burn_from(deps, env, info, owner, amount),
+        ExecuteMsg::BurnFrom { owner, amount } => {
+            ExecHandler::execute_burn_from(deps, env, info, owner, amount)
+        }
     }
 }
 
@@ -116,7 +117,9 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
         QueryMsg::Balance { address } => QueryHandler::query_balance(deps, address),
         QueryMsg::TokenInfo {} => QueryHandler::query_token_info(deps),
         QueryMsg::MintInfo {} => QueryHandler::query_mint_info(deps),
-        QueryMsg::Allowance { owner, spender } => QueryHandler::query_allowance(deps, owner, spender),
+        QueryMsg::Allowance { owner, spender } => {
+            QueryHandler::query_allowance(deps, owner, spender)
+        }
     }
 }
 

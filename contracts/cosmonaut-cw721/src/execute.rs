@@ -1,99 +1,125 @@
-use crate::state::{CosmonautContract, Extension, Freight};
+use crate::state::{Extension, Freight};
 use crate::ContractError;
-use cosmwasm_std::{Addr, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint128};
-use cw721::Cw721ReceiveMsg;
-use cw721_base::state::{Approval, TokenInfo};
-use cw721_base::MintMsg;
-use cw_utils::Expiration;
+use cosmwasm_std::{Addr, Deps, DepsMut, Empty, Env, MessageInfo, Response, Uint128};
+use cw721_base::state::{TokenInfo};
+use cw721_base::{Cw721Contract};
+use crate::msg::ExecuteMsg;
 
-pub fn execute_transfer_nft(
-    deps: DepsMut,
-    env: Env,
-    token_id: String,
-    sender: Addr,
-    recipient: String,
-) -> Result<Response, ContractError> {
-    _transfer(deps, &env, &token_id, &sender, &recipient)?;
-    Ok(Response::new()
-        .add_attribute("action", "transfer")
-        .add_attribute("token_id", token_id)
-        .add_attribute("from", sender)
-        .add_attribute("to", recipient))
+pub trait BaseExecute {
+    fn base_execute(
+        &self,
+        deps: DepsMut,
+        env: Env,
+        info: MessageInfo,
+        msg: ExecuteMsg<Extension>,
+    ) -> Result<Response, ContractError>;
 }
 
-pub fn execute_send_nft(
-    deps: DepsMut,
-    env: Env,
-    token_id: &String,
-    sender: Addr,
-    contract_addr: String,
-    msg: Binary,
-) -> Result<Response, ContractError> {
-    _transfer(deps, &env, token_id, &sender, &contract_addr)?;
-
-    let contract_msg = Cw721ReceiveMsg {
-        sender: sender.to_string(),
-        token_id: token_id.to_string(),
-        msg,
+impl<'a> BaseExecute for Cw721Contract<'a, Extension, Empty> {
+    fn base_execute(
+        &self,
+        deps: DepsMut,
+        env: Env,
+        info: MessageInfo,
+        msg: ExecuteMsg<Extension>,
+    ) -> Result<Response, ContractError> {
+        let cw721_msg = msg.into();
+        let execute_res = self.execute(deps, env, info, cw721_msg);
+        match execute_res {
+            Ok(res) => Ok(res),
+            Err(err) => Err(ContractError::from(err))
+        }
     }
-    .into_cosmos_msg(&contract_addr)?;
-
-    Ok(Response::new()
-        .add_attribute("action", "transfer")
-        .add_attribute("token_id", token_id)
-        .add_attribute("from", sender)
-        .add_attribute("to", contract_addr)
-        .add_message(contract_msg))
 }
 
-fn _transfer(
-    deps: DepsMut,
-    env: &Env,
-    token_id: &str,
-    sender: &Addr,
-    recipient: &str,
-) -> Result<(), ContractError> {
-    let cosmonaut_contract = CosmonautContract::default();
-    let token = cosmonaut_contract.tokens.may_load(deps.storage, token_id)?;
+// pub fn execute_transfer_nft(
+//     deps: DepsMut,
+//     env: Env,
+//     token_id: String,
+//     sender: Addr,
+//     recipient: String,
+// ) -> Result<Response, ContractError> {
+//     _transfer(deps, &env, &token_id, &sender, &recipient)?;
+//     Ok(Response::new()
+//         .add_attribute("action", "transfer")
+//         .add_attribute("token_id", token_id)
+//         .add_attribute("from", sender)
+//         .add_attribute("to", recipient))
+// }
 
-    if token.is_none() {
-        return Err(ContractError::NotFound {});
-    }
+// pub fn execute_send_nft(
+//     deps: DepsMut,
+//     env: Env,
+//     token_id: &String,
+//     sender: Addr,
+//     contract_addr: String,
+//     msg: Binary,
+// ) -> Result<Response, ContractError> {
+//     _transfer(deps, &env, token_id, &sender, &contract_addr)?;
+//
+//     let contract_msg = Cw721ReceiveMsg {
+//         sender: sender.to_string(),
+//         token_id: token_id.to_string(),
+//         msg,
+//     }
+//         .into_cosmos_msg(&contract_addr)?;
+//
+//     Ok(Response::new()
+//         .add_attribute("action", "transfer")
+//         .add_attribute("token_id", token_id)
+//         .add_attribute("from", sender)
+//         .add_attribute("to", contract_addr)
+//         .add_message(contract_msg))
+// }
 
-    check_can_send(
-        &cosmonaut_contract,
-        deps.as_ref(),
-        env,
-        sender,
-        &token.unwrap(),
-    )?;
-    let recipient_addr = deps.api.addr_validate(recipient)?;
-    cosmonaut_contract.tokens.update(
-        deps.storage,
-        token_id,
-        |old_token_info: Option<TokenInfo<Extension>>| -> StdResult<_> {
-            let mut new_token_info = old_token_info.unwrap();
-            new_token_info.owner = recipient_addr;
-            new_token_info.approvals = vec![];
-            Ok(new_token_info)
-        },
-    )?;
-    Ok(())
-}
+// fn _transfer(
+//     deps: DepsMut,
+//     env: &Env,
+//     token_id: &str,
+//     sender: &Addr,
+//     recipient: &str,
+// ) -> Result<(), ContractError> {
+//     let cosmonaut_contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
+//     let token = cosmonaut_contract.tokens.may_load(deps.storage, token_id)?;
+//
+//     if token.is_none() {
+//         return Err(ContractError::NotFound {});
+//     }
+//
+//     check_can_send(
+//         &cosmonaut_contract,
+//         deps.as_ref(),
+//         env,
+//         sender,
+//         &token.unwrap(),
+//     )?;
+//     let recipient_addr = deps.api.addr_validate(recipient)?;
+//     cosmonaut_contract.tokens.update(
+//         deps.storage,
+//         token_id,
+//         |old_token_info: Option<TokenInfo<Extension>>| -> StdResult<_> {
+//             let mut new_token_info = old_token_info.unwrap();
+//             new_token_info.owner = recipient_addr;
+//             new_token_info.approvals = vec![];
+//             Ok(new_token_info)
+//         },
+//     )?;
+//     Ok(())
+// }
 
-pub fn execute_mint(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    mint_msg: MintMsg<Extension>,
-) -> Result<Response, ContractError> {
-    let cosmonaut_contract = CosmonautContract::default();
-    let response = cosmonaut_contract.mint(deps, env, info, mint_msg).unwrap();
-    Ok(response)
-}
+// pub fn execute_mint(
+//     deps: DepsMut,
+//     env: Env,
+//     info: MessageInfo,
+//     mint_msg: MintMsg<Extension>,
+// ) -> Result<Response, ContractError> {
+//     let cosmonaut_contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
+//     let response = cosmonaut_contract.mint(deps, env, info, mint_msg).unwrap();
+//     Ok(response)
+// }
 
 fn check_can_send(
-    contract: &CosmonautContract,
+    contract: &Cw721Contract<Extension, Empty>,
     deps: Deps,
     env: &Env,
     sender: &Addr,
@@ -127,163 +153,163 @@ fn check_can_send(
     }
 }
 
-pub fn execute_approve(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    spender: String,
-    token_id: String,
-    expires: Option<Expiration>,
-) -> Result<Response, ContractError> {
-    update_approvals(deps, &env, &info, &spender, &token_id, true, expires)?;
+// pub fn execute_approve(
+//     deps: DepsMut,
+//     env: Env,
+//     info: MessageInfo,
+//     spender: String,
+//     token_id: String,
+//     expires: Option<Expiration>,
+// ) -> Result<Response, ContractError> {
+//     update_approvals(deps, &env, &info, &spender, &token_id, true, expires)?;
+//
+//     Ok(Response::new()
+//         .add_attribute("action", "approve")
+//         .add_attribute("sender", info.sender)
+//         .add_attribute("spender", spender)
+//         .add_attribute("token_id", token_id))
+// }
 
-    Ok(Response::new()
-        .add_attribute("action", "approve")
-        .add_attribute("sender", info.sender)
-        .add_attribute("spender", spender)
-        .add_attribute("token_id", token_id))
-}
+// pub fn execute_approve_all(
+//     deps: DepsMut,
+//     env: Env,
+//     info: MessageInfo,
+//     operator: String,
+//     expires: Option<Expiration>,
+// ) -> Result<Response, ContractError> {
+//     let contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
+//
+//     let expires = expires.unwrap_or_default();
+//     if expires.is_expired(&env.block) {
+//         return Err(ContractError::Expired {});
+//     }
+//
+//     let operator_addr = deps.api.addr_validate(&operator)?;
+//     contract
+//         .operators
+//         .save(deps.storage, (&info.sender, &operator_addr), &expires)?;
+//
+//     Ok(Response::new()
+//         .add_attribute("action", "approve_all")
+//         .add_attribute("sender", info.sender)
+//         .add_attribute("operator", operator))
+// }
 
-pub fn execute_approve_all(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    operator: String,
-    expires: Option<Expiration>,
-) -> Result<Response, ContractError> {
-    let contract = CosmonautContract::default();
+// pub fn execute_revoke(
+//     deps: DepsMut,
+//     env: Env,
+//     info: MessageInfo,
+//     spender: String,
+//     token_id: String,
+// ) -> Result<Response, ContractError> {
+//     update_approvals(deps, &env, &info, &spender, &token_id, false, None)?;
+//
+//     Ok(Response::new()
+//         .add_attribute("action", "revoke")
+//         .add_attribute("sender", info.sender)
+//         .add_attribute("spender", spender)
+//         .add_attribute("token_id", token_id))
+// }
 
-    let expires = expires.unwrap_or_default();
-    if expires.is_expired(&env.block) {
-        return Err(ContractError::Expired {});
-    }
+// pub fn execute_revoke_all(
+//     deps: DepsMut,
+//     _env: Env,
+//     info: MessageInfo,
+//     operator: String,
+// ) -> Result<Response, ContractError> {
+//     let contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
+//     let operator_addr = deps.api.addr_validate(&operator)?;
+//     contract
+//         .operators
+//         .remove(deps.storage, (&info.sender, &operator_addr));
+//     Ok(Response::new()
+//         .add_attribute("action", "revoke_all")
+//         .add_attribute("sender", info.sender)
+//         .add_attribute("operator", operator))
+// }
 
-    let operator_addr = deps.api.addr_validate(&operator)?;
-    contract
-        .operators
-        .save(deps.storage, (&info.sender, &operator_addr), &expires)?;
+// fn update_approvals(
+//     deps: DepsMut,
+//     env: &Env,
+//     info: &MessageInfo,
+//     spender: &str,
+//     token_id: &str,
+//     add: bool,
+//     expires: Option<Expiration>,
+// ) -> Result<Response, ContractError> {
+//     let cosmonaut_contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
+//     let mut token = cosmonaut_contract.tokens.load(deps.storage, token_id)?;
+//
+//     check_can_approve(deps.as_ref(), env, info, &token, &cosmonaut_contract)?;
+//     let spender_addr = deps.api.addr_validate(spender)?;
+//
+//     token.approvals = token
+//         .approvals
+//         .into_iter()
+//         .filter(|approval| approval.spender != spender_addr)
+//         .collect();
+//     if add {
+//         let expires = expires.unwrap_or_default();
+//         if expires.is_expired(&env.block) {
+//             return Err(ContractError::Expired {});
+//         }
+//         let approval = Approval {
+//             spender: spender_addr,
+//             expires,
+//         };
+//         token.approvals.push(approval);
+//     }
+//     cosmonaut_contract
+//         .tokens
+//         .save(deps.storage, token_id, &token)?;
+//     Ok(Response::new())
+// }
 
-    Ok(Response::new()
-        .add_attribute("action", "approve_all")
-        .add_attribute("sender", info.sender)
-        .add_attribute("operator", operator))
-}
+// fn check_can_approve(
+//     deps: Deps,
+//     env: &Env,
+//     info: &MessageInfo,
+//     token: &TokenInfo<Extension>,
+//     contract: &Cw721Contract<Extension, Empty>,
+// ) -> Result<(), ContractError> {
+//     if token.owner == info.sender {
+//         return Ok(());
+//     }
+//
+//     let operator = contract
+//         .operators
+//         .may_load(deps.storage, (&token.owner, &info.sender))?;
+//     match operator {
+//         Some(expiration) => {
+//             if expiration.is_expired(&env.block) {
+//                 Err(ContractError::Unauthorized {})
+//             } else {
+//                 Ok(())
+//             }
+//         }
+//         None => Err(ContractError::Unauthorized {}),
+//     }
+// }
 
-pub fn execute_revoke(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    spender: String,
-    token_id: String,
-) -> Result<Response, ContractError> {
-    update_approvals(deps, &env, &info, &spender, &token_id, false, None)?;
-
-    Ok(Response::new()
-        .add_attribute("action", "revoke")
-        .add_attribute("sender", info.sender)
-        .add_attribute("spender", spender)
-        .add_attribute("token_id", token_id))
-}
-
-pub fn execute_revoke_all(
-    deps: DepsMut,
-    _env: Env,
-    info: MessageInfo,
-    operator: String,
-) -> Result<Response, ContractError> {
-    let contract = CosmonautContract::default();
-    let operator_addr = deps.api.addr_validate(&operator)?;
-    contract
-        .operators
-        .remove(deps.storage, (&info.sender, &operator_addr));
-    Ok(Response::new()
-        .add_attribute("action", "revoke_all")
-        .add_attribute("sender", info.sender)
-        .add_attribute("operator", operator))
-}
-
-fn update_approvals(
-    deps: DepsMut,
-    env: &Env,
-    info: &MessageInfo,
-    spender: &str,
-    token_id: &str,
-    add: bool,
-    expires: Option<Expiration>,
-) -> Result<Response, ContractError> {
-    let cosmonaut_contract = CosmonautContract::default();
-    let mut token = cosmonaut_contract.tokens.load(deps.storage, token_id)?;
-
-    check_can_approve(deps.as_ref(), env, info, &token, &cosmonaut_contract)?;
-    let spender_addr = deps.api.addr_validate(spender)?;
-
-    token.approvals = token
-        .approvals
-        .into_iter()
-        .filter(|approval| approval.spender != spender_addr)
-        .collect();
-    if add {
-        let expires = expires.unwrap_or_default();
-        if expires.is_expired(&env.block) {
-            return Err(ContractError::Expired {});
-        }
-        let approval = Approval {
-            spender: spender_addr,
-            expires,
-        };
-        token.approvals.push(approval);
-    }
-    cosmonaut_contract
-        .tokens
-        .save(deps.storage, token_id, &token)?;
-    Ok(Response::new())
-}
-
-fn check_can_approve(
-    deps: Deps,
-    env: &Env,
-    info: &MessageInfo,
-    token: &TokenInfo<Extension>,
-    contract: &CosmonautContract,
-) -> Result<(), ContractError> {
-    if token.owner == info.sender {
-        return Ok(());
-    }
-
-    let operator = contract
-        .operators
-        .may_load(deps.storage, (&token.owner, &info.sender))?;
-    match operator {
-        Some(expiration) => {
-            if expiration.is_expired(&env.block) {
-                Err(ContractError::Unauthorized {})
-            } else {
-                Ok(())
-            }
-        }
-        None => Err(ContractError::Unauthorized {}),
-    }
-}
-
-pub fn execute_burn(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    token_id: String,
-) -> Result<Response, ContractError> {
-    let contract = CosmonautContract::default();
-    let token = contract.tokens.load(deps.storage, &token_id)?;
-
-    check_can_send(&contract, deps.as_ref(), &env, &info.sender, &token)?;
-
-    contract.tokens.remove(deps.storage, &token_id)?;
-    contract.decrement_tokens(deps.storage)?;
-
-    Ok(Response::new()
-        .add_attribute("action", "burn")
-        .add_attribute("sender", info.sender)
-        .add_attribute("token_id", token_id))
-}
+// pub fn execute_burn(
+//     deps: DepsMut,
+//     env: Env,
+//     info: MessageInfo,
+//     token_id: String,
+// ) -> Result<Response, ContractError> {
+//     let contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
+//     let token = contract.tokens.load(deps.storage, &token_id)?;
+//
+//     check_can_send(&contract, deps.as_ref(), &env, &info.sender, &token)?;
+//
+//     contract.tokens.remove(deps.storage, &token_id)?;
+//     contract.decrement_tokens(deps.storage)?;
+//
+//     Ok(Response::new()
+//         .add_attribute("action", "burn")
+//         .add_attribute("sender", info.sender)
+//         .add_attribute("token_id", token_id))
+// }
 
 pub fn execute_set_minter(
     deps: DepsMut,
@@ -291,7 +317,7 @@ pub fn execute_set_minter(
     minter: String,
 ) -> Result<Response, ContractError> {
     let minter_addr = deps.api.addr_validate(&minter)?;
-    let cosmonaut_contract = CosmonautContract::default();
+    let cosmonaut_contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
 
     if cosmonaut_contract.minter(deps.as_ref())?.minter == info.sender {
         cosmonaut_contract.minter.save(deps.storage, &minter_addr)?;
@@ -312,7 +338,7 @@ pub fn execute_load_freight(
     amount: u128,
     unit_weight: u128,
 ) -> Result<Response, ContractError> {
-    let contract = CosmonautContract::default();
+    let contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
     let mut token = contract.tokens.load(deps.storage, &token_id)?;
     let mut extension = token.extension.unwrap();
 
@@ -351,7 +377,7 @@ pub fn execute_unload_freight(
     denom: String,
     amount: u128,
 ) -> Result<Response, ContractError> {
-    let contract = CosmonautContract::default();
+    let contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
     let mut token = contract.tokens.load(deps.storage, &token_id)?;
     let mut extension = token.extension.unwrap();
 
@@ -385,9 +411,8 @@ pub fn execute_decrease_health(
     token_id: String,
     value: u128,
 ) -> Result<Response, ContractError> {
-    let cosmonaut_contract = CosmonautContract::default();
+    let cosmonaut_contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
     let mut token = cosmonaut_contract.tokens.load(deps.storage, &token_id)?;
-
     check_can_send(
         &cosmonaut_contract,
         deps.as_ref(),

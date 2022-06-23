@@ -2,11 +2,11 @@
 mod tests {
     use crate::contract::{execute, instantiate, query};
     use crate::msg::ExecuteMsg;
-    use crate::state::{CosmonautContract, Extension, Metadata};
+    use crate::state::{Extension, Metadata};
     use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
-    use cosmwasm_std::{attr, from_binary, DepsMut, Response};
+    use cosmwasm_std::{attr, from_binary, DepsMut, Response, Empty};
     use cw721::{Approval, ApprovalsResponse, NftInfoResponse, NumTokensResponse, OwnerOfResponse};
-    use cw721_base::{InstantiateMsg, MintMsg, QueryMsg};
+    use cw721_base::{Cw721Contract, InstantiateMsg, MintMsg, QueryMsg};
     use cw_utils::Expiration;
     use serde::de::Unexpected::Option;
     use std::collections::HashMap;
@@ -15,8 +15,8 @@ mod tests {
     const STRANGER: &str = "juno17zfp9u7zxg3gel4r3txa2jqxme7jkw7d972flm";
     const STRANGER2: &str = "juno16zfp9u7zxg3gel4r3txa2jqxme7jkw7d972flm";
 
-    fn setup_contract(deps: DepsMut) -> CosmonautContract {
-        let contract = CosmonautContract::default();
+    fn setup_contract(deps: DepsMut) -> Cw721Contract<Extension, Empty> {
+        let contract = Cw721Contract::default();
         let msg = InstantiateMsg {
             name: "mars".to_string(),
             symbol: "MARS".to_string(),
