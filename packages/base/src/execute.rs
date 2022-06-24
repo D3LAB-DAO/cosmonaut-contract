@@ -1,3 +1,4 @@
+use anyhow::Error;
 use cosmwasm_std::{Addr, Attribute, Coin};
 use cw_multi_test::{BasicApp, Executor};
 use serde::de::DeserializeOwned;
@@ -10,18 +11,18 @@ pub fn execute_contract<T>(
     msg: &T,
     send_funds: &[Coin],
     sender: &str,
-) -> Vec<Attribute>
+) -> Result<Vec<Attribute>, Error>
 where
     T: Serialize + DeserializeOwned + Clone + Debug,
 {
-    let execute_res = app
-        .execute_contract(
-            Addr::unchecked(sender),
-            Addr::unchecked(contract_addr),
-            &msg,
-            send_funds,
-        )
-        .unwrap();
-
-    execute_res.events[1].clone().attributes
+    let execute_res = app.execute_contract(
+        Addr::unchecked(sender),
+        Addr::unchecked(contract_addr),
+        &msg,
+        send_funds,
+    );
+    match execute_res {
+        Ok(res) => Ok(res.events[1].clone().attributes),
+        Err(err) => Err(err),
+    }
 }

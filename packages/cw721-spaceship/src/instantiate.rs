@@ -13,7 +13,7 @@ pub fn instantiate_spaceship_nft_contract(
     let cw721_init_msg = InstantiateMsg {
         name: "spaceship".to_string(),
         symbol: "space".to_string(),
-        minter: admin.to_string(),
+        minter: "adfadfasdfaf".to_string(),
     };
     instantiate_contract::<InstantiateMsg>(app, cw721_init_msg, code_id, sender, admin, label)
 }

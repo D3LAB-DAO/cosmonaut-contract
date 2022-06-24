@@ -1,7 +1,7 @@
 use base::query::query_contract;
 use base::result::QueryAllResult;
 use cosmonaut_cw721::state::Extension;
-use cosmwasm_std::Addr;
+use cosmwasm_std::{Addr, StdError};
 use cw721::{
     AllNftInfoResponse, ContractInfoResponse, NftInfoResponse, NumTokensResponse, OwnerOfResponse,
     TokensResponse,
@@ -9,6 +9,20 @@ use cw721::{
 use cw721_base::msg::QueryMsg;
 use cw721_base::MinterResponse;
 use cw_multi_test::BasicApp;
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
+use std::fmt::Debug;
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub enum QueryResponse {
+    AllNftInfoResponse(AllNftInfoResponse<Extension>),
+    ContractInfoResponse(ContractInfoResponse),
+    NftInfoResponse(NftInfoResponse<Extension>),
+    NumTokensResponse(NumTokensResponse),
+    OwnerOfResponse(OwnerOfResponse),
+    TokensResponse(TokensResponse),
+    MinterResponse(MinterResponse),
+}
 
 fn create_all_query_msgs(owner: &str) -> Vec<QueryMsg> {
     let minter_query_msg = QueryMsg::Minter {};
@@ -53,21 +67,30 @@ pub fn query_all_cw721_msgs(
     contract_addr: &Addr,
     owner: &str,
     recipient: &str,
-) -> QueryAllResult {
+) -> QueryAllResult<QueryResponse> {
     let cw721_query_msgs = create_all_query_msgs(owner);
-    let mut query_results: Vec<String> = vec![];
+    let mut responses: Vec<QueryResponse> = vec![];
+    let mut errors: Vec<String> = vec![];
 
     for msg in cw721_query_msgs {
         match msg {
             QueryMsg::Minter {} => {
-                let res: MinterResponse = query_contract(app, contract_addr, &QueryMsg::Minter {});
-                query_results.push(serde_json::to_string(&res).unwrap());
+                let res: Result<MinterResponse, StdError> =
+                    query_contract(app, contract_addr, &QueryMsg::Minter {});
+                match res {
+                    Ok(res) => {
+                        responses.push(QueryResponse::MinterResponse(res));
+                    }
+                    Err(err) => {
+                        errors.push(err.to_string());
+                    }
+                }
             }
             QueryMsg::OwnerOf {
                 token_id,
                 include_expired,
             } => {
-                let res: OwnerOfResponse = query_contract(
+                let res: Result<OwnerOfResponse, StdError> = query_contract(
                     app,
                     contract_addr,
                     &QueryMsg::OwnerOf {
@@ -75,18 +98,32 @@ pub fn query_all_cw721_msgs(
                         include_expired,
                     },
                 );
-                query_results.push(serde_json::to_string(&res).unwrap());
+                match res {
+                    Ok(res) => {
+                        responses.push(QueryResponse::OwnerOfResponse(res));
+                    }
+                    Err(err) => {
+                        errors.push(err.to_string());
+                    }
+                }
             }
             QueryMsg::NftInfo { token_id } => {
-                let res: NftInfoResponse<Extension> =
+                let res: Result<NftInfoResponse<Extension>, StdError> =
                     query_contract(app, contract_addr, &QueryMsg::NftInfo { token_id });
-                query_results.push(serde_json::to_string(&res).unwrap());
+                match res {
+                    Ok(res) => {
+                        responses.push(QueryResponse::NftInfoResponse(res));
+                    }
+                    Err(err) => {
+                        errors.push(err.to_string());
+                    }
+                }
             }
             QueryMsg::AllNftInfo {
                 token_id,
                 include_expired,
             } => {
-                let res: AllNftInfoResponse<Extension> = query_contract(
+                let res: Result<AllNftInfoResponse<Extension>, StdError> = query_contract(
                     app,
                     contract_addr,
                     &QueryMsg::AllNftInfo {
@@ -94,19 +131,33 @@ pub fn query_all_cw721_msgs(
                         include_expired,
                     },
                 );
-                query_results.push(serde_json::to_string(&res).unwrap());
+                match res {
+                    Ok(res) => {
+                        responses.push(QueryResponse::AllNftInfoResponse(res));
+                    }
+                    Err(err) => {
+                        errors.push(err.to_string());
+                    }
+                }
             }
             QueryMsg::NumTokens {} => {
-                let res: NumTokensResponse =
+                let res: Result<NumTokensResponse, StdError> =
                     query_contract(app, contract_addr, &QueryMsg::NumTokens {});
-                query_results.push(serde_json::to_string(&res).unwrap());
+                match res {
+                    Ok(res) => {
+                        responses.push(QueryResponse::NumTokensResponse(res));
+                    }
+                    Err(err) => {
+                        errors.push(err.to_string());
+                    }
+                }
             }
             QueryMsg::Tokens {
                 owner: _,
                 start_after,
                 limit,
             } => {
-                let res: TokensResponse = query_contract(
+                let res: Result<TokensResponse, StdError> = query_contract(
                     app,
                     contract_addr,
                     &QueryMsg::Tokens {
@@ -115,16 +166,30 @@ pub fn query_all_cw721_msgs(
                         limit,
                     },
                 );
-                query_results.push(serde_json::to_string(&res).unwrap());
+                match res {
+                    Ok(res) => {
+                        responses.push(QueryResponse::TokensResponse(res));
+                    }
+                    Err(err) => {
+                        errors.push(err.to_string());
+                    }
+                }
             }
             QueryMsg::ContractInfo {} => {
-                let res: ContractInfoResponse =
+                let res: Result<ContractInfoResponse, StdError> =
                     query_contract(app, contract_addr, &QueryMsg::ContractInfo {});
-                query_results.push(serde_json::to_string(&res).unwrap());
+                match res {
+                    Ok(res) => {
+                        responses.push(QueryResponse::ContractInfoResponse(res));
+                    }
+                    Err(err) => {
+                        errors.push(err.to_string());
+                    }
+                }
             }
             _ => {}
         }
     }
 
-    QueryAllResult { query_results }
+    QueryAllResult { responses, errors }
 }

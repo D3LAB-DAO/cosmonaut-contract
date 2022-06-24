@@ -74,6 +74,7 @@ pub fn execute_cw721_all_msg(
 ) -> ExecuteAllResult {
     use cosmonaut_cw721::msg::ExecuteMsg;
     let mut total_attributes: Vec<Vec<Attribute>> = vec![];
+    let mut total_errors: Vec<String> = vec![];
 
     let cw721_execute_msgs = create_cw721_execute_msgs(admin, recipient, stranger);
 
@@ -85,8 +86,14 @@ pub fn execute_cw721_all_msg(
             &[],
             admin,
         );
-        total_attributes.push(execute_res);
+        match execute_res {
+            Ok(res) => total_attributes.push(res),
+            Err(err) => total_errors.push(err.root_cause().to_string()),
+        }
     }
 
-    ExecuteAllResult { total_attributes }
+    ExecuteAllResult {
+        attributes: total_attributes,
+        errors: total_errors,
+    }
 }

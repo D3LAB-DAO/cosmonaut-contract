@@ -1,61 +1,51 @@
 use cosmwasm_std::Attribute;
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
+use std::fmt::Debug;
 use std::fs::OpenOptions;
-use std::io::Write;
 
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct ExecuteAllResult {
-    pub total_attributes: Vec<Vec<Attribute>>,
+    pub attributes: Vec<Vec<Attribute>>,
+    pub errors: Vec<String>,
 }
 
-pub struct QueryAllResult {
-    pub query_results: Vec<String>,
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct QueryAllResult<T> {
+    pub responses: Vec<T>,
+    pub errors: Vec<String>,
 }
 
 pub trait Result {
     fn print_results(&self);
-    fn write_to_file(&self, path: &str);
-}
-
-impl Result for ExecuteAllResult {
-    fn print_results(&self) {
-        for attr in &self.total_attributes {
-            println!("{}", serde_json::to_string(attr).unwrap());
-        }
-    }
-
-    fn write_to_file(&self, path: &str) {
+    fn write_to_file(&self, path: &str)
+    where
+        Self: Serialize,
+    {
         let file = OpenOptions::new()
             .create(true)
             .append(true)
             .open(path)
             .unwrap();
-        serde_json::to_writer_pretty(&file, &self.total_attributes).unwrap();
+        serde_json::to_writer_pretty(&file, &self).unwrap();
     }
 }
 
-impl Result for QueryAllResult {
+impl Result for ExecuteAllResult {
     fn print_results(&self) {
-        for result in &self.query_results {
-            println!("{}", result);
+        for attr in &self.attributes {
+            println!("{}", serde_json::to_string(attr).unwrap());
         }
     }
+}
 
-    fn write_to_file(&self, path: &str) {
-        let mut file = OpenOptions::new()
-            .create(true)
-            .append(true)
-            .open(path)
-            .unwrap();
-
-        let mut idx = 0;
-
-        file.write_all("[".as_bytes()).unwrap();
-        for i in &self.query_results {
-            file.write_all(i.as_bytes()).unwrap();
-            if idx != &self.query_results.len() - 1 {
-                file.write_all(",\n".as_bytes()).unwrap();
-                idx += 1;
-            }
+impl<T> Result for QueryAllResult<T>
+where
+    T: Debug,
+{
+    fn print_results(&self) {
+        for result in &self.responses {
+            println!("{:?}", result);
         }
-        file.write_all("]".as_bytes()).unwrap();
     }
 }
