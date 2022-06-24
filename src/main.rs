@@ -17,8 +17,8 @@ const ADDR1: &str = "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111";
 const ADDR2: &str = "wasm222rvne2lz6funpxxkk6yumc8ll4l3c2e3kk222";
 const ADDR3: &str = "wasm333rvne2lz6funpxxkk6yumc8ll4l3c2e3kk333";
 
-const DEFAULT_EXECUTE_RESULT_DIR: &str = "./execute_output.json";
-const DEFAULT_QUERY_RESULT_DIR: &str = "./query_output.json";
+const DEFAULT_EXECUTE_RESULT_DIR: &str = "./execute_result.json";
+const DEFAULT_QUERY_RESULT_DIR: &str = "./query_result.json";
 
 fn main() {
     let execute_output_dir: &str = &args()
