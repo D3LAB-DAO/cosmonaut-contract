@@ -1,6 +1,6 @@
 ## How to Run
 ```shell
-cargo run -- execute_result_path.json query_result_path.json
+cargo run -- execute_result_path.json query_result_path.json lesson_num
 ```
 
-default path is "./execute_result.json", "./query_result.json"
+*** IMPORTANT: you must pass all these three arguments ***
