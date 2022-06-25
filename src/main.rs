@@ -50,9 +50,21 @@ fn main() {
     );
 
     execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3)
-        .check_answer(which_lesson, &format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json", which_lesson, which_lesson))
+        .check_answer(
+            which_lesson,
+            &format!(
+                "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
+                which_lesson, which_lesson
+            ),
+        )
         .write_to_file(execute_output_dir);
     query_all_cw721_msgs(&app, &cw721_contract_addr, ADDR1, ADDR2)
-        .check_answer(which_lesson, &format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json", which_lesson, which_lesson))
+        .check_answer(
+            which_lesson,
+            &format!(
+                "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
+                which_lesson, which_lesson
+            ),
+        )
         .write_to_file(query_output_dir);
 }
