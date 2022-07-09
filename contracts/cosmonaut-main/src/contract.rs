@@ -89,31 +89,30 @@ pub fn instantiate(
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn reply(deps: DepsMut, _env: Env, msg: Reply) -> StdResult<Response> {
     match msg.id {
-        CW20_CONTRACT_REPLY_ID => handle_instantiate_reply(deps, msg),
-        CW721_CONTRACT_REPLY_ID => handle_instantiate_reply(deps, msg),
+        CW20_CONTRACT_REPLY_ID => handle_cw20_instantiate_reply(deps, msg),
+        CW721_CONTRACT_REPLY_ID => handle_cw721_instantiate_reply(deps, msg),
         _ => Err(StdError::not_found("not found")),
     }
 }
 
-fn handle_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Response> {
+fn handle_cw20_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Response> {
     let res = parse_reply_instantiate_data(msg.clone()).unwrap();
-    match msg.id {
-        CW20_CONTRACT_REPLY_ID => {
-            CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
-                config.money_cw20_contract.addr =
-                    Some(Addr::unchecked(res.contract_address));
-                Ok(config)
-            })?;
-        }
-        CW721_CONTRACT_REPLY_ID => {
-            CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
-                config.spaceship_cw721_contract.addr =
-                    Some(Addr::unchecked(res.contract_address));
-                Ok(config)
-            })?;
-        }
-        _ => {}
-    }
+    CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
+        config.money_cw20_contract.addr =
+            Some(Addr::unchecked(res.contract_address));
+        Ok(config)
+    })?;
+    Ok(Response::new())
+}
+
+fn handle_cw721_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Response> {
+    let res = parse_reply_instantiate_data(msg.clone()).unwrap();
+
+    CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
+        config.spaceship_cw721_contract.addr =
+            Some(Addr::unchecked(res.contract_address));
+        Ok(config)
+    })?;
     Ok(Response::new())
 }
 
