@@ -25,9 +25,9 @@ overflow-checks = true
 [dependencies]
 serde = { version = "1.0.137", default-features = false, features = ["derive"] }
 cosmwasm-std = { version = "1.0.0" }
-
+schemars = "0.8.10"
 cw721-spaceship = {path="packages/cw721-spaceship"}
-cw20-money = {path="packages/cw20-money"}
+cw20 = {path= "packages/cw20" }
 main-contract = {path="packages/main-contract"}
 
 base = {path="packages/base"}

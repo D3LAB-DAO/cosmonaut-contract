@@ -13,5 +13,8 @@ cosmonaut-cw721 = {path= "../../contracts/cosmonaut-cw721", features=["library"]
 cosmonaut-main = {path="../../contracts/cosmonaut-main", features=["library"]}
 
 base = {path="../base"}
+schemars = "0.8.10"
+serde = { version = "1.0.137", default-features = false, features = ["derive"] }
+cw721-base = { version = "0.13.2", features = ["library"] }
 
 cw-multi-test = "0.13.2"

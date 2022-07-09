@@ -1,11 +1,14 @@
-use cosmwasm_std::{Addr, Attribute};
-use cw721_base::MintMsg;
-use cw_multi_test::BasicApp;
 use base::execute::execute_contract;
 use base::result::ExecuteAllResult;
 use cosmonaut_cw721::state::{Extension, Metadata};
 use cosmonaut_main::msg::ExecuteMsg;
+use cosmwasm_std::{Addr, Attribute};
+use cw721_base::MintMsg;
+use cw_multi_test::BasicApp;
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct FreightInfo {
     pub contract_addr: String,
     pub contract_id: u64,
@@ -19,9 +22,7 @@ fn create_main_contract_execute_msgs(
     recipient: &str,
     freights: Vec<FreightInfo>,
 ) -> Vec<cosmonaut_main::msg::ExecuteMsg<Extension>> {
-    let buy_money_token_msg = ExecuteMsg::BuyMoneyToken {
-        amount: 1000
-    };
+    let buy_money_token_msg = ExecuteMsg::BuyMoneyToken { amount: 1000 };
 
     let buy_nft_msg = ExecuteMsg::BuyNft {
         original_owner: admin.to_string(),
@@ -42,39 +43,15 @@ fn create_main_contract_execute_msgs(
     });
 
     let set_minter_msg = ExecuteMsg::SetMinter {
-        minter: recipient.to_string()
-    };
-
-    let buy_freight_token_msg = ExecuteMsg::BuyFreightToken {
-        denom: "oil".to_string(),
-        amount: 1000,
-    };
-
-    let add_freight_contract_msg = ExecuteMsg::AddFreightContract {
-        address: freight_contract_addr.to_string(),
-        denom: freight_denom.to_string(),
-        code_id: freight_contract_id,
-    };
-
-    let load_freight_msg = ExecuteMsg::LoadFreight {
-        token_id: freight_contract_id.to_string(),
-        denom: freight_denom.to_string(),
-        amount: 100,
-        unit_weight: 1,
-    };
-
-    let unload_freight_msg = ExecuteMsg::UnLoadFreight {
-        token_id: freight_contract_id.to_string(),
-        denom: freight_denom.to_string(),
-        amount: 50,
+        minter: recipient.to_string(),
     };
 
     let mut freight_msgs = vec![];
 
     for i in freights {
         let add_freight_contract_msg = ExecuteMsg::AddFreightContract {
-            address: i.contract_addr,
-            denom: i.denom,
+            address: i.clone().contract_addr,
+            denom: i.clone().denom,
             code_id: i.contract_id,
         };
 
@@ -85,7 +62,7 @@ fn create_main_contract_execute_msgs(
 
         let load_freight_msg = ExecuteMsg::LoadFreight {
             token_id: i.contract_id.to_string(),
-            denom: freight_denom.to_string(),
+            denom: i.clone().denom,
             amount: i.amount,
             unit_weight: i.unit_weight,
         };
@@ -100,7 +77,7 @@ fn create_main_contract_execute_msgs(
         freight_msgs.push(buy_freight_token_msg);
         freight_msgs.push(load_freight_msg);
         freight_msgs.push(unload_freight_msg);
-    };
+    }
 
     let play_game_msg = ExecuteMsg::PlayGame {
         token_id: 1.to_string(),
@@ -112,10 +89,6 @@ fn create_main_contract_execute_msgs(
         buy_nft_msg,
         mint_msg,
         set_minter_msg,
-        buy_freight_token_msg,
-        add_freight_contract_msg,
-        load_freight_msg,
-        unload_freight_msg,
         play_game_msg,
     ];
 
@@ -132,16 +105,13 @@ pub fn execute_main_all_msg(
     let mut total_attributes: Vec<Vec<Attribute>> = vec![];
     let mut total_errors: Vec<String> = vec![];
 
-    let main_execute_msgs = create_main_contract_execute_msgs(
-        admin,
-        recipient,
-        freights,
-    );
+    let main_execute_msgs = create_main_contract_execute_msgs(admin, recipient, freights);
     for msg in main_execute_msgs {
-        let execute_res = execute_contract(app, &Addr::unchecked(main_contract_addr), &msg, &[], admin);
+        let execute_res =
+            execute_contract(app, &Addr::unchecked(main_contract_addr), &msg, &[], admin);
         match execute_res {
             Ok(res) => total_attributes.push(res),
-            Err(err) => total_errors.push(err.root_cause().to_string())
+            Err(err) => total_errors.push(err.root_cause().to_string()),
         }
     }
 

@@ -2,8 +2,8 @@ use base::init::init_app;
 use base::result::Result;
 use std::env::args;
 
-use cw20_money::init::mock_cw20_contract;
-use cw20_money::instantiate::instantiate_cw20_money_contract;
+use cw20::init::mock_cw20_contract;
+use cw20::instantiate::instantiate_cw20_contract;
 
 use cw721_spaceship::execute::execute_cw721_all_msg;
 use cw721_spaceship::init::mock_cw721_contract;
@@ -38,8 +38,16 @@ fn main() {
 
     let cw721_contract_addr =
         instantiate_spaceship_nft_contract(&mut app, cw721_code_id, ADDR1, ADDR1, "cw721 nft");
-    let _cw20_contract_addr =
-        instantiate_cw20_money_contract(&mut app, cw20_code_id, ADDR1, ADDR1, "cw20 money");
+
+    let cw20_money_contract_addr =
+        instantiate_cw20_contract(&mut app, cw20_code_id, ADDR1, ADDR1, "mars", "umars", "cw20 money");
+
+    let cw20_oil_contract_addr =
+        instantiate_cw20_contract(&mut app, cw20_code_id, ADDR1, ADDR1, "oil", "uoil", "cw20 oil");
+
+    let cw20_bullet_contract_addr =
+        instantiate_cw20_contract(&mut app, cw20_code_id, ADDR1, ADDR1, "bullet", "ubullet", "cw20 bullet");
+
     let main_contract_addr = instantiate_main_contract(
         &mut app,
         main_contract_id,

@@ -337,7 +337,7 @@ mod tests {
             }
         );
 
-        let query_cw20_money_balance_res: BalanceResponse = app
+        let query_cw20_balance_res: BalanceResponse = app
             .wrap()
             .query_wasm_smart(
                 money_contract_addr.address.to_string(),
@@ -348,7 +348,7 @@ mod tests {
             .unwrap();
 
         // ADDR1 bought a nft which is 500 money token, balance is 500
-        assert_eq!(query_cw20_money_balance_res.balance, Uint128::new(500));
+        assert_eq!(query_cw20_balance_res.balance, Uint128::new(500));
 
         let approve_nft_msg: cosmonaut_cw721::msg::ExecuteMsg<Extension> =
             cosmonaut_cw721::msg::ExecuteMsg::Approve {
