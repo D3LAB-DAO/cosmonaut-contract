@@ -140,7 +140,9 @@ pub fn execute_load_freight_to_nft(
     check_is_sender_owner_of_nft(deps.as_ref(), &info.sender, &token_id)?;
 
     let burn_cw20_token_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
-        contract_addr: target_contract_addr.unwrap().address,
+        contract_addr: target_contract_addr
+            .ok_or(ContractError::TokenNotFound {})?
+            .address,
         msg: to_binary(&cosmonaut_cw20_msg::ExecuteMsg::BurnFrom {
             owner: info.sender.to_string(),
             amount: Uint128::new(amount),
@@ -157,7 +159,9 @@ pub fn execute_load_freight_to_nft(
         };
 
     let load_freight_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
-        contract_addr: config.spaceship_cw721_contract.addr.unwrap().to_string(),
+        contract_addr: config.spaceship_cw721_contract.addr
+            .ok_or(ContractError::TokenNotFound {})
+            .to_string(),
         msg: to_binary(&load_freight_msg)?,
         funds: vec![],
     });
