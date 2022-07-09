@@ -52,10 +52,7 @@ pub fn instantiate(
                 name: "MARS".to_string(),
                 symbol: "mars".to_string(),
                 decimals: 6,
-                initial_balances: vec![Cw20Coin {
-                    address: info.sender.to_string(),
-                    amount: Uint128::zero(),
-                }],
+                initial_balances: vec![],
                 mint: Some(MinterResponse {
                     minter: env.contract.address.to_string(),
                     cap: None,
