@@ -4,10 +4,7 @@ use crate::state::{FreightContractInfo, CONFIG};
 use cosmonaut_cw20::msg as cosmonaut_cw20_msg;
 use cosmonaut_cw721::msg as cosmonaut_cw721_msg;
 use cosmonaut_cw721::state::{Extension, Metadata};
-use cosmwasm_std::{
-    coin, to_binary, Addr, CosmosMsg, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
-    Uint128, WasmMsg,
-};
+use cosmwasm_std::{coin, to_binary, Addr, CosmosMsg, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint128, WasmMsg, ContractInfoResponse, QueryRequest, WasmQuery};
 use cw721::{Cw721QueryMsg, NftInfoResponse, OwnerOfResponse};
 use cw721_base::{MintMsg, QueryMsg};
 use std::ops::{Add, Div, Rem};
@@ -227,7 +224,6 @@ pub fn execute_add_freight_contract(
     deps: DepsMut,
     address: String,
     denom: String,
-    code_id: u64,
 ) -> Result<Response, ContractError> {
     let config = CONFIG.load(deps.storage)?;
 
@@ -238,6 +234,12 @@ pub fn execute_add_freight_contract(
     {
         return Err(ContractError::DuplicatedContract {});
     }
+
+    let freight_info: ContractInfoResponse = deps.querier.query(&QueryRequest::Wasm(
+        WasmQuery::ContractInfo { contract_addr: address.clone() }
+    )).map_err(ContractError::TokenNotFound {})?;
+
+    let code_id = freight_info.code_id;
 
     CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
         config.freight_contracts.push(FreightContractInfo {

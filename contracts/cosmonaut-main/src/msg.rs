@@ -36,7 +36,6 @@ pub enum ExecuteMsg<T> {
     AddFreightContract {
         address: String,
         denom: String,
-        code_id: u64,
     },
     LoadFreight {
         token_id: String,

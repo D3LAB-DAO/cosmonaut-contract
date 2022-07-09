@@ -121,8 +121,7 @@ pub fn execute(
         ExecuteMsg::AddFreightContract {
             address,
             denom,
-            code_id,
-        } => execute::execute_add_freight_contract(deps, address, denom, code_id),
+        } => execute::execute_add_freight_contract(deps, address, denom),
 
         ExecuteMsg::BuyNft {
             nft_id,
