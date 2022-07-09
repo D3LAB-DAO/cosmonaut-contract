@@ -51,15 +51,6 @@ pub fn execute_buy_spaceship(
         },
     )?;
 
-    let money_token_info: cosmonaut_cw20_msg::TokenInfoResponse = deps.querier.query_wasm_smart(
-        config.money_cw20_contract.addr.as_ref().unwrap(),
-        &cosmonaut_cw20::msg::QueryMsg::TokenInfo {},
-    )?;
-
-    if money_token_info.symbol != nft_info.extension.unit_denom {
-        return Err(ContractError::InvalidToken {});
-    }
-
     let token_balance: cosmonaut_cw20_msg::BalanceResponse = deps.querier.query_wasm_smart(
         config.money_cw20_contract.addr.as_ref().unwrap(),
         &cosmonaut_cw20_msg::QueryMsg::Balance {
@@ -275,11 +266,11 @@ fn check_is_sender_owner_of_nft(
 
     if owner_of_query_res.owner != *sender
         && owner_of_query_res
-            .approvals
-            .into_iter()
-            .filter(|a| a.spender == *sender)
-            .count()
-            == 0
+        .approvals
+        .into_iter()
+        .filter(|a| a.spender == *sender)
+        .count()
+        == 0
     {
         return Err(ContractError::Unauthorized {});
     }
@@ -405,7 +396,7 @@ pub fn execute_play_game(
         random_number = timestamp_int_nanos.rem(Uint128::new(MAX_FREIGHT_WEIGHT));
         spaceship_speed = Uint128::new(MAX_FREIGHT_WEIGHT)
             - Uint128::new(MAX_FREIGHT_WEIGHT)
-                .multiply_ratio(total_freight_weight, MAX_FREIGHT_WEIGHT);
+            .multiply_ratio(total_freight_weight, MAX_FREIGHT_WEIGHT);
         if random_number > spaceship_speed {
             decrease_value = decrease_value.add(step)
         }
