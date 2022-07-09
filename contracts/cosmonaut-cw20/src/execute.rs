@@ -8,7 +8,7 @@ use cosmwasm_std::{
 use cw20::Cw20ReceiveMsg;
 use cw_utils::Expiration;
 
-pub fn execute_transfer(
+pub fn transfer(
     deps: DepsMut,
     sender: Addr,
     recipient: String,
@@ -45,7 +45,7 @@ pub fn execute_transfer(
         .add_attribute("amount", amount.to_string()))
 }
 
-pub fn execute_send(
+pub fn send(
     deps: DepsMut,
     sender: Addr,
     contract: String,
@@ -89,7 +89,7 @@ pub fn execute_send(
         .add_message(contract_msg))
 }
 
-pub fn execute_mint(
+pub fn mint(
     deps: DepsMut,
     sender: Addr,
     recipient: String,
@@ -131,7 +131,7 @@ pub fn execute_mint(
         .add_attribute("amount", amount.to_string()))
 }
 
-pub fn execute_increase_allowance(
+pub fn increase_allowance(
     deps: DepsMut,
     owner: Addr,
     spender: String,
@@ -168,7 +168,7 @@ pub fn execute_increase_allowance(
         .add_attribute("amount", amount.to_string()))
 }
 
-pub fn execute_decrease_allowance(
+pub fn decrease_allowance(
     deps: DepsMut,
     owner: Addr,
     spender: String,
@@ -206,7 +206,7 @@ pub fn execute_decrease_allowance(
         .add_attribute("amount", amount.to_string()))
 }
 
-pub fn execute_transfer_from(
+pub fn transfer_from(
     deps: DepsMut,
     env: Env,
     info: MessageInfo,
@@ -257,7 +257,7 @@ fn deduct_allowance(
     })
 }
 
-pub fn execute_burn(
+pub fn burn(
     deps: DepsMut,
     _env: Env,
     info: MessageInfo,
@@ -282,7 +282,7 @@ pub fn execute_burn(
         .add_attribute("amount", amount))
 }
 
-pub fn execute_burn_from(
+pub fn burn_from(
     deps: DepsMut,
     env: Env,
     info: MessageInfo,
