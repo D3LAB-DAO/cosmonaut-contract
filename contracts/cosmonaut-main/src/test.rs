@@ -80,7 +80,7 @@ mod tests {
                 &instantiate_msg,
                 &[],
                 "main contract",
-                Option::from(ADDR1.to_string()),
+                Some(ADDR1.to_string()),
             )
             .unwrap();
 
@@ -118,7 +118,7 @@ mod tests {
                     symbol: "oil".to_string(),
                     decimals: 6,
                     initial_balances: vec![],
-                    mint: Option::from(MinterResponse {
+                    mint: Some(MinterResponse {
                         minter: contract_addr.to_string(),
                         cap: None,
                     }),
@@ -127,7 +127,7 @@ mod tests {
                 },
                 &[],
                 "main contract",
-                Option::from(ADDR1.to_string()),
+                Some(ADDR1.to_string()),
             )
             .unwrap();
 
@@ -149,10 +149,10 @@ mod tests {
             token_id: "1".to_string(),
             owner: contract_addr.to_string(),
             token_uri: None,
-            extension: Option::from(Metadata {
+            extension: Some(Metadata {
                 unit_denom: "mars".to_string(),
                 price: 500,
-                name: Option::from("Spaceship".to_string()),
+                name: Some("Spaceship".to_string()),
                 freight: vec![],
                 health: 30,
             }),
@@ -226,7 +226,7 @@ mod tests {
 
         let query_nft_msg = cw721::Cw721QueryMsg::OwnerOf {
             token_id: "1".to_string(),
-            include_expired: Option::from(false),
+            include_expired: Some(false),
         };
 
         let owner_of_1_res: cw721::OwnerOfResponse = app
@@ -280,7 +280,7 @@ mod tests {
             Metadata {
                 unit_denom: "mars".to_string(),
                 price: 500,
-                name: Option::from("Spaceship".to_string()),
+                name: Some("Spaceship".to_string()),
                 freight: vec![Freight {
                     denom: "oil".to_string(),
                     amount: Uint128::new(1000),

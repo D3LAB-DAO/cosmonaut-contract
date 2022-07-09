@@ -273,7 +273,7 @@ pub fn execute_burn(
 
     TOKEN_INFO.update(deps.storage, |mut info| -> StdResult<_> {
         info.total_supply =
-            Option::from(info.total_supply.unwrap_or_default().checked_sub(amount)?);
+            Some(info.total_supply.unwrap_or_default().checked_sub(amount)?);
         Ok(info)
     })?;
 

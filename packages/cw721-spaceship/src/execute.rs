@@ -17,10 +17,10 @@ fn create_cw721_execute_msgs(
         token_id: "1".to_string(),
         owner: admin.to_string(),
         token_uri: None,
-        extension: Option::from(Metadata {
+        extension: Some(Metadata {
             unit_denom: "mars".to_string(),
             price: 500,
-            name: Option::from("cosmonaut spaceship".to_string()),
+            name: Some("cosmonaut spaceship".to_string()),
             freight: vec![],
             health: 10,
         }),

@@ -19,7 +19,7 @@ pub fn instantiate_cw20_contract(
         symbol: symbol.to_string(),
         decimals: 6,
         initial_balances: vec![],
-        mint: Option::from(MinterResponse {
+        mint: Some(MinterResponse {
             minter: admin.to_string(),
             cap: None,
         }),

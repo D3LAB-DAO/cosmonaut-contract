@@ -269,7 +269,7 @@ fn check_is_sender_owner_of_nft(
         config.spaceship_cw721_contract.addr.as_ref().unwrap(),
         &QueryMsg::OwnerOf {
             token_id: token_id.to_string(),
-            include_expired: Option::from(false),
+            include_expired: Some(false),
         },
     )?;
 

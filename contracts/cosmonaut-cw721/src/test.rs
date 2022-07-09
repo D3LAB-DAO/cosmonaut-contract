@@ -42,10 +42,10 @@ mod tests {
         let mint_msg = MintMsg {
             token_id: "1".to_string(),
             owner: owner.to_string(),
-            token_uri: Option::from(
+            token_uri: Some(
                 "https://docs.cosmwasm.com/cw-plus/0.9.0/cw721/spec".to_string(),
             ),
-            extension: Option::from(metadata),
+            extension: Some(metadata),
         };
 
         let execute_mint_msg = ExecuteMsg::Mint(mint_msg);
@@ -110,7 +110,7 @@ mod tests {
         let approve_msg: ExecuteMsg<Extension> = ExecuteMsg::Approve {
             spender: STRANGER.to_string(),
             token_id: "1".to_string(),
-            expires: Option::from(Expiration::AtHeight(20000)),
+            expires: Some(Expiration::AtHeight(20000)),
         };
         execute(
             deps.as_mut(),
@@ -150,7 +150,7 @@ mod tests {
         let approve_msg: ExecuteMsg<Extension> = ExecuteMsg::Approve {
             spender: STRANGER.to_string(),
             token_id: "1".to_string(),
-            expires: Option::from(Expiration::AtHeight(20000)),
+            expires: Some(Expiration::AtHeight(20000)),
         };
         execute(
             deps.as_mut(),
@@ -194,7 +194,7 @@ mod tests {
 
         let approve_all_msg = ExecuteMsg::ApproveAll {
             operator: STRANGER.to_string(),
-            expires: Option::from(Expiration::AtHeight(20000)),
+            expires: Some(Expiration::AtHeight(20000)),
         };
 
         let approve_all_res = execute(
@@ -249,7 +249,7 @@ mod tests {
         let approve_msg = ExecuteMsg::Approve {
             spender: STRANGER.to_string(),
             token_id: "1".to_string(),
-            expires: Option::from(Expiration::AtHeight(20000)),
+            expires: Some(Expiration::AtHeight(20000)),
         };
 
         execute(
@@ -263,7 +263,7 @@ mod tests {
         let approve_msg2 = ExecuteMsg::Approve {
             spender: STRANGER2.to_string(),
             token_id: "1".to_string(),
-            expires: Option::from(Expiration::AtHeight(18000)),
+            expires: Some(Expiration::AtHeight(18000)),
         };
 
         execute(
@@ -276,7 +276,7 @@ mod tests {
 
         let query_owner_msg = QueryMsg::OwnerOf {
             token_id: "1".to_string(),
-            include_expired: Option::from(true),
+            include_expired: Some(true),
         };
 
         let query_res_bin = query(deps.as_ref(), mock_env(), query_owner_msg).unwrap();
@@ -301,7 +301,7 @@ mod tests {
 
         let query_approvals_msg = QueryMsg::Approvals {
             token_id: "1".to_string(),
-            include_expired: Option::from(true),
+            include_expired: Some(true),
         };
 
         let query_approvals_res_bin =
@@ -346,7 +346,7 @@ mod tests {
             NftInfoResponse {
                 token_uri: Some("https://docs.cosmwasm.com/cw-plus/0.9.0/cw721/spec".to_string()),
 
-                extension: Option::from(Metadata {
+                extension: Some(Metadata {
                     unit_denom: "mars".to_string(),
                     price: 1000,
                     name: None,

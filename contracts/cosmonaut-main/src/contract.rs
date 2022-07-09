@@ -46,7 +46,7 @@ pub fn instantiate(
 
     let instantiate_cw20_contract: SubMsg = SubMsg::reply_on_success(
         WasmMsg::Instantiate {
-            admin: Option::from(info.sender.to_string()),
+            admin: Some(info.sender.to_string()),
             code_id: msg.money_cw20_contract.code_id,
             msg: to_binary(&Cw20InstantiateMsg {
                 name: "MARS".to_string(),
@@ -56,7 +56,7 @@ pub fn instantiate(
                     address: info.sender.to_string(),
                     amount: Uint128::zero(),
                 }],
-                mint: Option::from(MinterResponse {
+                mint: Some(MinterResponse {
                     minter: env.contract.address.to_string(),
                     cap: None,
                 }),
@@ -70,7 +70,7 @@ pub fn instantiate(
 
     let instantiate_cw721_contract: SubMsg = SubMsg::reply_on_success(
         WasmMsg::Instantiate {
-            admin: Option::from(info.sender.to_string()),
+            admin: Some(info.sender.to_string()),
             code_id: msg.spaceship_cw721_contract.code_id,
             msg: to_binary(&Cw721InstantiateMsg {
                 name: "spaceship".to_string(),
@@ -104,14 +104,14 @@ fn handle_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Response> {
         CW20_CONTRACT_REPLY_ID => {
             CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
                 config.money_cw20_contract.addr =
-                    Option::from(Addr::unchecked(res.contract_address));
+                    Some(Addr::unchecked(res.contract_address));
                 Ok(config)
             })?;
         }
         CW721_CONTRACT_REPLY_ID => {
             CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
                 config.spaceship_cw721_contract.addr =
-                    Option::from(Addr::unchecked(res.contract_address));
+                    Some(Addr::unchecked(res.contract_address));
                 Ok(config)
             })?;
         }

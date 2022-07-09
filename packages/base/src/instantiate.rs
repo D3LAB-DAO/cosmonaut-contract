@@ -20,7 +20,7 @@ where
         &msg,
         &[],
         label,
-        Option::from(admin.to_string()),
+        Some(admin.to_string()),
     )
     .unwrap()
 }

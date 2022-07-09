@@ -42,7 +42,7 @@ pub fn instantiate(
         symbol: msg.symbol,
         decimals: msg.decimals,
         mint: Some(minter_data.clone()),
-        total_supply: Option::from(Uint128::new(msg.total_supply.unwrap_or(0))),
+        total_supply: Some(Uint128::new(msg.total_supply.unwrap_or(0))),
     };
 
     let initial_balances = msg.initial_balances;
