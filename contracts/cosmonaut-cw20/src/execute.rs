@@ -14,10 +14,6 @@ pub fn transfer(
     recipient: String,
     amount: Uint128,
 ) -> Result<Response, ContractError> {
-    if sender == recipient {
-        return Err(ContractError::SameAddress {});
-    }
-
     let sender_balance = BALANCES.load(deps.storage, &sender)?;
     if sender_balance < amount {
         return Err(ContractError::NotEnoughBalance {
