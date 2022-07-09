@@ -1,3 +1,4 @@
+use cosmwasm_std::Addr;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -13,8 +14,8 @@ pub struct FreightContractInfo {
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct Config {
-    pub spaceship_cw721_contract: ContractInitInfo,
-    pub money_cw20_contract: ContractInitInfo,
+    pub spaceship_cw721_contract: Addr,
+    pub money_cw20_contract: Addr,
     pub freight_contracts: Vec<FreightContractInfo>,
 }
 
