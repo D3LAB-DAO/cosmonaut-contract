@@ -39,14 +39,35 @@ fn main() {
     let cw721_contract_addr =
         instantiate_spaceship_nft_contract(&mut app, cw721_code_id, ADDR1, ADDR1, "cw721 nft");
 
-    let cw20_money_contract_addr =
-        instantiate_cw20_contract(&mut app, cw20_code_id, ADDR1, ADDR1, "mars", "umars", "cw20 money");
+    let cw20_money_contract_addr = instantiate_cw20_contract(
+        &mut app,
+        cw20_code_id,
+        ADDR1,
+        ADDR1,
+        "mars",
+        "umars",
+        "cw20 money",
+    );
 
-    let cw20_oil_contract_addr =
-        instantiate_cw20_contract(&mut app, cw20_code_id, ADDR1, ADDR1, "oil", "uoil", "cw20 oil");
+    let cw20_oil_contract_addr = instantiate_cw20_contract(
+        &mut app,
+        cw20_code_id,
+        ADDR1,
+        ADDR1,
+        "oil",
+        "uoil",
+        "cw20 oil",
+    );
 
-    let cw20_bullet_contract_addr =
-        instantiate_cw20_contract(&mut app, cw20_code_id, ADDR1, ADDR1, "bullet", "ubullet", "cw20 bullet");
+    let cw20_bullet_contract_addr = instantiate_cw20_contract(
+        &mut app,
+        cw20_code_id,
+        ADDR1,
+        ADDR1,
+        "bullet",
+        "ubullet",
+        "cw20 bullet",
+    );
 
     let main_contract_addr = instantiate_main_contract(
         &mut app,

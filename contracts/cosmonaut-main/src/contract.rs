@@ -1,16 +1,12 @@
 use crate::error::ContractError;
-use crate::execute::{
-    execute_add_freight_contract, execute_buy_freight_token, execute_buy_money_token,
-    execute_buy_spaceship, execute_load_freight_to_nft, execute_mint_to_cw721_contract,
-    execute_play_game, execute_set_minter_to_cw721_contract, execute_unload_freight_from_nft,
-};
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
-use crate::query::query_money_contract;
 use crate::state::{Config, CONFIG};
+use crate::{execute, query};
 use cosmonaut_cw721::state::Extension;
 
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
+use cosmwasm_std::WasmMsg::Execute;
 use cosmwasm_std::{
     to_binary, Addr, Binary, Deps, DepsMut, Env, MessageInfo, Reply, Response, StdError, StdResult,
     SubMsg, Uint128, WasmMsg,
@@ -98,8 +94,7 @@ pub fn reply(deps: DepsMut, _env: Env, msg: Reply) -> StdResult<Response> {
 fn handle_cw20_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Response> {
     let res = parse_reply_instantiate_data(msg.clone()).unwrap();
     CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
-        config.money_cw20_contract.addr =
-            Some(Addr::unchecked(res.contract_address));
+        config.money_cw20_contract.addr = Some(Addr::unchecked(res.contract_address));
         Ok(config)
     })?;
     Ok(Response::new())
@@ -109,8 +104,7 @@ fn handle_cw721_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Respon
     let res = parse_reply_instantiate_data(msg.clone()).unwrap();
 
     CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
-        config.spaceship_cw721_contract.addr =
-            Some(Addr::unchecked(res.contract_address));
+        config.spaceship_cw721_contract.addr = Some(Addr::unchecked(res.contract_address));
         Ok(config)
     })?;
     Ok(Response::new())
@@ -128,39 +122,45 @@ pub fn execute(
             address,
             denom,
             code_id,
-        } => execute_add_freight_contract(deps, address, denom, code_id),
+        } => execute::execute_add_freight_contract(deps, address, denom, code_id),
 
         ExecuteMsg::BuyNft {
             nft_id,
             original_owner,
-        } => execute_buy_spaceship(deps, info, nft_id, original_owner),
+        } => execute::execute_buy_spaceship(deps, info, nft_id, original_owner),
 
-        ExecuteMsg::Mint(mint_msg) => execute_mint_to_cw721_contract(deps, info, mint_msg),
+        ExecuteMsg::Mint(mint_msg) => execute::execute_mint_to_cw721_contract(deps, info, mint_msg),
 
-        ExecuteMsg::SetMinter { minter } => execute_set_minter_to_cw721_contract(deps, minter),
+        ExecuteMsg::SetMinter { minter } => {
+            execute::execute_set_minter_to_cw721_contract(deps, minter)
+        }
 
         ExecuteMsg::LoadFreight {
             token_id,
             denom,
             amount,
             unit_weight,
-        } => execute_load_freight_to_nft(deps, info, token_id, denom, amount, unit_weight),
+        } => execute::execute_load_freight_to_nft(deps, info, token_id, denom, amount, unit_weight),
         ExecuteMsg::UnLoadFreight {
             token_id,
             denom,
             amount,
-        } => execute_unload_freight_from_nft(deps, info, token_id, denom, amount),
-        ExecuteMsg::BuyMoneyToken { amount } => execute_buy_money_token(deps, info, amount),
-        ExecuteMsg::BuyFreightToken { denom, amount } => {
-            execute_buy_freight_token(deps, info, denom, amount)
+        } => execute::execute_unload_freight_from_nft(deps, info, token_id, denom, amount),
+        ExecuteMsg::BuyMoneyToken { amount } => {
+            execute::execute_buy_money_token(deps, info, amount)
         }
-        ExecuteMsg::PlayGame { token_id, epoch } => execute_play_game(deps, env, token_id, epoch),
+        ExecuteMsg::BuyFreightToken { denom, amount } => {
+            execute::execute_buy_freight_token(deps, info, denom, amount)
+        }
+        ExecuteMsg::PlayGame { token_id, epoch } => {
+            execute::execute_play_game(deps, env, token_id, epoch)
+        }
     }
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
-        QueryMsg::MoneyContract {} => query_money_contract(deps),
+        QueryMsg::MoneyContract {} => query::query_money_contract(deps),
     }
 }

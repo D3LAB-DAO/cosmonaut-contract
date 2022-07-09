@@ -42,9 +42,7 @@ mod tests {
         let mint_msg = MintMsg {
             token_id: "1".to_string(),
             owner: owner.to_string(),
-            token_uri: Some(
-                "https://docs.cosmwasm.com/cw-plus/0.9.0/cw721/spec".to_string(),
-            ),
+            token_uri: Some("https://docs.cosmwasm.com/cw-plus/0.9.0/cw721/spec".to_string()),
             extension: Some(metadata),
         };
 
