@@ -270,13 +270,10 @@ fn check_is_sender_owner_of_nft(
         },
     )?;
 
-    if owner_of_query_res.owner != *sender
-        && owner_of_query_res
+    if !owner_of_query_res
         .approvals
         .into_iter()
-        .filter(|a| a.spender == *sender)
-        .count()
-        == 0
+        .any(|a| a.spender == *sender)
     {
         return Err(ContractError::Unauthorized {});
     }
