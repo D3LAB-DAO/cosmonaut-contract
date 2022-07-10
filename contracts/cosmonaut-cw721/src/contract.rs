@@ -36,7 +36,7 @@ pub fn execute(
     deps: DepsMut,
     env: Env,
     info: MessageInfo,
-    msg: ExecuteMsg<Extension>,
+    msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
     let cosmonaut_contract = Cw721Contract::default();
 

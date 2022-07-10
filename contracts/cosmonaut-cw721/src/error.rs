@@ -1,3 +1,4 @@
+use std::convert::TryFrom;
 use cosmwasm_std::StdError;
 use cw721_base::ContractError as Cw721ContractError;
 use thiserror::Error;
@@ -29,16 +30,18 @@ pub enum ContractError {
     ApprovalNotFound { spender: String },
 }
 
-impl From<Cw721ContractError> for ContractError {
-    fn from(err: Cw721ContractError) -> Self {
+impl TryFrom<Cw721ContractError> for ContractError {
+    type Error = ContractError;
+
+    fn try_from(err: Cw721ContractError) -> Result<Self, Self::Error> {
         match err {
-            Cw721ContractError::Unauthorized {} => ContractError::Unauthorized {},
-            Cw721ContractError::Claimed {} => ContractError::Claimed {},
-            Cw721ContractError::Expired {} => ContractError::Expired {},
+            Cw721ContractError::Unauthorized {} => Ok(ContractError::Unauthorized {}),
+            Cw721ContractError::Claimed {} => Ok(ContractError::Claimed {}),
+            Cw721ContractError::Expired {} => Ok(ContractError::Expired {}),
             Cw721ContractError::ApprovalNotFound { spender } => {
-                ContractError::ApprovalNotFound { spender }
+                Ok(ContractError::ApprovalNotFound { spender })
             }
-            _ => ContractError::Unimplemented {},
+            _ => Err(ContractError::Unimplemented {}),
         }
     }
 }

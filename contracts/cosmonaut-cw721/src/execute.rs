@@ -1,3 +1,4 @@
+use std::convert::TryFrom;
 use crate::msg::ExecuteMsg;
 use crate::state::{Extension, Freight};
 use crate::ContractError;
@@ -11,7 +12,7 @@ pub trait BaseExecute {
         deps: DepsMut,
         env: Env,
         info: MessageInfo,
-        msg: ExecuteMsg<Extension>,
+        msg: ExecuteMsg,
     ) -> Result<Response, ContractError>;
 }
 
@@ -21,13 +22,13 @@ impl<'a> BaseExecute for Cw721Contract<'a, Extension, Empty> {
         deps: DepsMut,
         env: Env,
         info: MessageInfo,
-        msg: ExecuteMsg<Extension>,
+        msg: ExecuteMsg,
     ) -> Result<Response, ContractError> {
         let cw721_msg = msg.into();
         let execute_res = self.execute(deps, env, info, cw721_msg);
         match execute_res {
             Ok(res) => Ok(res),
-            Err(err) => Err(ContractError::from(err)),
+            Err(err) => Err(ContractError::try_from(err)?),
         }
     }
 }
