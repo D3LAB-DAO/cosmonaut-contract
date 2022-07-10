@@ -117,7 +117,8 @@ dependencies = [
  "base",
  "cosmwasm-schema",
  "cosmwasm-std",
- "cw20 0.1.0",
+ "cw20",
+ "cw20-tokens",
  "cw721-spaceship",
  "main-contract",
  "schemars",
@@ -134,7 +135,7 @@ dependencies = [
  "cw-storage-plus 0.13.4",
  "cw-utils",
  "cw2",
- "cw20 0.13.4",
+ "cw20",
  "cw20-base",
  "schemars",
  "serde",
@@ -172,7 +173,7 @@ dependencies = [
  "cw-storage-plus 0.13.4",
  "cw-utils",
  "cw2",
- "cw20 0.13.4",
+ "cw20",
  "cw20-base",
  "cw721",
  "cw721-base",
@@ -357,18 +358,6 @@ dependencies = [
 
 [[package]]
 name = "cw20"
-version = "0.1.0"
-dependencies = [
- "base",
- "cosmonaut-cw20",
- "cosmonaut-cw721",
- "cosmonaut-main",
- "cosmwasm-std",
- "cw-multi-test",
-]
-
-[[package]]
-name = "cw20"
 version = "0.13.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4cb782b8f110819a4eb5dbbcfed25ffba49ec16bbe32b4ad8da50a5ce68fec05"
@@ -389,10 +378,23 @@ dependencies = [
  "cw-storage-plus 0.13.4",
  "cw-utils",
  "cw2",
- "cw20 0.13.4",
+ "cw20",
  "schemars",
  "serde",
  "thiserror",
+]
+
+[[package]]
+name = "cw20-tokens"
+version = "0.1.0"
+dependencies = [
+ "base",
+ "cosmonaut-cw20",
+ "cosmonaut-cw721",
+ "cosmonaut-main",
+ "cosmwasm-std",
+ "cw-multi-test",
+ "cw20",
 ]
 
 [[package]]

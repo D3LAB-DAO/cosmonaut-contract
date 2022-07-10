@@ -1,8 +1,24 @@
 use cosmwasm_std::{Addr, Uint128};
+use cw20::Cw20Coin;
 use cw721_base::MintMsg;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use cosmonaut_cw20::msg::MinterResponse;
 use cosmonaut_cw721::state::Extension;
+use crate::state::Config;
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub struct Cw20InstantiateMsg {
+    pub name: String,
+    pub symbol: String,
+    pub decimals: u8,
+    pub initial_balances: Vec<Cw20Coin>,
+    pub mint: Option<MinterResponse>,
+    pub marketing: Option<String>,
+    pub total_supply: Uint128,
+    pub unit_weight: Option<Uint128>,
+}
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {
@@ -56,6 +72,7 @@ pub enum ExecuteMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum QueryMsg {
+    Config {},
     MoneyContract {},
 }
 
@@ -63,3 +80,10 @@ pub enum QueryMsg {
 pub struct MoneyContractResponse {
     pub address: Addr,
 }
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct ConfigResponse {
+    pub config: Config,
+}
+
+

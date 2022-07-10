@@ -99,7 +99,7 @@ pub fn execute_load_freight(
     let mut token = contract.tokens.load(deps.storage, &token_id)?;
     let mut extension = token.extension;
 
-    // iterate freight to find target cw20 by denom
+    // iterate freight to find target cw20-tokens by denom
     let candidate_idx = extension.freight.iter().position(|l| l.denom == denom);
     // if there is token with given denom
     if let Some(idx) = candidate_idx {

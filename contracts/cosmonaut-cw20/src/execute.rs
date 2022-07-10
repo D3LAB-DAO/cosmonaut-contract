@@ -94,9 +94,9 @@ pub fn mint(
     if amount == Uint128::zero() {
         return Err(ContractError::InvalidZeroAmount {});
     }
-
     let token_info = TOKEN_INFO.load(deps.storage)?;
     let minter_data = token_info.mint.as_ref().unwrap();
+
     if minter_data.minter != sender {
         return Err(ContractError::Unauthorized {});
     }

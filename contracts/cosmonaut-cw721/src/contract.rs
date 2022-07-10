@@ -42,14 +42,14 @@ pub fn execute(
 
     match msg {
         ExecuteMsg::SetMinter { minter } => ExecHandler::execute_set_minter(deps, info, minter),
-        // msg to load cw20 token data on nft
+        // msg to load cw20-tokens token data on nft
         ExecuteMsg::LoadFreight {
             token_id,
             denom,
             amount,
             unit_weight,
         } => ExecHandler::execute_load_freight(deps, token_id, denom, amount, unit_weight),
-        // msg to unload cw20 token data on nft
+        // msg to unload cw20-tokens token data on nft
         ExecuteMsg::UnloadFreight {
             token_id,
             denom,

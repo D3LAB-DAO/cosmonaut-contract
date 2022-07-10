@@ -8,7 +8,6 @@ use cw_storage_plus::Item;
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct FreightContractInfo {
     pub address: String,
-    pub code_id: u64,
     pub denom: String,
 }
 

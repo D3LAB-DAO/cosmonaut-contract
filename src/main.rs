@@ -2,9 +2,10 @@ use base::init::init_app;
 use base::result::Result;
 use std::env::args;
 use cosmwasm_std::Uint128;
+use cw20::Cw20Coin;
 
-use cw20::init::mock_cw20_contract;
-use cw20::instantiate::instantiate_cw20_contract;
+use cw20_tokens::init::mock_cw20_contract;
+use cw20_tokens::instantiate::instantiate_cw20_contract;
 
 use cw721_spaceship::execute::execute_cw721_all_msg;
 use cw721_spaceship::init::mock_cw721_contract;
@@ -40,38 +41,6 @@ fn main() {
     let cw721_contract_addr =
         instantiate_spaceship_nft_contract(&mut app, cw721_code_id, ADDR1, ADDR1, "cw721 nft");
 
-    let cw20_money_contract_addr = instantiate_cw20_contract(
-        &mut app,
-        cw20_code_id,
-        ADDR1,
-        ADDR1,
-        "mars",
-        "umars",
-        None,
-        "cw20 money",
-    );
-
-    let cw20_oil_contract_addr = instantiate_cw20_contract(
-        &mut app,
-        cw20_code_id,
-        ADDR1,
-        ADDR1,
-        "oil",
-        "uoil",
-        Some(Uint128::new(1)),
-        "cw20 oil",
-    );
-
-    let cw20_bullet_contract_addr = instantiate_cw20_contract(
-        &mut app,
-        cw20_code_id,
-        ADDR1,
-        ADDR1,
-        "bullet",
-        "ubullet",
-        Some(Uint128::new(2)),
-        "cw20 bullet",
-    );
 
     let main_contract_addr = instantiate_main_contract(
         &mut app,
@@ -83,26 +52,50 @@ fn main() {
         "main contract",
     );
 
-    execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3)
-        .check_answer(
-            which_lesson,
-            &format!(
-                "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
-                which_lesson, which_lesson
-            ),
-        )
-        .write_to_file(execute_output_dir);
-    query_all_cw721_msgs(&app, &cw721_contract_addr, ADDR1, ADDR2)
-        .check_answer(
-            which_lesson,
-            &format!(
-                "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
-                which_lesson, which_lesson
-            ),
-        )
-        .write_to_file(query_output_dir);
+    let cw20_oil_contract_addr = instantiate_cw20_contract(
+        &mut app,
+        cw20_code_id,
+        ADDR1,
+        main_contract_addr.as_ref(),
+        "oil",
+        "uoil",
+        vec![Cw20Coin { address: ADDR1.to_string(), amount: Uint128::new(10000000) }],
+        Some(Uint128::new(1)),
+        "cw20-tokens oil",
+    );
 
-    execute_main_all_msg(
+    let cw20_bullet_contract_addr = instantiate_cw20_contract(
+        &mut app,
+        cw20_code_id,
+        ADDR1,
+        main_contract_addr.as_ref(),
+        "bullet",
+        "ubullet",
+        vec![Cw20Coin { address: ADDR1.to_string(), amount: Uint128::new(10000000) }],
+        Some(Uint128::new(2)),
+        "cw20-tokens bullet",
+    );
+
+    // println!("{:?}", execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3));
+    // .check_answer(
+    //     which_lesson,
+    //     &format!(
+    //         "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
+    //         which_lesson, which_lesson
+    //     ),
+    // )
+    // .write_to_file(execute_output_dir);
+    // println!("{:?}", query_all_cw721_msgs(&app, &cw721_contract_addr, ADDR1, ADDR2));
+    //     .check_answer(
+    //         which_lesson,
+    //         &format!(
+    //             "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
+    //             which_lesson, which_lesson
+    //         ),
+    //     )
+    //     .write_to_file(query_output_dir);
+    //
+    let a = execute_main_all_msg(
         &mut app,
         main_contract_addr.as_ref(),
         vec![
@@ -117,13 +110,14 @@ fn main() {
         ],
         ADDR1,
         ADDR2,
-    )
-        .check_answer(
-            which_lesson,
-            &format!(
-                "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
-                which_lesson, which_lesson
-            ),
-        )
-        .write_to_file(execute_output_dir)
+    );
+    println!("{:?}", a);
+    //     .check_answer(
+    //         which_lesson,
+    //         &format!(
+    //             "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
+    //             which_lesson, which_lesson
+    //         ),
+    //     )
+    //     .write_to_file(execute_output_dir)
 }

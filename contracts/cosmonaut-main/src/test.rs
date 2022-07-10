@@ -321,7 +321,7 @@ mod tests {
             .wrap()
             .query_balance(Addr::unchecked(contract_addr.clone()), "uatom")
             .unwrap();
-        // ADDR1 bought 2000 cw20 money token with 2000 atom, main contract's atom balance is 2000
+        // ADDR1 bought 2000 cw20-tokens money token with 2000 atom, main contract's atom balance is 2000
         assert_eq!(
             query_balance_of_main_contract,
             Coin {

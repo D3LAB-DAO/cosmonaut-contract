@@ -53,6 +53,7 @@ pub fn execute_buy_spaceship(
         },
     )?;
 
+
     if token_balance.balance.u128() < nft_info.extension.price {
         return Err(ContractError::NotEnoughToken {});
     }
@@ -228,18 +229,12 @@ pub fn execute_add_freight_contract(
     let freight_info: cosmonaut_cw20::msg::TokenInfoResponse = deps.querier.query_wasm_smart(address.clone(), &cosmonaut_cw20::msg::QueryMsg::TokenInfo {})?;
     let denom = freight_info.symbol;
 
-    let freight_info: ContractInfoResponse = deps.querier.query(&QueryRequest::Wasm(
-        WasmQuery::ContractInfo { contract_addr: address.clone() }
-    ))?;
-
-    let code_id = freight_info.code_id;
-
     let config = CONFIG.load(deps.storage)?;
 
     if config
         .freight_contracts
         .into_iter()
-        .any(|c| c.denom == denom || c.code_id == code_id)
+        .any(|c| c.denom == denom)
     {
         return Err(ContractError::DuplicatedContract {});
     }
@@ -248,7 +243,6 @@ pub fn execute_add_freight_contract(
         config.freight_contracts.push(FreightContractInfo {
             address: address.clone(),
             denom,
-            code_id,
         });
         Ok(config)
     })?;
@@ -276,7 +270,8 @@ fn check_is_sender_owner_of_nft(
     if !owner_of_query_res
         .approvals
         .into_iter()
-        .any(|a| a.spender == *sender)
+        .any(|a| a.spender == *sender) &&
+        owner_of_query_res.owner != *sender
     {
         return Err(ContractError::Unauthorized {});
     }

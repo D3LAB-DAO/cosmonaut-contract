@@ -1,5 +1,5 @@
 [package]
-name = "cw20"
+name = "cw20-tokens"
 version = "0.1.0"
 edition = "2021"
 
@@ -11,7 +11,7 @@ cosmwasm-std = { version = "1.0.0" }
 cosmonaut-cw20 = {path= "../../contracts/cosmonaut-cw20", features=["library"]}
 cosmonaut-cw721 = {path= "../../contracts/cosmonaut-cw721", features=["library"]}
 cosmonaut-main = {path="../../contracts/cosmonaut-main", features=["library"]}
-
+cw20 = "0.13.4"
 base = {path="../base"}
 
 cw-multi-test = "0.13.2"

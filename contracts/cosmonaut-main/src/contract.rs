@@ -1,5 +1,5 @@
 use crate::error::ContractError;
-use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+use crate::msg::{Cw20InstantiateMsg, ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{Config, CONFIG};
 use crate::{execute, query};
 use cosmonaut_cw721::state::Extension;
@@ -12,10 +12,10 @@ use cosmwasm_std::{
     SubMsg, Uint128, WasmMsg,
 };
 use cw2::set_contract_version;
-use cw20::{Cw20Coin, MinterResponse};
-use cw20_base::msg::InstantiateMsg as Cw20InstantiateMsg;
+use cw20::{Cw20Coin};
 use cw721_base::msg::InstantiateMsg as Cw721InstantiateMsg;
 use cw_utils::parse_reply_instantiate_data;
+use cosmonaut_cw20::msg::MinterResponse;
 
 // version info for migration info
 const CONTRACT_NAME: &str = "crates.io:cosmonaut-contract";
@@ -54,6 +54,8 @@ pub fn instantiate(
                     cap: None,
                 }),
                 marketing: None,
+                total_supply: Default::default(),
+                unit_weight: None,
             })?,
             funds: vec![],
             label: "mars token for money".to_string(),
@@ -159,5 +161,6 @@ pub fn execute(
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
         QueryMsg::MoneyContract {} => query::query_money_contract(deps),
+        QueryMsg::Config {} => query::query_config(deps)
     }
 }
