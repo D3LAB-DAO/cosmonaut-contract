@@ -1,4 +1,4 @@
-use std::convert::TryFrom;
+use std::convert::{TryFrom, TryInto};
 use crate::msg::ExecuteMsg;
 use crate::state::{Extension, Freight};
 use crate::ContractError;
@@ -24,7 +24,7 @@ impl<'a> BaseExecute for Cw721Contract<'a, Extension, Empty> {
         info: MessageInfo,
         msg: ExecuteMsg,
     ) -> Result<Response, ContractError> {
-        let cw721_msg = msg.into();
+        let cw721_msg = msg.try_into()?;
         let execute_res = self.execute(deps, env, info, cw721_msg);
         match execute_res {
             Ok(res) => Ok(res),
@@ -92,12 +92,12 @@ pub fn execute_load_freight(
     deps: DepsMut,
     token_id: String,
     denom: String,
-    amount: u128,
-    unit_weight: u128,
+    amount: Uint128,
+    unit_weight: Uint128,
 ) -> Result<Response, ContractError> {
     let contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
     let mut token = contract.tokens.load(deps.storage, &token_id)?;
-    let mut extension = token.extension.unwrap();
+    let mut extension = token.extension;
 
     // iterate freight to find target cw20 by denom
     let candidate_idx = extension.freight.iter().position(|l| l.denom == denom);
@@ -106,14 +106,14 @@ pub fn execute_load_freight(
         // update token amount
         extension.freight[idx].amount = extension.freight[idx]
             .amount
-            .checked_add(Uint128::new(amount))
+            .checked_add(amount)
             .unwrap();
     } else {
         // if not, push a new freight data
         extension.freight.push(Freight {
             denom: denom.clone(),
-            amount: Uint128::new(amount),
-            unit_weight,
+            amount,
+            unit_weight: unit_weight.u128(),
         })
     }
 
@@ -132,20 +132,20 @@ pub fn execute_unload_freight(
     deps: DepsMut,
     token_id: String,
     denom: String,
-    amount: u128,
+    amount: Uint128,
 ) -> Result<Response, ContractError> {
     let contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
     let mut token = contract.tokens.load(deps.storage, &token_id)?;
-    let mut extension = token.extension.unwrap();
+    let mut extension = token.extension;
 
     let candidate_idx = extension.freight.iter().position(|l| l.denom == denom);
     if let Some(idx) = candidate_idx {
-        if extension.freight[idx].amount.u128() - amount == 0 {
+        if extension.freight[idx].amount.u128() - amount.u128() == 0 {
             extension.freight.remove(idx);
         } else {
             extension.freight[idx].amount = extension.freight[idx]
                 .amount
-                .checked_sub(Uint128::new(amount))
+                .checked_sub(amount)
                 .unwrap();
         }
     } else {
@@ -166,7 +166,7 @@ pub fn execute_decrease_health(
     info: MessageInfo,
     env: Env,
     token_id: String,
-    value: u128,
+    value: Uint128,
 ) -> Result<Response, ContractError> {
     let cosmonaut_contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
     let mut token = cosmonaut_contract.tokens.load(deps.storage, &token_id)?;
@@ -177,10 +177,10 @@ pub fn execute_decrease_health(
         &info.sender,
         &token,
     )?;
-    let mut extension = token.extension.unwrap();
+    let mut extension = token.extension;
 
     // handle with negative overflow
-    extension.health = extension.health.saturating_sub(value);
+    extension.health = extension.health.saturating_sub(value.u128());
     token.extension = Extension::from(extension);
     cosmonaut_contract
         .tokens

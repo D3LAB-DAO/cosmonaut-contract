@@ -32,8 +32,8 @@ pub fn instantiate(
     msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
     let config = Config {
-        money_cw20_contract: msg.clone().money_cw20_contract,
-        spaceship_cw721_contract: msg.clone().spaceship_cw721_contract,
+        money_cw20_contract: Addr::unchecked(""),
+        spaceship_cw721_contract: Addr::unchecked(""),
         freight_contracts: vec![],
     };
 
@@ -43,7 +43,7 @@ pub fn instantiate(
     let instantiate_cw20_contract: SubMsg = SubMsg::reply_on_success(
         WasmMsg::Instantiate {
             admin: Some(info.sender.to_string()),
-            code_id: msg.money_cw20_contract.code_id,
+            code_id: msg.money_cw20_id,
             msg: to_binary(&Cw20InstantiateMsg {
                 name: "MARS".to_string(),
                 symbol: "mars".to_string(),
@@ -64,7 +64,7 @@ pub fn instantiate(
     let instantiate_cw721_contract: SubMsg = SubMsg::reply_on_success(
         WasmMsg::Instantiate {
             admin: Some(info.sender.to_string()),
-            code_id: msg.spaceship_cw721_contract.code_id,
+            code_id: msg.spaceship_cw721_id,
             msg: to_binary(&Cw721InstantiateMsg {
                 name: "spaceship".to_string(),
                 symbol: "SPACE".to_string(),
@@ -94,7 +94,7 @@ pub fn reply(deps: DepsMut, _env: Env, msg: Reply) -> StdResult<Response> {
 fn handle_cw20_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Response> {
     let res = parse_reply_instantiate_data(msg.clone()).unwrap();
     CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
-        config.money_cw20_contract.addr = Some(Addr::unchecked(res.contract_address));
+        config.money_cw20_contract = Addr::unchecked(res.contract_address);
         Ok(config)
     })?;
     Ok(Response::new())
@@ -104,7 +104,7 @@ fn handle_cw721_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Respon
     let res = parse_reply_instantiate_data(msg.clone()).unwrap();
 
     CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
-        config.spaceship_cw721_contract.addr = Some(Addr::unchecked(res.contract_address));
+        config.spaceship_cw721_contract = Addr::unchecked(res.contract_address);
         Ok(config)
     })?;
     Ok(Response::new())
@@ -115,13 +115,12 @@ pub fn execute(
     deps: DepsMut,
     env: Env,
     info: MessageInfo,
-    msg: ExecuteMsg<Extension>,
+    msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
     match msg {
         ExecuteMsg::AddFreightContract {
             address,
-            denom,
-        } => execute::execute_add_freight_contract(deps, address, denom),
+        } => execute::execute_add_freight_contract(deps, address),
 
         ExecuteMsg::BuyNft {
             nft_id,
@@ -135,21 +134,20 @@ pub fn execute(
         }
 
         ExecuteMsg::LoadFreight {
+            address,
             token_id,
-            denom,
-            amount,
-            unit_weight,
-        } => execute::execute_load_freight_to_nft(deps, info, token_id, denom, amount, unit_weight),
+            amount
+        } => execute::execute_load_freight_to_nft(deps, info, address, token_id, amount),
         ExecuteMsg::UnLoadFreight {
+            address,
             token_id,
-            denom,
-            amount,
-        } => execute::execute_unload_freight_from_nft(deps, info, token_id, denom, amount),
+            amount
+        } => execute::execute_unload_freight_from_nft(deps, info, address, token_id, amount),
         ExecuteMsg::BuyMoneyToken { amount } => {
             execute::execute_buy_money_token(deps, info, amount)
         }
-        ExecuteMsg::BuyFreightToken { denom, amount } => {
-            execute::execute_buy_freight_token(deps, info, denom, amount)
+        ExecuteMsg::BuyFreightToken { address, amount } => {
+            execute::execute_buy_freight_token(deps, info, address, amount)
         }
         ExecuteMsg::PlayGame { token_id, epoch } => {
             execute::execute_play_game(deps, env, token_id, epoch)

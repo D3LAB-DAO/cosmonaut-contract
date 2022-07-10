@@ -1,6 +1,7 @@
 use base::init::init_app;
 use base::result::Result;
 use std::env::args;
+use cosmwasm_std::Uint128;
 
 use cw20::init::mock_cw20_contract;
 use cw20::instantiate::instantiate_cw20_contract;
@@ -9,7 +10,7 @@ use cw721_spaceship::execute::execute_cw721_all_msg;
 use cw721_spaceship::init::mock_cw721_contract;
 use cw721_spaceship::instantiate::instantiate_spaceship_nft_contract;
 use cw721_spaceship::query::query_all_cw721_msgs;
-use main_contract::execute::execute_main_all_msg;
+use main_contract::execute::{execute_main_all_msg, FreightParams};
 
 use main_contract::init::mock_main_contract;
 use main_contract::instantiate::instantiate_main_contract;
@@ -46,6 +47,7 @@ fn main() {
         ADDR1,
         "mars",
         "umars",
+        None,
         "cw20 money",
     );
 
@@ -56,6 +58,7 @@ fn main() {
         ADDR1,
         "oil",
         "uoil",
+        Some(Uint128::new(1)),
         "cw20 oil",
     );
 
@@ -66,6 +69,7 @@ fn main() {
         ADDR1,
         "bullet",
         "ubullet",
+        Some(Uint128::new(2)),
         "cw20 bullet",
     );
 
@@ -98,7 +102,22 @@ fn main() {
         )
         .write_to_file(query_output_dir);
 
-    execute_main_all_msg(&mut app, main_contract_addr.as_ref(), [], ADDR1, ADDR2)
+    execute_main_all_msg(
+        &mut app,
+        main_contract_addr.as_ref(),
+        vec![
+            FreightParams {
+                contract_addr: cw20_oil_contract_addr.to_string(),
+                amount: Uint128::new(200),
+            },
+            FreightParams {
+                contract_addr: cw20_bullet_contract_addr.to_string(),
+                amount: Uint128::new(100),
+            },
+        ],
+        ADDR1,
+        ADDR2,
+    )
         .check_answer(
             which_lesson,
             &format!(

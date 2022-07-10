@@ -15,7 +15,8 @@ pub fn token_info(deps: Deps) -> StdResult<Binary> {
         name: token_info.name,
         symbol: token_info.symbol,
         decimals: token_info.decimals,
-        total_supply: token_info.total_supply.unwrap_or_default(),
+        total_supply: token_info.total_supply,
+        unit_weight: token_info.unit_weight,
     })
 }
 

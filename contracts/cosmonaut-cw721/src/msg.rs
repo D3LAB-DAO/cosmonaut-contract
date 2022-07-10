@@ -1,5 +1,5 @@
 use std::convert::TryFrom;
-use cosmwasm_std::Binary;
+use cosmwasm_std::{Binary, Uint128};
 use cw721_base::ExecuteMsg as Cw721ExecuteMsg;
 use cw721_base::MintMsg;
 use cw_utils::Expiration;
@@ -50,23 +50,27 @@ pub enum ExecuteMsg {
     LoadFreight {
         token_id: String,
         denom: String,
-        amount: u128,
-        unit_weight: u128,
+        amount: Uint128,
+        unit_weight: Uint128,
+    },
+
+    FuelUp {
+        amount: Uint128
     },
 
     UnloadFreight {
         token_id: String,
         denom: String,
-        amount: u128,
+        amount: Uint128,
     },
 
     DecreaseHealth {
         token_id: String,
-        value: u128,
+        value: Uint128,
     },
 }
 
-impl TryFrom<ExecuteMsg> for Cw721ExecuteMsg<T> {
+impl TryFrom<ExecuteMsg> for Cw721ExecuteMsg<Extension> {
     type Error = ContractError;
 
     fn try_from(msg: ExecuteMsg) -> Result<Self, Self::Error> {
@@ -104,7 +108,7 @@ impl TryFrom<ExecuteMsg> for Cw721ExecuteMsg<T> {
             ExecuteMsg::ApproveAll { operator, expires } => {
                 Ok(Cw721ExecuteMsg::ApproveAll { operator, expires })
             }
-            ExecuteMsg::RevokeAll { operator } => Cw721ExecuteMsg::RevokeAll { operator },
+            ExecuteMsg::RevokeAll { operator } => Ok(Cw721ExecuteMsg::RevokeAll { operator }),
             _ => Err(ContractError::Unimplemented {}),
         }
     }

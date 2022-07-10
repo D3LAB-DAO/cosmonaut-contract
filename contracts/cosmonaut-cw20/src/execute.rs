@@ -103,12 +103,11 @@ pub fn mint(
 
     token_info
         .total_supply
-        .unwrap_or_default()
         .checked_add(amount)
         .map_err(StdError::overflow)?;
 
     if let Some(limit) = token_info.get_cap() {
-        if token_info.total_supply.unwrap_or_default() > limit {
+        if token_info.total_supply > limit {
             return Err(ContractError::CannotExceedCap {});
         }
     }
@@ -268,7 +267,7 @@ pub fn burn(
     })?;
 
     TOKEN_INFO.update(deps.storage, |mut info| -> StdResult<_> {
-        info.total_supply = Some(info.total_supply.unwrap_or_default().checked_sub(amount)?);
+        info.total_supply = info.total_supply.checked_sub(amount)?;
         Ok(info)
     })?;
 

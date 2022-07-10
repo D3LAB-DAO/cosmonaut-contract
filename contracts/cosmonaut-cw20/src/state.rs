@@ -11,8 +11,9 @@ pub struct TokenInfo {
     pub name: String,
     pub symbol: String,
     pub decimals: u8,
-    pub total_supply: Option<Uint128>,
+    pub total_supply: Uint128,
     pub mint: Option<MinterResponse>,
+    pub unit_weight: Option<Uint128>,
 }
 
 impl TokenInfo {

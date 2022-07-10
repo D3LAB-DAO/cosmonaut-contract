@@ -14,6 +14,7 @@ pub struct InstantiateMsg {
     pub mint: Option<MinterResponse>,
     pub marketing: Option<String>,
     pub total_supply: Uint128,
+    pub unit_weight: Option<Uint128>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
@@ -89,6 +90,7 @@ pub struct TokenInfoResponse {
     pub symbol: String,
     pub decimals: u8,
     pub total_supply: Uint128,
+    pub unit_weight: Option<Uint128>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

@@ -1,7 +1,8 @@
-use cosmwasm_std::Addr;
+use cosmwasm_std::{Addr, Uint128};
 use cw721_base::MintMsg;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use cosmonaut_cw721::state::Extension;
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {
@@ -17,36 +18,34 @@ pub struct ContractInitInfo {
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
-pub enum ExecuteMsg<T> {
+pub enum ExecuteMsg {
     BuyMoneyToken {
-        amount: u128,
+        amount: Uint128,
     },
     BuyNft {
         original_owner: String,
         nft_id: String,
     },
-    Mint(MintMsg<T>),
+    Mint(MintMsg<Extension>),
     SetMinter {
         minter: String,
     },
     BuyFreightToken {
-        denom: String,
-        amount: u128,
+        address: String,
+        amount: Uint128,
     },
     AddFreightContract {
         address: String,
-        denom: String,
     },
     LoadFreight {
+        address: String,
         token_id: String,
-        denom: String,
-        amount: u128,
-        unit_weight: u128,
+        amount: Uint128,
     },
     UnLoadFreight {
+        address: String,
         token_id: String,
-        denom: String,
-        amount: u128,
+        amount: Uint128,
     },
     PlayGame {
         token_id: String,

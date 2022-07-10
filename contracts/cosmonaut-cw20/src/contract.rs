@@ -41,7 +41,8 @@ pub fn instantiate(
         symbol: msg.symbol,
         decimals: msg.decimals,
         mint: Some(minter_data.clone()),
-        total_supply: Some(Uint128::new(msg.total_supply.unwrap_or(0))),
+        total_supply: msg.total_supply,
+        unit_weight: msg.unit_weight
     };
 
     let initial_balances = msg.initial_balances;
@@ -56,7 +57,6 @@ pub fn instantiate(
         // update total supply with initial balances
         token_info
             .total_supply
-            .unwrap_or_default()
             .checked_add(balance.amount)
             .map_err(StdError::overflow)?;
     }

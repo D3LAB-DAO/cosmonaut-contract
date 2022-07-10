@@ -21,9 +21,7 @@ pub fn execute_mint_to_cw721_contract(
     let mint_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
         contract_addr: config
             .spaceship_cw721_contract
-            .addr
             .as_ref()
-            .unwrap()
             .to_string(),
         msg: to_binary(&ExecuteMsg::Mint(mint_msg))?,
         funds: vec![],
@@ -42,14 +40,14 @@ pub fn execute_buy_spaceship(
 ) -> Result<Response, ContractError> {
     let config = CONFIG.load(deps.storage)?;
     let nft_info: NftInfoResponse<Metadata> = deps.querier.query_wasm_smart(
-        config.spaceship_cw721_contract.addr.as_ref().unwrap(),
+        config.spaceship_cw721_contract.as_ref(),
         &Cw721QueryMsg::NftInfo {
             token_id: nft_id.clone(),
         },
     )?;
 
     let token_balance: cosmonaut_cw20_msg::BalanceResponse = deps.querier.query_wasm_smart(
-        config.money_cw20_contract.addr.as_ref().unwrap(),
+        config.money_cw20_contract.as_ref(),
         &cosmonaut_cw20_msg::QueryMsg::Balance {
             address: info.sender.to_string(),
         },
@@ -63,27 +61,25 @@ pub fn execute_buy_spaceship(
         owner: info.sender.to_string(),
         recipient: config
             .money_cw20_contract
-            .addr
             .as_ref()
-            .unwrap()
             .to_string(),
         amount: Uint128::from(nft_info.extension.price),
     };
 
     let transfer_money_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
-        contract_addr: config.money_cw20_contract.addr.unwrap().to_string(),
+        contract_addr: config.money_cw20_contract.to_string(),
         msg: to_binary(&transfer_money_msg)?,
         funds: vec![],
     });
 
-    let transfer_nft_msg: cosmonaut_cw721::msg::ExecuteMsg<Extension> =
+    let transfer_nft_msg: cosmonaut_cw721::msg::ExecuteMsg =
         cosmonaut_cw721_msg::ExecuteMsg::TransferNft {
             recipient: info.sender.to_string(),
             token_id: nft_id,
         };
 
     let transfer_nft_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
-        contract_addr: config.spaceship_cw721_contract.addr.unwrap().to_string(),
+        contract_addr: config.spaceship_cw721_contract.to_string(),
         msg: to_binary(&transfer_nft_msg)?,
         funds: vec![],
     });
@@ -100,10 +96,10 @@ pub fn execute_set_minter_to_cw721_contract(
 ) -> Result<Response, ContractError> {
     let config = CONFIG.load(deps.storage)?;
 
-    let set_minter_msg: ExecuteMsg<Extension> = ExecuteMsg::SetMinter { minter };
+    let set_minter_msg: ExecuteMsg = ExecuteMsg::SetMinter { minter };
 
     let set_minter_msg_wrapper = CosmosMsg::Wasm(WasmMsg::Execute {
-        contract_addr: config.spaceship_cw721_contract.addr.unwrap().to_string(),
+        contract_addr: config.spaceship_cw721_contract.to_string(),
         msg: to_binary(&set_minter_msg)?,
         funds: vec![],
     });
@@ -116,12 +112,15 @@ pub fn execute_set_minter_to_cw721_contract(
 pub fn execute_load_freight_to_nft(
     deps: DepsMut,
     info: MessageInfo,
+    address: String,
     token_id: String,
-    denom: String,
-    amount: u128,
-    unit_weight: u128,
+    amount: Uint128,
 ) -> Result<Response, ContractError> {
-    if amount * unit_weight > MAX_FREIGHT_WEIGHT {
+    let freight_info: cosmonaut_cw20::msg::TokenInfoResponse = deps.querier.query_wasm_smart(address, &cosmonaut_cw20::msg::QueryMsg::TokenInfo {})?;
+    let unit_weight = freight_info.unit_weight.ok_or(ContractError::TokenNotFound {})?;
+    let denom = freight_info.symbol;
+
+    if amount * unit_weight > Uint128::new(MAX_FREIGHT_WEIGHT) {
         return Err(ContractError::FrightOverloaded {});
     }
     let config = CONFIG.load(deps.storage)?;
@@ -142,12 +141,12 @@ pub fn execute_load_freight_to_nft(
             .address,
         msg: to_binary(&cosmonaut_cw20_msg::ExecuteMsg::BurnFrom {
             owner: info.sender.to_string(),
-            amount: Uint128::new(amount),
+            amount,
         })?,
         funds: vec![],
     });
 
-    let load_freight_msg: cosmonaut_cw721_msg::ExecuteMsg<Extension> =
+    let load_freight_msg: cosmonaut_cw721_msg::ExecuteMsg =
         cosmonaut_cw721_msg::ExecuteMsg::LoadFreight {
             token_id: token_id.clone(),
             denom: denom.clone(),
@@ -156,8 +155,7 @@ pub fn execute_load_freight_to_nft(
         };
 
     let load_freight_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
-        contract_addr: config.spaceship_cw721_contract.addr
-            .ok_or(ContractError::TokenNotFound {})
+        contract_addr: config.spaceship_cw721_contract
             .to_string(),
         msg: to_binary(&load_freight_msg)?,
         funds: vec![],
@@ -174,10 +172,13 @@ pub fn execute_load_freight_to_nft(
 pub fn execute_unload_freight_from_nft(
     deps: DepsMut,
     info: MessageInfo,
+    address: String,
     token_id: String,
-    denom: String,
-    amount: u128,
+    amount: Uint128,
 ) -> Result<Response, ContractError> {
+    let freight_info: cosmonaut_cw20::msg::TokenInfoResponse = deps.querier.query_wasm_smart(address, &cosmonaut_cw20::msg::QueryMsg::TokenInfo {})?;
+    let denom = freight_info.symbol;
+
     let config = CONFIG.load(deps.storage)?;
     let target_contract_addr = config
         .freight_contracts
@@ -194,12 +195,12 @@ pub fn execute_unload_freight_from_nft(
         contract_addr: target_contract_addr.unwrap().address,
         msg: to_binary(&cosmonaut_cw20_msg::ExecuteMsg::Mint {
             recipient: info.sender.to_string(),
-            amount: Uint128::new(amount),
+            amount,
         })?,
         funds: vec![],
     });
 
-    let unload_freight_msg: cosmonaut_cw721_msg::ExecuteMsg<Extension> =
+    let unload_freight_msg: cosmonaut_cw721_msg::ExecuteMsg =
         cosmonaut_cw721_msg::ExecuteMsg::UnloadFreight {
             token_id: token_id.clone(),
             denom: denom.clone(),
@@ -207,7 +208,7 @@ pub fn execute_unload_freight_from_nft(
         };
 
     let unload_freight_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
-        contract_addr: config.spaceship_cw721_contract.addr.unwrap().to_string(),
+        contract_addr: config.spaceship_cw721_contract.to_string(),
         msg: to_binary(&unload_freight_msg)?,
         funds: vec![],
     });
@@ -223,8 +224,16 @@ pub fn execute_unload_freight_from_nft(
 pub fn execute_add_freight_contract(
     deps: DepsMut,
     address: String,
-    denom: String,
 ) -> Result<Response, ContractError> {
+    let freight_info: cosmonaut_cw20::msg::TokenInfoResponse = deps.querier.query_wasm_smart(address.clone(), &cosmonaut_cw20::msg::QueryMsg::TokenInfo {})?;
+    let denom = freight_info.symbol;
+
+    let freight_info: ContractInfoResponse = deps.querier.query(&QueryRequest::Wasm(
+        WasmQuery::ContractInfo { contract_addr: address.clone() }
+    ))?;
+
+    let code_id = freight_info.code_id;
+
     let config = CONFIG.load(deps.storage)?;
 
     if config
@@ -234,12 +243,6 @@ pub fn execute_add_freight_contract(
     {
         return Err(ContractError::DuplicatedContract {});
     }
-
-    let freight_info: ContractInfoResponse = deps.querier.query(&QueryRequest::Wasm(
-        WasmQuery::ContractInfo { contract_addr: address.clone() }
-    )).map_err(ContractError::TokenNotFound {})?;
-
-    let code_id = freight_info.code_id;
 
     CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
         config.freight_contracts.push(FreightContractInfo {
@@ -263,7 +266,7 @@ fn check_is_sender_owner_of_nft(
     let config = CONFIG.load(deps.storage)?;
 
     let owner_of_query_res: OwnerOfResponse = deps.querier.query_wasm_smart(
-        config.spaceship_cw721_contract.addr.as_ref().unwrap(),
+        config.spaceship_cw721_contract.as_ref(),
         &QueryMsg::OwnerOf {
             token_id: token_id.to_string(),
             include_expired: Some(false),
@@ -284,7 +287,7 @@ fn check_is_sender_owner_of_nft(
 pub fn execute_buy_money_token(
     deps: DepsMut,
     info: MessageInfo,
-    amount: u128,
+    amount: Uint128,
 ) -> Result<Response, ContractError> {
     let config = CONFIG.load(deps.storage)?;
     let income_asset = info.funds;
@@ -294,20 +297,18 @@ pub fn execute_buy_money_token(
         .find(|coin| coin.denom == "uatom")
         .unwrap_or_else(|| coin(0, "uatom"));
 
-    if atom_income.amount.u128() < amount {
+    if atom_income.amount.u128() < amount.u128() {
         return Err(ContractError::NotEnoughCoin {});
     }
 
     let mint_token_msg = CosmosMsg::Wasm(WasmMsg::Execute {
         contract_addr: config
             .money_cw20_contract
-            .addr
             .as_ref()
-            .unwrap()
             .to_string(),
         msg: to_binary(&cosmonaut_cw20_msg::ExecuteMsg::Mint {
             recipient: info.sender.to_string(),
-            amount: Uint128::new(amount),
+            amount,
         })?,
         funds: vec![],
     });
@@ -322,9 +323,12 @@ pub fn execute_buy_money_token(
 pub fn execute_buy_freight_token(
     deps: DepsMut,
     info: MessageInfo,
-    denom: String,
-    amount: u128,
+    address: String,
+    amount: Uint128,
 ) -> Result<Response, ContractError> {
+    let freight_info: cosmonaut_cw20::msg::TokenInfoResponse = deps.querier.query_wasm_smart(address, &cosmonaut_cw20::msg::QueryMsg::TokenInfo {})?;
+    let denom = freight_info.symbol;
+
     let config = CONFIG.load(deps.storage)?;
     let target_contract_addr = config
         .freight_contracts
@@ -339,16 +343,16 @@ pub fn execute_buy_freight_token(
         contract_addr: target_contract_addr.unwrap().address,
         msg: to_binary(&cosmonaut_cw20_msg::ExecuteMsg::Mint {
             recipient: info.sender.to_string(),
-            amount: Uint128::new(amount),
+            amount,
         })?,
         funds: vec![],
     });
 
     let burn_money_token_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
-        contract_addr: config.money_cw20_contract.addr.unwrap().to_string(),
+        contract_addr: config.money_cw20_contract.to_string(),
         msg: to_binary(&cosmonaut_cw20_msg::ExecuteMsg::BurnFrom {
             owner: info.sender.to_string(),
-            amount: Uint128::new(amount),
+            amount,
         })?,
         funds: vec![],
     });
@@ -372,9 +376,7 @@ pub fn execute_play_game(
     let nft_info: NftInfoResponse<Metadata> = deps.querier.query_wasm_smart(
         config
             .spaceship_cw721_contract
-            .addr
             .as_ref()
-            .unwrap()
             .to_string(),
         &Cw721QueryMsg::NftInfo {
             token_id: token_id.clone(),
@@ -405,18 +407,16 @@ pub fn execute_play_game(
         }
     }
 
-    let decrease_health_msg: cosmonaut_cw721_msg::ExecuteMsg<Extension> =
+    let decrease_health_msg: cosmonaut_cw721_msg::ExecuteMsg =
         cosmonaut_cw721_msg::ExecuteMsg::DecreaseHealth {
             token_id,
-            value: decrease_value.u128(),
+            value: decrease_value,
         };
 
     let decrease_health_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
         contract_addr: config
             .spaceship_cw721_contract
-            .addr
             .as_ref()
-            .unwrap()
             .to_string(),
         msg: to_binary(&decrease_health_msg)?,
         funds: vec![],
