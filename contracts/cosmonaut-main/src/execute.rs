@@ -13,6 +13,7 @@ use cw721_base::{MintMsg, QueryMsg};
 use std::ops::{Add, Div, Rem};
 
 const MAX_FREIGHT_WEIGHT: u128 = 1000 * 1000;
+const FUEL_PER_GAME: u128 = 10;
 
 pub fn execute_mint_to_cw721_contract(
     deps: DepsMut,
@@ -36,7 +37,6 @@ pub fn execute_buy_spaceship(
     deps: DepsMut,
     info: MessageInfo,
     nft_id: String,
-    _original_owner: String,
 ) -> Result<Response, ContractError> {
     let config = CONFIG.load(deps.storage)?;
     let nft_info: NftInfoResponse<Metadata> = deps.querier.query_wasm_smart(
@@ -45,6 +45,7 @@ pub fn execute_buy_spaceship(
             token_id: nft_id.clone(),
         },
     )?;
+
 
     let token_balance: cosmonaut_cw20_msg::BalanceResponse = deps.querier.query_wasm_smart(
         config.money_cw20_contract.as_ref(),
@@ -404,7 +405,7 @@ pub fn fuel_up(
 pub fn burn_fuel(
     deps: DepsMut,
     token_id: String,
-    amount: Uint128
+    amount: Uint128,
 ) -> Result<Response, ContractError> {
     let config = CONFIG.load(deps.storage)?;
 
@@ -428,11 +429,15 @@ pub fn burn_fuel(
         .add_message(fuel_up_msg_wrap))
 }
 
+fn _generate_random_number(timestamp_int_nanos: Uint128) -> Uint128 {
+    timestamp_int_nanos.rem(Uint128::new(MAX_FREIGHT_WEIGHT))
+}
+
 pub fn execute_play_game(
     deps: DepsMut,
     env: Env,
     token_id: String,
-    epoch: u64,
+    epoch: Uint128,
 ) -> Result<Response, ContractError> {
     let config = CONFIG.load(deps.storage)?;
 
@@ -450,28 +455,27 @@ pub fn execute_play_game(
         .map(|f| f.unit_weight * f.unit_weight)
         .sum();
 
-    let mut decrease_value = Uint128::zero();
+    let mut health_decrease_value = Uint128::zero();
     let mut random_number = Uint128::zero();
     let mut spaceship_speed = Uint128::zero();
 
-    for _ in 0..epoch {
+    for _ in 0..epoch.u128() {
         let timestamp_int_nanos = Uint128::new(u128::from(env.block.time.nanos()));
         let total_health = Uint128::new(nft_info.extension.health);
-        let step = total_health.div(Uint128::new(epoch as u128));
-        random_number = timestamp_int_nanos.rem(Uint128::new(MAX_FREIGHT_WEIGHT));
+        let step = total_health.div(epoch);
+        random_number = _generate_random_number(timestamp_int_nanos);
         spaceship_speed = Uint128::new(MAX_FREIGHT_WEIGHT)
             - Uint128::new(MAX_FREIGHT_WEIGHT)
-                .multiply_ratio(total_freight_weight, MAX_FREIGHT_WEIGHT);
+            .multiply_ratio(total_freight_weight, MAX_FREIGHT_WEIGHT);
         if random_number > spaceship_speed {
-            decrease_value = decrease_value.add(step)
+            health_decrease_value = health_decrease_value.add(step)
         }
     }
 
-    let decrease_health_msg: cosmonaut_cw721_msg::ExecuteMsg =
-        cosmonaut_cw721_msg::ExecuteMsg::DecreaseHealth {
-            token_id,
-            value: decrease_value,
-        };
+    let decrease_health_msg = cosmonaut_cw721_msg::ExecuteMsg::DecreaseHealth {
+        token_id: token_id.clone(),
+        value: health_decrease_value,
+    };
 
     let decrease_health_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
         contract_addr: config.spaceship_cw721_contract.as_ref().to_string(),
@@ -479,11 +483,21 @@ pub fn execute_play_game(
         funds: vec![],
     });
 
+    let burn_fuel_msg = cosmonaut_cw721_msg::ExecuteMsg::BurnFuel {
+        token_id,
+        amount: Uint128::new(FUEL_PER_GAME).checked_mul(epoch).map_err(StdError::overflow)?,
+    };
+
+    let burn_fuel_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
+        contract_addr: config.spaceship_cw721_contract.as_ref().to_string(),
+        msg: to_binary(&burn_fuel_msg)?,
+        funds: vec![],
+    });
+
     Ok(Response::new()
         .add_attribute("action", "play_game")
-        .add_attribute("decrease_value", decrease_value.to_string())
-        .add_attribute("random_number", random_number.to_string())
+        .add_attribute("decreased_health_value", health_decrease_value.to_string())
+        .add_attribute("decreased_fuel_value", (FUEL_PER_GAME * epoch.u128()).to_string())
         .add_attribute("spaceship_speed", spaceship_speed.to_string())
-        .add_attribute("nanos", env.block.time.nanos().to_string())
-        .add_message(decrease_health_msg_wrap))
+        .add_messages([decrease_health_msg_wrap, burn_fuel_msg_wrap]))
 }

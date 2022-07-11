@@ -23,6 +23,9 @@ pub enum ContractError {
     #[error("NotFound")]
     NotFound {},
 
+    #[error("NotFound")]
+    FuelNotEnough {},
+
     #[error("SameAddress")]
     SameAddress {},
 

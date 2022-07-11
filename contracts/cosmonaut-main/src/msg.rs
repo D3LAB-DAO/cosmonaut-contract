@@ -40,7 +40,6 @@ pub enum ExecuteMsg {
         amount: Uint128,
     },
     BuyNft {
-        original_owner: String,
         nft_id: String,
     },
     Mint(MintMsg<Extension>),
@@ -74,7 +73,7 @@ pub enum ExecuteMsg {
     },
     PlayGame {
         token_id: String,
-        epoch: u64,
+        epoch: Uint128,
     },
 }
 

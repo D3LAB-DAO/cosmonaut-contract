@@ -165,6 +165,7 @@ pub fn decrease_health(
 ) -> Result<Response, ContractError> {
     let cosmonaut_contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
     let mut token = cosmonaut_contract.tokens.load(deps.storage, &token_id)?;
+
     check_can_send(
         &cosmonaut_contract,
         deps.as_ref(),
@@ -180,6 +181,7 @@ pub fn decrease_health(
     cosmonaut_contract
         .tokens
         .save(deps.storage, &token_id, &token)?;
+
 
     Ok(Response::new()
         .add_attribute("action", "decrease_health")
@@ -233,10 +235,11 @@ pub fn burn_fuel(
     let mut token = contract.tokens.load(deps.storage, &token_id)?;
     let mut extension = token.extension;
 
+
     extension.fuel = extension
         .fuel
         .checked_sub(amount.u128())
-        .ok_or(ContractError::NotFound {})?;
+        .ok_or(ContractError::FuelNotEnough {})?;
 
     token.extension = Extension::from(extension);
     contract.tokens.save(deps.storage, &token_id, &token)?;

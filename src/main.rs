@@ -40,13 +40,13 @@ fn main() {
     let spaceship_cw721_code_id = app.store_code(mock_cw721_contract());
     let main_contract_id = app.store_code(mock_main_contract());
 
-    let cw721_contract_addr = instantiate_spaceship_nft_contract(
-        &mut app,
-        spaceship_cw721_code_id,
-        ADDR1,
-        ADDR1,
-        "cw721 nft",
-    );
+    // let cw721_contract_addr = instantiate_spaceship_nft_contract(
+    //     &mut app,
+    //     spaceship_cw721_code_id,
+    //     ADDR1,
+    //     ADDR1,
+    //     "cw721 nft",
+    // );
 
     let main_contract_addr = instantiate_main_contract(
         &mut app,

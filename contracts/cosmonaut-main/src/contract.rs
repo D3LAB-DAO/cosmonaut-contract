@@ -164,8 +164,7 @@ pub fn execute(
         }
         ExecuteMsg::BuyNft {
             nft_id,
-            original_owner,
-        } => execute::execute_buy_spaceship(deps, info, nft_id, original_owner),
+        } => execute::execute_buy_spaceship(deps, info, nft_id),
 
         ExecuteMsg::Mint(mint_msg) => execute::execute_mint_to_cw721_contract(deps, info, mint_msg),
 

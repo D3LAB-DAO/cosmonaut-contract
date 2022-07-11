@@ -343,7 +343,7 @@ mod tests {
         // ADDR1 bought a nft which is 500 money token, balance is 500
         assert_eq!(query_cw20_balance_res.balance, Uint128::new(500));
 
-        let approve_nft_msg: cosmonaut_cw721::msg::ExecuteMsg<Extension> =
+        let approve_nft_msg: cosmonaut_cw721::msg::ExecuteMsg =
             cosmonaut_cw721::msg::ExecuteMsg::Approve {
                 spender: contract_addr.to_string(),
                 token_id: "1".to_string(),
@@ -358,9 +358,9 @@ mod tests {
         )
         .unwrap();
 
-        let play_game_msg: ExecuteMsg<Extension> = ExecuteMsg::PlayGame {
+        let play_game_msg: ExecuteMsg = ExecuteMsg::PlayGame {
             token_id: "1".to_string(),
-            epoch: 5,
+            epoch: Uint128::new(5),
         };
 
         app.execute_contract(Addr::unchecked(ADDR1), contract_addr, &play_game_msg, &[])
