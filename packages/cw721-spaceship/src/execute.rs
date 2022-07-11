@@ -1,58 +1,59 @@
 use base::execute::execute_contract;
 use base::result::ExecuteAllResult;
-use cosmonaut_cw721::state::Extension as cosmonautExtension;
-use cosmwasm_std::{Addr, Attribute};
+use cosmonaut_cw721::state::{Extension as cosmonautExtension, Freight};
+use cosmwasm_std::{Addr, Attribute, Uint128};
 use cw_multi_test::BasicApp;
 
 fn create_cw721_execute_msgs(
     admin: &str,
     recipient: &str,
     stranger: &str,
-) -> Vec<cosmonaut_cw721::msg::ExecuteMsg<cosmonautExtension>> {
+) -> Vec<cosmonaut_cw721::msg::ExecuteMsg> {
     use cosmonaut_cw721::msg::ExecuteMsg;
     use cosmonaut_cw721::state::{Extension, Metadata};
     use cw721_base::MintMsg;
 
-    let mint_msg = ExecuteMsg::<Extension>::Mint(MintMsg {
+    let mint_msg = ExecuteMsg::Mint(MintMsg {
         token_id: "1".to_string(),
         owner: admin.to_string(),
         token_uri: None,
-        extension: Option::from(Metadata {
+        extension: Metadata {
             unit_denom: "mars".to_string(),
             price: 500,
-            name: Option::from("cosmonaut spaceship".to_string()),
+            name: Some("cosmonaut spaceship".to_string()),
             freight: vec![],
             health: 10,
-        }),
+            fuel: 0,
+        },
     });
 
-    let transfer_nft_msg = ExecuteMsg::<Extension>::TransferNft {
+    let transfer_nft_msg = ExecuteMsg::TransferNft {
         recipient: recipient.to_string(),
         token_id: "1".to_string(),
     };
 
-    let approve_nft_msg = ExecuteMsg::<Extension>::Approve {
+    let approve_nft_msg = ExecuteMsg::Approve {
         spender: stranger.to_string(),
         token_id: "1".to_string(),
         expires: None,
     };
 
-    let load_freight_msg = ExecuteMsg::<Extension>::LoadFreight {
+    let load_freight_msg = ExecuteMsg::LoadFreight {
         token_id: "1".to_string(),
         denom: "oil".to_string(),
-        amount: 10000,
-        unit_weight: 1,
+        amount: Uint128::new(10000),
+        unit_weight: Uint128::new(1),
     };
 
-    let unload_freight_msg = ExecuteMsg::<Extension>::UnloadFreight {
+    let unload_freight_msg = ExecuteMsg::UnloadFreight {
         token_id: "1".to_string(),
         denom: "oil".to_string(),
-        amount: 5000,
+        amount: Uint128::new(5000),
     };
 
-    let decrease_health_msg = ExecuteMsg::<Extension>::DecreaseHealth {
+    let decrease_health_msg = ExecuteMsg::DecreaseHealth {
         token_id: "1".to_string(),
-        value: 5,
+        value: Uint128::new(5),
     };
 
     vec![
@@ -79,13 +80,8 @@ pub fn execute_cw721_all_msg(
     let cw721_execute_msgs = create_cw721_execute_msgs(admin, recipient, stranger);
 
     for msg in cw721_execute_msgs {
-        let execute_res = execute_contract::<ExecuteMsg<cosmonautExtension>>(
-            app,
-            &Addr::unchecked(contract_addr),
-            &msg,
-            &[],
-            admin,
-        );
+        let execute_res =
+            execute_contract::<ExecuteMsg>(app, &Addr::unchecked(contract_addr), &msg, &[], admin);
         match execute_res {
             Ok(res) => total_attributes.push(res),
             Err(err) => total_errors.push(err.root_cause().to_string()),

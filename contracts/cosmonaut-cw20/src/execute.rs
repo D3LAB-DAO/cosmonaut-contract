@@ -8,16 +8,12 @@ use cosmwasm_std::{
 use cw20::Cw20ReceiveMsg;
 use cw_utils::Expiration;
 
-pub fn execute_transfer(
+pub fn transfer(
     deps: DepsMut,
     sender: Addr,
     recipient: String,
     amount: Uint128,
 ) -> Result<Response, ContractError> {
-    if sender == recipient {
-        return Err(ContractError::SameAddress {});
-    }
-
     let sender_balance = BALANCES.load(deps.storage, &sender)?;
     if sender_balance < amount {
         return Err(ContractError::NotEnoughBalance {
@@ -45,7 +41,7 @@ pub fn execute_transfer(
         .add_attribute("amount", amount.to_string()))
 }
 
-pub fn execute_send(
+pub fn send(
     deps: DepsMut,
     sender: Addr,
     contract: String,
@@ -89,7 +85,7 @@ pub fn execute_send(
         .add_message(contract_msg))
 }
 
-pub fn execute_mint(
+pub fn mint(
     deps: DepsMut,
     sender: Addr,
     recipient: String,
@@ -98,21 +94,20 @@ pub fn execute_mint(
     if amount == Uint128::zero() {
         return Err(ContractError::InvalidZeroAmount {});
     }
-
     let token_info = TOKEN_INFO.load(deps.storage)?;
     let minter_data = token_info.mint.as_ref().unwrap();
+
     if minter_data.minter != sender {
         return Err(ContractError::Unauthorized {});
     }
 
     token_info
         .total_supply
-        .unwrap_or_default()
         .checked_add(amount)
         .map_err(StdError::overflow)?;
 
     if let Some(limit) = token_info.get_cap() {
-        if token_info.total_supply.unwrap_or_default() > limit {
+        if token_info.total_supply > limit {
             return Err(ContractError::CannotExceedCap {});
         }
     }
@@ -131,7 +126,7 @@ pub fn execute_mint(
         .add_attribute("amount", amount.to_string()))
 }
 
-pub fn execute_increase_allowance(
+pub fn increase_allowance(
     deps: DepsMut,
     owner: Addr,
     spender: String,
@@ -168,7 +163,7 @@ pub fn execute_increase_allowance(
         .add_attribute("amount", amount.to_string()))
 }
 
-pub fn execute_decrease_allowance(
+pub fn decrease_allowance(
     deps: DepsMut,
     owner: Addr,
     spender: String,
@@ -206,7 +201,7 @@ pub fn execute_decrease_allowance(
         .add_attribute("amount", amount.to_string()))
 }
 
-pub fn execute_transfer_from(
+pub fn transfer_from(
     deps: DepsMut,
     env: Env,
     info: MessageInfo,
@@ -257,7 +252,7 @@ fn deduct_allowance(
     })
 }
 
-pub fn execute_burn(
+pub fn burn(
     deps: DepsMut,
     _env: Env,
     info: MessageInfo,
@@ -272,8 +267,7 @@ pub fn execute_burn(
     })?;
 
     TOKEN_INFO.update(deps.storage, |mut info| -> StdResult<_> {
-        info.total_supply =
-            Option::from(info.total_supply.unwrap_or_default().checked_sub(amount)?);
+        info.total_supply = info.total_supply.checked_sub(amount)?;
         Ok(info)
     })?;
 
@@ -283,7 +277,7 @@ pub fn execute_burn(
         .add_attribute("amount", amount))
 }
 
-pub fn execute_burn_from(
+pub fn burn_from(
     deps: DepsMut,
     env: Env,
     info: MessageInfo,

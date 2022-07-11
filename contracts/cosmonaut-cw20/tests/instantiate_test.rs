@@ -15,7 +15,7 @@ mod instantiate {
 
         let mint_msg = MinterResponse {
             minter: addr1.to_string(),
-            cap: Option::from(Uint128::new(100)),
+            cap: Some(Uint128::new(100)),
         };
 
         let msg = InstantiateMsg {
@@ -26,8 +26,10 @@ mod instantiate {
                 address: addr1.to_string(),
                 amount: Uint128::new(100),
             }],
-            mint: Option::from(mint_msg),
+            mint: Some(mint_msg),
             marketing: None,
+            total_supply: Uint128::zero(),
+            unit_weight: None,
         };
 
         let res = instantiate(deps.as_mut(), _env, info, msg).unwrap();

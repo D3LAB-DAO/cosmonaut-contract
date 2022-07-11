@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use cosmwasm_std::{Addr, Uint128};
 use cw_storage_plus::Item;
 
-pub type Extension = Option<Metadata>;
+pub type Extension = Metadata;
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct State {
@@ -27,6 +27,7 @@ pub struct Metadata {
     pub name: Option<String>,
     pub freight: Vec<Freight>,
     pub health: u128,
+    pub fuel: u128,
 }
 
 pub const STATE: Item<State> = Item::new("state");

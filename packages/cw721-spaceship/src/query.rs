@@ -33,12 +33,12 @@ fn create_all_query_msgs(owner: &str) -> Vec<QueryMsg> {
 
     let all_nft_info_query_msg = QueryMsg::AllNftInfo {
         token_id: "1".to_string(),
-        include_expired: Option::from(true),
+        include_expired: Some(true),
     };
 
     let owner_of_query_msg = QueryMsg::OwnerOf {
         token_id: "1".to_string(),
-        include_expired: Option::from(true),
+        include_expired: Some(true),
     };
 
     let num_tokens_msg = QueryMsg::NumTokens {};
@@ -46,7 +46,7 @@ fn create_all_query_msgs(owner: &str) -> Vec<QueryMsg> {
     let tokens_msg = QueryMsg::Tokens {
         owner: owner.to_string(),
         start_after: None,
-        limit: Option::from(30),
+        limit: Some(30),
     };
 
     let contract_info_msg = QueryMsg::ContractInfo {};

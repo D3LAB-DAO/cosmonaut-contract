@@ -2,7 +2,7 @@ use cosmwasm_std::{coin, Addr, Empty};
 use cw_multi_test::{custom_app, BasicApp};
 
 pub fn init_app(admin: &str) -> BasicApp {
-    let init_funds = vec![coin(5000, "uatom")];
+    let init_funds = vec![coin(100000000, "uatom")];
     custom_app::<Empty, Empty, _>(|router, _, storage| {
         router
             .bank

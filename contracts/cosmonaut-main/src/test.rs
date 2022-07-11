@@ -63,14 +63,8 @@ mod tests {
         let main_contract_id = app.store_code(mock_main_contract());
 
         let instantiate_msg = InstantiateMsg {
-            money_cw20_contract: ContractInitInfo {
-                addr: None,
-                code_id: cw20_code_id,
-            },
-            spaceship_cw721_contract: ContractInitInfo {
-                addr: None,
-                code_id: cw721_code_id,
-            },
+            money_cw20_id: cw20_code_id,
+            spaceship_cw721_id: cw721_code_id,
         };
 
         let contract_addr = app
@@ -80,7 +74,7 @@ mod tests {
                 &instantiate_msg,
                 &[],
                 "main contract",
-                Option::from(ADDR1.to_string()),
+                Some(ADDR1.to_string()),
             )
             .unwrap();
 
@@ -118,7 +112,7 @@ mod tests {
                     symbol: "oil".to_string(),
                     decimals: 6,
                     initial_balances: vec![],
-                    mint: Option::from(MinterResponse {
+                    mint: Some(MinterResponse {
                         minter: contract_addr.to_string(),
                         cap: None,
                     }),
@@ -127,14 +121,13 @@ mod tests {
                 },
                 &[],
                 "main contract",
-                Option::from(ADDR1.to_string()),
+                Some(ADDR1.to_string()),
             )
             .unwrap();
 
         let add_freight_contract_msg: ExecuteMsg<Extension> = AddFreightContract {
             address: oil_cw20_contract_addr.to_string(),
             denom: "oil".to_string(),
-            code_id: 3,
         };
 
         app.execute_contract(
@@ -149,10 +142,10 @@ mod tests {
             token_id: "1".to_string(),
             owner: contract_addr.to_string(),
             token_uri: None,
-            extension: Option::from(Metadata {
+            extension: Some(Metadata {
                 unit_denom: "mars".to_string(),
                 price: 500,
-                name: Option::from("Spaceship".to_string()),
+                name: Some("Spaceship".to_string()),
                 freight: vec![],
                 health: 30,
             }),
@@ -226,7 +219,7 @@ mod tests {
 
         let query_nft_msg = cw721::Cw721QueryMsg::OwnerOf {
             token_id: "1".to_string(),
-            include_expired: Option::from(false),
+            include_expired: Some(false),
         };
 
         let owner_of_1_res: cw721::OwnerOfResponse = app
@@ -280,7 +273,7 @@ mod tests {
             Metadata {
                 unit_denom: "mars".to_string(),
                 price: 500,
-                name: Option::from("Spaceship".to_string()),
+                name: Some("Spaceship".to_string()),
                 freight: vec![Freight {
                     denom: "oil".to_string(),
                     amount: Uint128::new(1000),
@@ -328,7 +321,7 @@ mod tests {
             .wrap()
             .query_balance(Addr::unchecked(contract_addr.clone()), "uatom")
             .unwrap();
-        // ADDR1 bought 2000 cw20 money token with 2000 atom, main contract's atom balance is 2000
+        // ADDR1 bought 2000 cw20-tokens money token with 2000 atom, main contract's atom balance is 2000
         assert_eq!(
             query_balance_of_main_contract,
             Coin {
@@ -350,7 +343,7 @@ mod tests {
         // ADDR1 bought a nft which is 500 money token, balance is 500
         assert_eq!(query_cw20_balance_res.balance, Uint128::new(500));
 
-        let approve_nft_msg: cosmonaut_cw721::msg::ExecuteMsg<Extension> =
+        let approve_nft_msg: cosmonaut_cw721::msg::ExecuteMsg =
             cosmonaut_cw721::msg::ExecuteMsg::Approve {
                 spender: contract_addr.to_string(),
                 token_id: "1".to_string(),
@@ -365,18 +358,13 @@ mod tests {
         )
         .unwrap();
 
-        let play_game_msg: ExecuteMsg<Extension> = ExecuteMsg::PlayGame {
+        let play_game_msg: ExecuteMsg = ExecuteMsg::PlayGame {
             token_id: "1".to_string(),
-            epoch: 5,
+            epoch: Uint128::new(5),
         };
 
-        app.execute_contract(
-            Addr::unchecked(ADDR1),
-            contract_addr.clone(),
-            &play_game_msg,
-            &[],
-        )
-        .unwrap();
+        app.execute_contract(Addr::unchecked(ADDR1), contract_addr, &play_game_msg, &[])
+            .unwrap();
 
         let query_nft_info_msg = NftInfo {
             token_id: "1".to_string(),

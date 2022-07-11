@@ -22,7 +22,7 @@ mod execute {
 
         let mint_msg = MinterResponse {
             minter: addr1.to_string(),
-            cap: Option::from(Uint128::new(100)),
+            cap: Some(Uint128::new(100)),
         };
 
         let _msg = InstantiateMsg {
@@ -33,7 +33,7 @@ mod execute {
                 address: addr1.to_string(),
                 amount: Uint128::new(100),
             }],
-            mint: Option::from(mint_msg),
+            mint: Some(mint_msg),
             marketing: None,
             total_supply: None,
         };
@@ -97,7 +97,7 @@ mod execute {
 
         let mint_spec = MinterResponse {
             minter: addr1.to_string(),
-            cap: Option::from(Uint128::new(1000)),
+            cap: Some(Uint128::new(1000)),
         };
 
         let _msg = InstantiateMsg {
@@ -108,7 +108,7 @@ mod execute {
                 address: addr1.to_string(),
                 amount: Uint128::new(100),
             }],
-            mint: Option::from(mint_spec),
+            mint: Some(mint_spec),
             marketing: None,
             total_supply: None,
         };
@@ -156,7 +156,7 @@ mod execute {
             mint_info_response,
             MintInfoResponse {
                 minter: addr1.to_string(),
-                cap: Option::from(Uint128::new(1000)),
+                cap: Some(Uint128::new(1000)),
             }
         )
     }
@@ -171,7 +171,7 @@ mod execute {
 
         let mint_spec = MinterResponse {
             minter: addr1.to_string(),
-            cap: Option::from(Uint128::new(1000)),
+            cap: Some(Uint128::new(1000)),
         };
 
         let _msg = InstantiateMsg {
@@ -182,7 +182,7 @@ mod execute {
                 address: addr1.to_string(),
                 amount: Uint128::new(100),
             }],
-            mint: Option::from(mint_spec),
+            mint: Some(mint_spec),
             marketing: None,
             total_supply: None,
         };
@@ -192,13 +192,13 @@ mod execute {
         let increase_allowance_msg = IncreaseAllowance {
             spender: addr2.to_string(),
             amount: Uint128::new(30),
-            expires: Option::from(AtHeight(env.block.height + 180 / 5)),
+            expires: Some(AtHeight(env.block.height + 180 / 5)),
         };
 
         let increase_allowance_2_msg = IncreaseAllowance {
             spender: addr2.to_string(),
             amount: Uint128::new(20),
-            expires: Option::from(AtHeight(env.block.height + 180 / 5)),
+            expires: Some(AtHeight(env.block.height + 180 / 5)),
         };
 
         let increase_allowance_res = execute(
@@ -256,7 +256,7 @@ mod execute {
         let decrease_allowance_msg = DecreaseAllowance {
             spender: addr2.to_string(),
             amount: Uint128::new(25),
-            expires: Option::from(AtHeight(env.block.height + 180 / 5)),
+            expires: Some(AtHeight(env.block.height + 180 / 5)),
         };
 
         execute(deps.as_mut(), env.clone(), info, decrease_allowance_msg).unwrap();
@@ -289,7 +289,7 @@ mod execute {
 
         let mint_spec = MinterResponse {
             minter: addr1.to_string(),
-            cap: Option::from(Uint128::new(1000)),
+            cap: Some(Uint128::new(1000)),
         };
 
         let _msg = InstantiateMsg {
@@ -300,7 +300,7 @@ mod execute {
                 address: addr1.to_string(),
                 amount: Uint128::new(100),
             }],
-            mint: Option::from(mint_spec),
+            mint: Some(mint_spec),
             marketing: None,
             total_supply: None,
         };
@@ -310,7 +310,7 @@ mod execute {
         let increase_allowance_msg = IncreaseAllowance {
             spender: addr2.to_string(),
             amount: Uint128::new(30),
-            expires: Option::from(AtHeight(env.block.height + 180 / 5)),
+            expires: Some(AtHeight(env.block.height + 180 / 5)),
         };
 
         execute(deps.as_mut(), env.clone(), info, increase_allowance_msg).unwrap();
