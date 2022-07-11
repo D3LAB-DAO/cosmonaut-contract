@@ -1,6 +1,6 @@
-use std::convert::TryFrom;
 use cosmwasm_std::StdError;
 use cw721_base::ContractError as Cw721ContractError;
+use std::convert::TryFrom;
 use thiserror::Error;
 
 #[derive(Error, Debug)]

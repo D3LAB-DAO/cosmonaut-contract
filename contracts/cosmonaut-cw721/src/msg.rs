@@ -1,12 +1,12 @@
-use std::convert::TryFrom;
+use crate::state::Extension;
+use crate::ContractError;
 use cosmwasm_std::{Binary, Uint128};
 use cw721_base::ExecuteMsg as Cw721ExecuteMsg;
 use cw721_base::MintMsg;
 use cw_utils::Expiration;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use crate::ContractError;
-use crate::state::Extension;
+use std::convert::TryFrom;
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 #[serde(rename_all = "snake_case")]
@@ -55,7 +55,8 @@ pub enum ExecuteMsg {
     },
 
     FuelUp {
-        amount: Uint128
+        token_id: String,
+        amount: Uint128,
     },
 
     UnloadFreight {

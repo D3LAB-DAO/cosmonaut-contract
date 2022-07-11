@@ -27,6 +27,7 @@ pub struct Metadata {
     pub name: Option<String>,
     pub freight: Vec<Freight>,
     pub health: u128,
+    pub fuel: u128,
 }
 
 pub const STATE: Item<State> = Item::new("state");

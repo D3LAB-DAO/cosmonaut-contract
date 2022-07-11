@@ -23,6 +23,7 @@ fn create_cw721_execute_msgs(
             name: Some("cosmonaut spaceship".to_string()),
             freight: vec![],
             health: 10,
+            fuel: 0,
         },
     });
 
@@ -79,13 +80,8 @@ pub fn execute_cw721_all_msg(
     let cw721_execute_msgs = create_cw721_execute_msgs(admin, recipient, stranger);
 
     for msg in cw721_execute_msgs {
-        let execute_res = execute_contract::<ExecuteMsg>(
-            app,
-            &Addr::unchecked(contract_addr),
-            &msg,
-            &[],
-            admin,
-        );
+        let execute_res =
+            execute_contract::<ExecuteMsg>(app, &Addr::unchecked(contract_addr), &msg, &[], admin);
         match execute_res {
             Ok(res) => total_attributes.push(res),
             Err(err) => total_errors.push(err.root_cause().to_string()),

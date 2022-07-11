@@ -5,11 +5,11 @@ use cosmwasm_std::{
 };
 
 use crate::error::ContractError;
-use crate::execute as ExecHandler;
 use crate::execute::BaseExecute;
 use crate::msg::ExecuteMsg;
-use crate::query as QueryHandler;
 use crate::state::Extension;
+use crate::{execute, query};
+
 use cw2::set_contract_version;
 use cw721_base::{Cw721Contract, InstantiateMsg, QueryMsg};
 
@@ -41,23 +41,26 @@ pub fn execute(
     let cosmonaut_contract = Cw721Contract::default();
 
     match msg {
-        ExecuteMsg::SetMinter { minter } => ExecHandler::execute_set_minter(deps, info, minter),
+        ExecuteMsg::SetMinter { minter } => execute::set_minter(deps, info, minter),
         // msg to load cw20-tokens token data on nft
         ExecuteMsg::LoadFreight {
             token_id,
             denom,
             amount,
             unit_weight,
-        } => ExecHandler::execute_load_freight(deps, token_id, denom, amount, unit_weight),
+        } => execute::load_freight(deps, token_id, denom, amount, unit_weight),
         // msg to unload cw20-tokens token data on nft
         ExecuteMsg::UnloadFreight {
             token_id,
             denom,
             amount,
-        } => ExecHandler::execute_unload_freight(deps, token_id, denom, amount),
+        } => execute::unload_freight(deps, token_id, denom, amount),
         // msg to decrease health when playing games
         ExecuteMsg::DecreaseHealth { token_id, value } => {
-            ExecHandler::execute_decrease_health(deps, info, env, token_id, value)
+            execute::decrease_health(deps, info, env, token_id, value)
+        }
+        ExecuteMsg::FuelUp { token_id, amount } => {
+            execute::fuel_up(deps, info, token_id, amount)
         }
         _ => cosmonaut_contract.base_execute(deps, env, info, msg),
     }
@@ -66,11 +69,11 @@ pub fn execute(
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
-        QueryMsg::Minter {} => to_binary(&QueryHandler::query_minter(deps)?),
+        QueryMsg::Minter {} => to_binary(&query::query_minter(deps)?),
         QueryMsg::OwnerOf {
             token_id,
             include_expired,
-        } => to_binary(&QueryHandler::query_owner_of(
+        } => to_binary(&query::query_owner_of(
             deps,
             env,
             token_id,
@@ -79,34 +82,29 @@ pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
         QueryMsg::Approvals {
             token_id,
             include_expired,
-        } => to_binary(&QueryHandler::query_approved_for_all(
+        } => to_binary(&query::query_approved_for_all(
             deps,
             env,
             token_id,
             include_expired.unwrap_or(false),
         )?),
-        QueryMsg::NftInfo { token_id } => to_binary(&QueryHandler::query_nft_info(deps, token_id)?),
+        QueryMsg::NftInfo { token_id } => to_binary(&query::query_nft_info(deps, token_id)?),
         QueryMsg::AllNftInfo {
             token_id,
             include_expired,
-        } => to_binary(&QueryHandler::query_all_nft_info(
+        } => to_binary(&query::query_all_nft_info(
             deps,
             env,
             token_id,
             include_expired.unwrap_or_default(),
         )?),
-        QueryMsg::NumTokens {} => to_binary(&QueryHandler::query_num_tokens(deps)?),
+        QueryMsg::NumTokens {} => to_binary(&query::query_num_tokens(deps)?),
         QueryMsg::Tokens {
             owner,
             start_after,
             limit,
-        } => to_binary(&QueryHandler::query_tokens(
-            deps,
-            owner,
-            start_after,
-            limit,
-        )?),
-        QueryMsg::ContractInfo {} => to_binary(&QueryHandler::query_contract_info(deps)?),
+        } => to_binary(&query::query_tokens(deps, owner, start_after, limit)?),
+        QueryMsg::ContractInfo {} => to_binary(&query::query_contract_info(deps)?),
 
         _ => StdResult::Ok(Default::default()),
     }

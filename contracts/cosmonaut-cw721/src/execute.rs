@@ -1,10 +1,10 @@
-use std::convert::{TryFrom, TryInto};
 use crate::msg::ExecuteMsg;
 use crate::state::{Extension, Freight};
 use crate::ContractError;
-use cosmwasm_std::{Addr, Deps, DepsMut, Empty, Env, MessageInfo, Response, Uint128};
+use cosmwasm_std::{attr, Addr, Deps, DepsMut, Empty, Env, MessageInfo, Response, Uint128};
 use cw721_base::state::TokenInfo;
 use cw721_base::Cw721Contract;
+use std::convert::{TryFrom, TryInto};
 
 pub trait BaseExecute {
     fn base_execute(
@@ -68,7 +68,7 @@ fn check_can_send(
     }
 }
 
-pub fn execute_set_minter(
+pub fn set_minter(
     deps: DepsMut,
     info: MessageInfo,
     minter: String,
@@ -88,7 +88,7 @@ pub fn execute_set_minter(
         .add_attribute("minter", minter))
 }
 
-pub fn execute_load_freight(
+pub fn load_freight(
     deps: DepsMut,
     token_id: String,
     denom: String,
@@ -104,10 +104,7 @@ pub fn execute_load_freight(
     // if there is token with given denom
     if let Some(idx) = candidate_idx {
         // update token amount
-        extension.freight[idx].amount = extension.freight[idx]
-            .amount
-            .checked_add(amount)
-            .unwrap();
+        extension.freight[idx].amount = extension.freight[idx].amount.checked_add(amount).unwrap();
     } else {
         // if not, push a new freight data
         extension.freight.push(Freight {
@@ -128,7 +125,7 @@ pub fn execute_load_freight(
         .add_attribute("unit_weight", unit_weight.to_string()))
 }
 
-pub fn execute_unload_freight(
+pub fn unload_freight(
     deps: DepsMut,
     token_id: String,
     denom: String,
@@ -143,10 +140,8 @@ pub fn execute_unload_freight(
         if extension.freight[idx].amount.u128() - amount.u128() == 0 {
             extension.freight.remove(idx);
         } else {
-            extension.freight[idx].amount = extension.freight[idx]
-                .amount
-                .checked_sub(amount)
-                .unwrap();
+            extension.freight[idx].amount =
+                extension.freight[idx].amount.checked_sub(amount).unwrap();
         }
     } else {
         return Err(ContractError::NotFound {});
@@ -161,7 +156,7 @@ pub fn execute_unload_freight(
         .add_attribute("amount", amount.to_string()))
 }
 
-pub fn execute_decrease_health(
+pub fn decrease_health(
     deps: DepsMut,
     info: MessageInfo,
     env: Env,
@@ -191,4 +186,34 @@ pub fn execute_decrease_health(
         .add_attribute("sender", info.sender.to_string())
         .add_attribute("token_id", token_id.to_string())
         .add_attribute("value", value.to_string()))
+}
+
+pub fn fuel_up(
+    deps: DepsMut,
+    info: MessageInfo,
+    token_id: String,
+    amount: Uint128,
+) -> Result<Response, ContractError> {
+    let contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
+
+    if info.sender != contract.minter.load(deps.storage)? {
+        return Err(ContractError::Unauthorized {});
+    }
+
+    let mut token = contract.tokens.load(deps.storage, &token_id)?;
+    let mut extension = token.extension;
+
+    extension.fuel = extension
+        .fuel
+        .checked_add(amount.u128())
+        .ok_or(ContractError::NotFound {})?;
+
+    token.extension = Extension::from(extension);
+    contract.tokens.save(deps.storage, &token_id, &token)?;
+
+    Ok(Response::new().add_attributes([
+        attr("action", "fuel_up"),
+        attr("to", token_id),
+        attr("amount", amount.to_string()),
+    ]))
 }

@@ -1,8 +1,8 @@
 use base::init::init_app;
 use base::result::Result;
-use std::env::args;
 use cosmwasm_std::Uint128;
 use cw20::Cw20Coin;
+use std::env::args;
 
 use cw20_tokens::init::mock_cw20_contract;
 use cw20_tokens::instantiate::instantiate_cw20_contract;
@@ -34,44 +34,54 @@ fn main() {
 
     let mut app = init_app(ADDR1);
 
-    let cw20_code_id = app.store_code(mock_cw20_contract());
-    let cw721_code_id = app.store_code(mock_cw721_contract());
+    let money_cw20_code_id = app.store_code(mock_cw20_contract());
+    let fuel_cw20_code_id = app.store_code(mock_cw20_contract());
+    let bullet_cw20_code_id = app.store_code(mock_cw20_contract());
+    let spaceship_cw721_code_id = app.store_code(mock_cw721_contract());
     let main_contract_id = app.store_code(mock_main_contract());
 
-    let cw721_contract_addr =
-        instantiate_spaceship_nft_contract(&mut app, cw721_code_id, ADDR1, ADDR1, "cw721 nft");
-
+    let cw721_contract_addr = instantiate_spaceship_nft_contract(
+        &mut app,
+        spaceship_cw721_code_id,
+        ADDR1,
+        ADDR1,
+        "cw721 nft",
+    );
 
     let main_contract_addr = instantiate_main_contract(
         &mut app,
         main_contract_id,
-        cw20_code_id,
-        cw721_code_id,
+        money_cw20_code_id,
+        fuel_cw20_code_id,
+        spaceship_cw721_code_id,
         ADDR1,
         ADDR1,
         "main contract",
     );
 
-    let cw20_oil_contract_addr = instantiate_cw20_contract(
-        &mut app,
-        cw20_code_id,
-        ADDR1,
-        main_contract_addr.as_ref(),
-        "oil",
-        "uoil",
-        vec![Cw20Coin { address: ADDR1.to_string(), amount: Uint128::new(10000000) }],
-        Some(Uint128::new(1)),
-        "cw20-tokens oil",
-    );
-
+    // let cw20_oil_contract_addr = instantiate_cw20_contract(
+    //     &mut app,
+    //     fuel_cw20_code_id,
+    //     ADDR1,
+    //     main_contract_addr.as_ref(),
+    //     "oil",
+    //     "uoil",
+    //     vec![Cw20Coin { address: ADDR1.to_string(), amount: Uint128::new(10000000) }],
+    //     Some(Uint128::new(1)),
+    //     "cw20-tokens oil",
+    // );
+    //
     let cw20_bullet_contract_addr = instantiate_cw20_contract(
         &mut app,
-        cw20_code_id,
+        bullet_cw20_code_id,
         ADDR1,
         main_contract_addr.as_ref(),
         "bullet",
         "ubullet",
-        vec![Cw20Coin { address: ADDR1.to_string(), amount: Uint128::new(10000000) }],
+        vec![Cw20Coin {
+            address: ADDR1.to_string(),
+            amount: Uint128::new(10000000),
+        }],
         Some(Uint128::new(2)),
         "cw20-tokens bullet",
     );
@@ -98,16 +108,10 @@ fn main() {
     let a = execute_main_all_msg(
         &mut app,
         main_contract_addr.as_ref(),
-        vec![
-            FreightParams {
-                contract_addr: cw20_oil_contract_addr.to_string(),
-                amount: Uint128::new(200),
-            },
-            FreightParams {
-                contract_addr: cw20_bullet_contract_addr.to_string(),
-                amount: Uint128::new(100),
-            },
-        ],
+        vec![FreightParams {
+            contract_addr: cw20_bullet_contract_addr.to_string(),
+            amount: Uint128::new(100),
+        }],
         ADDR1,
         ADDR2,
     );

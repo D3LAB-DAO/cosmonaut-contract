@@ -11,6 +11,6 @@ pub fn query_money_contract(deps: Deps) -> StdResult<Binary> {
 
 pub fn query_config(deps: Deps) -> StdResult<Binary> {
     to_binary(&ConfigResponse {
-        config: CONFIG.load(deps.storage)?
+        config: CONFIG.load(deps.storage)?,
     })
 }

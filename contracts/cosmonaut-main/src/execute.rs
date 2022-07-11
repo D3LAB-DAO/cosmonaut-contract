@@ -4,7 +4,7 @@ use crate::state::{FreightContractInfo, CONFIG};
 use cosmonaut_cw20::msg as cosmonaut_cw20_msg;
 use cosmonaut_cw721::msg as cosmonaut_cw721_msg;
 use cosmonaut_cw721::state::{Extension, Metadata};
-use cosmwasm_std::{coin, to_binary, Addr, CosmosMsg, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint128, WasmMsg, ContractInfoResponse, QueryRequest, WasmQuery};
+use cosmwasm_std::{coin, to_binary, Addr, CosmosMsg, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint128, WasmMsg, ContractInfoResponse, QueryRequest, WasmQuery, attr, StdError};
 use cw721::{Cw721QueryMsg, NftInfoResponse, OwnerOfResponse};
 use cw721_base::{MintMsg, QueryMsg};
 use std::ops::{Add, Div, Rem};
@@ -226,6 +226,8 @@ pub fn execute_add_freight_contract(
     deps: DepsMut,
     address: String,
 ) -> Result<Response, ContractError> {
+    let contract_info: ContractInfoResponse = deps.querier.query(&QueryRequest::Wasm(WasmQuery::ContractInfo { contract_addr: address.clone() }))?;
+    let code_id = contract_info.code_id;
     let freight_info: cosmonaut_cw20::msg::TokenInfoResponse = deps.querier.query_wasm_smart(address.clone(), &cosmonaut_cw20::msg::QueryMsg::TokenInfo {})?;
     let denom = freight_info.symbol;
 
@@ -234,7 +236,7 @@ pub fn execute_add_freight_contract(
     if config
         .freight_contracts
         .into_iter()
-        .any(|c| c.denom == denom)
+        .any(|c| c.denom == denom || c.code_id == code_id)
     {
         return Err(ContractError::DuplicatedContract {});
     }
@@ -243,6 +245,7 @@ pub fn execute_add_freight_contract(
         config.freight_contracts.push(FreightContractInfo {
             address: address.clone(),
             denom,
+            code_id,
         });
         Ok(config)
     })?;
@@ -358,6 +361,43 @@ pub fn execute_buy_freight_token(
         .add_attribute("denom", denom)
         .add_attribute("amount", amount.to_string())
         .add_messages([mint_target_token_msg_wrap, burn_money_token_msg_wrap]))
+}
+
+pub fn fuel_up(
+    deps: DepsMut,
+    info: MessageInfo,
+    token_id: String,
+    amount: Uint128,
+) -> Result<Response, ContractError> {
+    check_is_sender_owner_of_nft(deps.as_ref(), &info.sender, &token_id)?;
+    let config = CONFIG.load(deps.storage)?;
+
+    execute_buy_freight_token(
+        deps,
+        info,
+        config.fuel_cw20_contract.to_string(),
+        amount,
+    );
+
+    let fuel_up_msg = cosmonaut_cw721_msg::ExecuteMsg::FuelUp {
+        token_id: token_id.clone(),
+        amount,
+    };
+
+    let fuel_up_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
+        contract_addr: config.spaceship_cw721_contract.to_string(),
+        msg: to_binary(&fuel_up_msg)?,
+        funds: vec![],
+    });
+
+    Ok(Response::new()
+        .add_attributes([
+            attr("action", "fuel_up"),
+            attr("to", token_id),
+            attr("amount", amount.to_string())
+        ])
+        .add_message(fuel_up_msg_wrap)
+    )
 }
 
 pub fn execute_play_game(

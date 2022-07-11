@@ -42,7 +42,7 @@ pub fn instantiate(
         decimals: msg.decimals,
         mint: Some(minter_data.clone()),
         total_supply: msg.total_supply,
-        unit_weight: msg.unit_weight
+        unit_weight: msg.unit_weight,
     };
 
     let initial_balances = msg.initial_balances;
@@ -116,8 +116,6 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
         QueryMsg::Balance { address } => query::balance(deps, address),
         QueryMsg::TokenInfo {} => query::token_info(deps),
         QueryMsg::MintInfo {} => query::mint_info(deps),
-        QueryMsg::Allowance { owner, spender } => {
-            query::allowance(deps, owner, spender)
-        }
+        QueryMsg::Allowance { owner, spender } => query::allowance(deps, owner, spender),
     }
 }

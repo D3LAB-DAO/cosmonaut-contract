@@ -85,7 +85,7 @@ mod tests {
             &buy_money_token_msg,
             &[coin(2000, "uatom")],
         )
-            .unwrap();
+        .unwrap();
 
         let query_balance_of_addr = app
             .wrap()
@@ -136,7 +136,7 @@ mod tests {
             &add_freight_contract_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let execute_mint_msg = ExecuteMsg::Mint(MintMsg {
             token_id: "1".to_string(),
@@ -157,7 +157,7 @@ mod tests {
             &execute_mint_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let query_money_contract_addr = QueryMsg::MoneyContract {};
         let money_contract_addr: MoneyContractResponse = app
@@ -175,7 +175,7 @@ mod tests {
             },
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let increase_money_allowance_msg = IncreaseAllowance {
             spender: contract_addr.to_string(),
@@ -189,7 +189,7 @@ mod tests {
             &increase_money_allowance_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let buy_freight_token_msg: ExecuteMsg<Extension> = BuyFreightToken {
             denom: "oil".to_string(),
@@ -202,7 +202,7 @@ mod tests {
             &buy_freight_token_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let buy_nft_msg: ExecuteMsg<Extension> = ExecuteMsg::BuyNft {
             original_owner: contract_addr.to_string(),
@@ -215,7 +215,7 @@ mod tests {
             &buy_nft_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let query_nft_msg = cw721::Cw721QueryMsg::OwnerOf {
             token_id: "1".to_string(),
@@ -242,7 +242,7 @@ mod tests {
             &increase_allowance_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let load_freight_msg: ExecuteMsg<Extension> = LoadFreight {
             token_id: "1".to_string(),
@@ -257,7 +257,7 @@ mod tests {
             &load_freight_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let query_nft_info_msg = NftInfo {
             token_id: "1".to_string(),
@@ -307,7 +307,7 @@ mod tests {
             &unload_freight_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let query_balance_res: BalanceResponse = app
             .wrap()
@@ -356,19 +356,14 @@ mod tests {
             &approve_nft_msg,
             &[],
         )
-            .unwrap();
+        .unwrap();
 
         let play_game_msg: ExecuteMsg<Extension> = ExecuteMsg::PlayGame {
             token_id: "1".to_string(),
             epoch: 5,
         };
 
-        app.execute_contract(
-            Addr::unchecked(ADDR1),
-            contract_addr,
-            &play_game_msg,
-            &[],
-        )
+        app.execute_contract(Addr::unchecked(ADDR1), contract_addr, &play_game_msg, &[])
             .unwrap();
 
         let query_nft_info_msg = NftInfo {
