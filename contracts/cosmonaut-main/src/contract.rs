@@ -162,7 +162,6 @@ pub fn execute(
         ExecuteMsg::AddFreightContract { address } => {
             execute::execute_add_freight_contract(deps, address)
         }
-
         ExecuteMsg::BuyNft {
             nft_id,
             original_owner,
@@ -173,7 +172,6 @@ pub fn execute(
         ExecuteMsg::SetMinter { minter } => {
             execute::execute_set_minter_to_cw721_contract(deps, minter)
         }
-
         ExecuteMsg::LoadFreight {
             address,
             token_id,
@@ -191,6 +189,7 @@ pub fn execute(
             execute::execute_buy_freight_token(deps, info, address, amount)
         }
         ExecuteMsg::FuelUp { token_id, amount } => execute::fuel_up(deps, info, token_id, amount),
+        ExecuteMsg::BurnFuel { token_id, amount } => execute::burn_fuel(deps, token_id, amount),
         ExecuteMsg::PlayGame { token_id, epoch } => {
             execute::execute_play_game(deps, env, token_id, epoch)
         }

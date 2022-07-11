@@ -59,12 +59,16 @@ pub enum ExecuteMsg {
         amount: Uint128,
     },
 
+    BurnFuel {
+        token_id: String,
+        amount: Uint128,
+    },
+
     UnloadFreight {
         token_id: String,
         denom: String,
         amount: Uint128,
     },
-
     DecreaseHealth {
         token_id: String,
         value: Uint128,

@@ -59,8 +59,9 @@ pub fn execute(
         ExecuteMsg::DecreaseHealth { token_id, value } => {
             execute::decrease_health(deps, info, env, token_id, value)
         }
-        ExecuteMsg::FuelUp { token_id, amount } => {
-            execute::fuel_up(deps, info, token_id, amount)
+        ExecuteMsg::FuelUp { token_id, amount } => execute::fuel_up(deps, info, token_id, amount),
+        ExecuteMsg::BurnFuel { token_id, amount } => {
+            execute::burn_fuel(deps, info, token_id, amount)
         }
         _ => cosmonaut_contract.base_execute(deps, env, info, msg),
     }

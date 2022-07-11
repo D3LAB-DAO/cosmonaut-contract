@@ -53,6 +53,11 @@ fn create_main_contract_execute_msgs(
         amount: Uint128::new(300),
     };
 
+    let burn_fuel_msg = ExecuteMsg::BurnFuel {
+        token_id: "1".to_string(),
+        amount: Uint128::new(100),
+    };
+
     let mut freight_msgs = vec![];
 
     for i in freights {
@@ -95,7 +100,7 @@ fn create_main_contract_execute_msgs(
     //
     // [freight_msgs, msg_except_freight_vec].concat()
 
-    [vec![buy_nft_msg, fuel_up_msg], freight_msgs].concat()
+    [vec![buy_nft_msg, fuel_up_msg, burn_fuel_msg], freight_msgs].concat()
 }
 
 pub fn execute_main_all_msg(

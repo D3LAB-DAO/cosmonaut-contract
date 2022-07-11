@@ -217,3 +217,33 @@ pub fn fuel_up(
         attr("amount", amount.to_string()),
     ]))
 }
+
+pub fn burn_fuel(
+    deps: DepsMut,
+    info: MessageInfo,
+    token_id: String,
+    amount: Uint128,
+) -> Result<Response, ContractError> {
+    let contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
+
+    if info.sender != contract.minter.load(deps.storage)? {
+        return Err(ContractError::Unauthorized {});
+    }
+
+    let mut token = contract.tokens.load(deps.storage, &token_id)?;
+    let mut extension = token.extension;
+
+    extension.fuel = extension
+        .fuel
+        .checked_sub(amount.u128())
+        .ok_or(ContractError::NotFound {})?;
+
+    token.extension = Extension::from(extension);
+    contract.tokens.save(deps.storage, &token_id, &token)?;
+
+    Ok(Response::new().add_attributes([
+        attr("action", "burn_fuel"),
+        attr("from", token_id),
+        attr("amount", amount.to_string()),
+    ]))
+}

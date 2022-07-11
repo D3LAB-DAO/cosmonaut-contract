@@ -68,6 +68,10 @@ pub enum ExecuteMsg {
         token_id: String,
         amount: Uint128,
     },
+    BurnFuel {
+        token_id: String,
+        amount: Uint128,
+    },
     PlayGame {
         token_id: String,
         epoch: u64,
