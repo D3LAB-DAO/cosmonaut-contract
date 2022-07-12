@@ -44,6 +44,9 @@ pub fn instantiate(
     _info: MessageInfo,
     msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
+    TOKEN_EXTENSION.save(deps.storage, &TokenExtension {
+        unit_weight: Uint128::zero()
+    })?;
     cw20_instantiate(deps, _env, _info, msg)
 }
 

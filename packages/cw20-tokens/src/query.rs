@@ -71,7 +71,7 @@ pub fn query_all_cw20_msgs(
                 let res: Result<TokenExtension, StdError> =
                     query_contract(app, contract_addr, &QueryMsg::TokenExtension {});
                 match res {
-                    Ok(res) => responses.push((QueryResponse::TokenExtension(res))),
+                    Ok(res) => responses.push(QueryResponse::TokenExtension(res)),
                     Err(err) => errors.push(err.to_string()),
                 }
             }
