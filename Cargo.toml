@@ -30,7 +30,6 @@ cw721-spaceship = {path="packages/cw721-spaceship"}
 cw20-tokens = {path= "packages/cw20-tokens" }
 cw20 = "0.13.4"
 main-contract = {path="packages/main-contract"}
-
 base = {path="packages/base"}
 
 [dev-dependencies]

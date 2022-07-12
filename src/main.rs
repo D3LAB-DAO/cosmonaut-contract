@@ -24,14 +24,11 @@ const ADDR3: &str = "wasm333rvne2lz6funpxxkk6yumc8ll4l3c2e3kk333";
 const DEFAULT_ANSWER_PATH: &str = "answers";
 
 fn main() {
-    if args().count() != 4 {
+    if args().count() != 2 {
         println!("args are not sufficient");
         std::process::exit(0);
     }
-
-    let execute_output_dir: &str = &args().nth(1).unwrap();
-    let query_output_dir: &str = &args().nth(2).unwrap();
-    let which_lesson: &str = &args().nth(3).unwrap();
+    let which_lesson: &str = &args().nth(1).unwrap();
 
     let mut app = init_app(ADDR1);
 
@@ -41,72 +38,81 @@ fn main() {
     let spaceship_cw721_code_id = app.store_code(mock_cw721_contract());
     let main_contract_id = app.store_code(mock_main_contract());
 
-    // let cw721_contract_addr = instantiate_spaceship_nft_contract(
+    match which_lesson {
+        "1" => {
+            let cw721_contract_addr = instantiate_spaceship_nft_contract(
+                &mut app,
+                spaceship_cw721_code_id,
+                ADDR1,
+                ADDR1,
+                "cw721 nft",
+            );
+            println!("{:?}", execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3)
+                .check_answer(
+                    which_lesson,
+                    &format!(
+                        "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
+                        which_lesson, which_lesson
+                    ),
+                ));
+            // .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json", which_lesson, which_lesson));
+
+            println!("{:?}", query_all_cw721_msgs(&app, &cw721_contract_addr, ADDR1, ADDR2)
+                .check_answer(
+                    which_lesson,
+                    &format!(
+                        "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
+                        which_lesson, which_lesson
+                    ),
+                ));
+            // .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json", which_lesson, which_lesson));
+        },
+        "2" => {
+
+        }
+        _ => {}
+    }
+    //
+    //
+    // let main_contract_addr = instantiate_main_contract(
     //     &mut app,
+    //     main_contract_id,
+    //     money_cw20_code_id,
+    //     fuel_cw20_code_id,
     //     spaceship_cw721_code_id,
     //     ADDR1,
     //     ADDR1,
-    //     "cw721 nft",
+    //     "main contract",
     // );
-
-    let main_contract_addr = instantiate_main_contract(
-        &mut app,
-        main_contract_id,
-        money_cw20_code_id,
-        fuel_cw20_code_id,
-        spaceship_cw721_code_id,
-        ADDR1,
-        ADDR1,
-        "main contract",
-    );
-
-    let cw20_bullet_contract_addr = instantiate_cw20_contract(
-        &mut app,
-        bullet_cw20_code_id,
-        ADDR1,
-        main_contract_addr.as_ref(),
-        "bullet",
-        "ubullet",
-        vec![Cw20Coin {
-            address: ADDR1.to_string(),
-            amount: Uint128::new(10000000),
-        }],
-        Uint128::new(2),
-        "cw20-tokens bullet",
-    );
-
-    // println!("{:?}", execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3));
-    // .check_answer(
-    //     which_lesson,
-    //     &format!(
-    //         "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
-    //         which_lesson, which_lesson
-    //     ),
-    // )
-    // .write_to_file(execute_output_dir);
-    // println!("{:?}", query_all_cw721_msgs(&app, &cw721_contract_addr, ADDR1, ADDR2));
-    //     .check_answer(
-    //         which_lesson,
-    //         &format!(
-    //             "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
-    //             which_lesson, which_lesson
-    //         ),
-    //     )
-    //     .write_to_file(query_output_dir);
     //
-    let a = execute_main_all_msg(
-        &mut app,
-        main_contract_addr.as_ref(),
-        vec![
-            FreightParams {
-                contract_addr: cw20_bullet_contract_addr.to_string(),
-                amount: Uint128::new(100)
-            }
-        ],
-        ADDR1,
-        ADDR2,
-    );
-    println!("{:?}", a);
+    // let cw20_bullet_contract_addr = instantiate_cw20_contract(
+    //     &mut app,
+    //     bullet_cw20_code_id,
+    //     ADDR1,
+    //     main_contract_addr.as_ref(),
+    //     "bullet",
+    //     "ubullet",
+    //     vec![Cw20Coin {
+    //         address: ADDR1.to_string(),
+    //         amount: Uint128::new(10000000),
+    //     }],
+    //     Uint128::new(2),
+    //     "cw20-tokens bullet",
+    // );
+    //
+    // let a = execute_main_all_msg(
+    //     &mut app,
+    //     main_contract_addr.as_ref(),
+    //     vec![
+    //         FreightParams {
+    //             contract_addr: cw20_bullet_contract_addr.to_string(),
+    //             amount: Uint128::new(100),
+    //         }
+    //     ],
+    //     ADDR1,
+    //     ADDR2,
+    // );
+    // println!("{:?}", a);
     //     .check_answer(
     //         which_lesson,
     //         &format!(

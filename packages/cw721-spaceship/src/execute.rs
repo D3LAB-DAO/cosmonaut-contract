@@ -1,8 +1,9 @@
 use base::execute::execute_contract;
 use base::result::ExecuteAllResult;
-use cosmonaut_cw721::state::{Extension as cosmonautExtension, Freight};
+use cosmonaut_cw721::state::{Extension as cosmonautExtension, Extension, Freight};
 use cosmwasm_std::{Addr, Attribute, Uint128};
 use cw_multi_test::BasicApp;
+use cosmonaut_cw20::msg::MinterResponse;
 
 fn create_cw721_execute_msgs(
     admin: &str,
@@ -56,6 +57,16 @@ fn create_cw721_execute_msgs(
         value: Uint128::new(5),
     };
 
+    let fuel_up_msg = ExecuteMsg::FuelUp {
+        token_id: "1".to_string(),
+        amount: Uint128::new(100),
+    };
+
+    let burn_fuel_msg = ExecuteMsg::BurnFuel {
+        token_id: "1".to_string(),
+        amount: Uint128::new(50),
+    };
+
     vec![
         mint_msg,
         approve_nft_msg,
@@ -63,6 +74,8 @@ fn create_cw721_execute_msgs(
         unload_freight_msg,
         decrease_health_msg,
         transfer_nft_msg,
+        fuel_up_msg,
+        burn_fuel_msg,
     ]
 }
 

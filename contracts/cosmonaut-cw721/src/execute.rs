@@ -237,14 +237,14 @@ pub fn burn_fuel(
     extension.fuel = extension
         .fuel
         .checked_sub(amount.u128())
-        .ok_or(ContractError::FuelNotEnough {})?;
+        .ok_or(ContractError::NotFound {})?;
 
     token.extension = Extension::from(extension);
     contract.tokens.save(deps.storage, &token_id, &token)?;
 
     Ok(Response::new().add_attributes([
         attr("action", "burn_fuel"),
-        attr("from", token_id),
+        attr("to", token_id),
         attr("amount", amount.to_string()),
     ]))
 }

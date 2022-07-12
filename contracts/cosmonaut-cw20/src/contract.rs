@@ -78,7 +78,9 @@ pub fn execute(
     info: MessageInfo,
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
-    cw20_execute(deps, env, info, msg)
+    let a = cw20_execute(deps, env, info, msg);
+    println!("{:?}", a);
+    a
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]

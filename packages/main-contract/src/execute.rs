@@ -59,7 +59,6 @@ fn create_main_contract_execute_msgs(
     let mut freight_msgs = vec![];
 
     for i in freights {
-
         let add_freight_contract_msg = ExecuteMsg::AddFreightContract {
             address: i.clone().contract_addr,
         };
@@ -69,15 +68,27 @@ fn create_main_contract_execute_msgs(
             amount: i.amount,
         };
 
+        let load_freight_msg = ExecuteMsg::LoadFreight {
+            address: i.clone().contract_addr.to_string(),
+            token_id: "1".to_string(),
+            amount: Uint128::new(100),
+        };
+
+        let unload_freight_msg = ExecuteMsg::UnLoadFreight {
+            address: i.clone().contract_addr.to_string(),
+            token_id: "1".to_string(),
+            amount: Uint128::new(50),
+        };
+
         freight_msgs.push(add_freight_contract_msg);
-        freight_msgs.push(buy_freight_token_msg);
-        // freight_msgs.push(load_freight_msg);
-        // freight_msgs.push(unload_freight_msg);
+        // freight_msgs.push(buy_freight_token_msg);
+        freight_msgs.push(load_freight_msg);
+        freight_msgs.push(unload_freight_msg);
     }
 
     let msg_except_freight_vec = vec![buy_nft_msg, fuel_up_msg, burn_fuel_msg];
 
-   [msg_except_freight_vec, freight_msgs].concat()
+    [msg_except_freight_vec, freight_msgs].concat()
 }
 
 pub fn execute_main_all_msg(

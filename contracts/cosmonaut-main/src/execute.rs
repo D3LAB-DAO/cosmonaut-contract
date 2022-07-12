@@ -11,7 +11,7 @@ use cosmwasm_std::{
 use cw721::{Cw721QueryMsg, NftInfoResponse, OwnerOfResponse};
 use cw721_base::{MintMsg, QueryMsg};
 use std::ops::{Add, Div, Rem};
-use cw20::{Cw20QueryMsg};
+use cw20::{Cw20QueryMsg, TokenInfoResponse};
 
 const MAX_FREIGHT_WEIGHT: u128 = 1000 * 1000;
 const FUEL_PER_GAME: u128 = 10;
@@ -122,7 +122,7 @@ pub fn execute_load_freight_to_nft(
 
     let unit_weight = freight_info
         .unit_weight;
-    println!("{}", unit_weight);
+
     let denom = freight_info.symbol;
 
     if amount * unit_weight > Uint128::new(MAX_FREIGHT_WEIGHT) {
