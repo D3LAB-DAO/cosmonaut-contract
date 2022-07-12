@@ -1,14 +1,16 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::{
-    Addr, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdError, StdResult, Uint128,
-};
-use cw2::set_contract_version;
 
-use crate::error::ContractError;
-use crate::msg::{ExecuteMsg, InstantiateMsg, MigrateMsg, MinterResponse, QueryMsg};
+use cosmwasm_std::{Addr, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdError, StdResult, to_binary, Uint128};
+use cw2::set_contract_version;
+use cw20_base::contract::{execute as cw20_execute, query as cw20_query, query_token_info};
+use cw20_base::msg::{ExecuteMsg, QueryMsg};
+use cw20_base::{ContractError, msg};
+
+use crate::msg::{InstantiateMsg, MinterResponse};
+use crate::query;
+use crate::query::token_info;
 use crate::state::{TokenInfo, BALANCES, TOKEN_INFO};
-use crate::{execute, query};
 
 const CONTRACT_NAME: &str = "crates.io:mars-tokens";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -76,46 +78,13 @@ pub fn execute(
     info: MessageInfo,
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
-    match msg {
-        ExecuteMsg::Transfer { recipient, amount } => {
-            execute::transfer(deps, info.sender, recipient, amount)
-        }
-        ExecuteMsg::Mint { recipient, amount } => {
-            execute::mint(deps, info.sender, recipient, amount)
-        }
-        ExecuteMsg::Send {
-            contract,
-            amount,
-            msg,
-        } => execute::send(deps, info.sender, contract, amount, msg),
-        ExecuteMsg::IncreaseAllowance {
-            spender,
-            amount,
-            expires,
-        } => execute::increase_allowance(deps, info.sender, spender, amount, expires),
-        ExecuteMsg::DecreaseAllowance {
-            spender,
-            amount,
-            expires,
-        } => execute::decrease_allowance(deps, info.sender, spender, amount, expires),
-        ExecuteMsg::TransferFrom {
-            owner,
-            recipient,
-            amount,
-        } => execute::transfer_from(deps, env, info, owner, recipient, amount),
-        ExecuteMsg::Burn { amount } => execute::burn(deps, env, info, amount),
-        ExecuteMsg::BurnFrom { owner, amount } => {
-            execute::burn_from(deps, env, info, owner, amount)
-        }
-    }
+    cw20_execute(deps, env, info, msg)
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
-pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
-        QueryMsg::Balance { address } => query::balance(deps, address),
-        QueryMsg::TokenInfo {} => query::token_info(deps),
-        QueryMsg::MintInfo {} => query::mint_info(deps),
-        QueryMsg::Allowance { owner, spender } => query::allowance(deps, owner, spender),
+        QueryMsg::TokenInfo {} => to_binary(&query::token_info(deps)?),
+        _ => cw20_query(deps, env, msg),
     }
 }

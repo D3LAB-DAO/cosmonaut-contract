@@ -182,7 +182,6 @@ pub fn decrease_health(
         .tokens
         .save(deps.storage, &token_id, &token)?;
 
-
     Ok(Response::new()
         .add_attribute("action", "decrease_health")
         .add_attribute("sender", info.sender.to_string())
@@ -234,7 +233,6 @@ pub fn burn_fuel(
 
     let mut token = contract.tokens.load(deps.storage, &token_id)?;
     let mut extension = token.extension;
-
 
     extension.fuel = extension
         .fuel

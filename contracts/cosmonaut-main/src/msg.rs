@@ -17,7 +17,7 @@ pub struct Cw20InstantiateMsg {
     pub mint: Option<MinterResponse>,
     pub marketing: Option<String>,
     pub total_supply: Uint128,
-    pub unit_weight: Option<Uint128>,
+    pub unit_weight: Uint128,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

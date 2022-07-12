@@ -654,6 +654,8 @@ dependencies = [
  "cosmonaut-main",
  "cosmwasm-std",
  "cw-multi-test",
+ "cw20",
+ "cw20-base",
  "cw721-base",
  "schemars",
  "serde",

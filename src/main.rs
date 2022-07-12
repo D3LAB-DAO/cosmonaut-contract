@@ -1,8 +1,9 @@
 use base::init::init_app;
 use base::result::Result;
-use cosmwasm_std::Uint128;
+use cosmwasm_std::{to_binary, Uint128, WasmQuery};
 use cw20::Cw20Coin;
 use std::env::args;
+use cw20::Cw20QueryMsg::TokenInfo;
 
 use cw20_tokens::init::mock_cw20_contract;
 use cw20_tokens::instantiate::instantiate_cw20_contract;
@@ -59,18 +60,6 @@ fn main() {
         "main contract",
     );
 
-    // let cw20_oil_contract_addr = instantiate_cw20_contract(
-    //     &mut app,
-    //     fuel_cw20_code_id,
-    //     ADDR1,
-    //     main_contract_addr.as_ref(),
-    //     "oil",
-    //     "uoil",
-    //     vec![Cw20Coin { address: ADDR1.to_string(), amount: Uint128::new(10000000) }],
-    //     Some(Uint128::new(1)),
-    //     "cw20-tokens oil",
-    // );
-    //
     let cw20_bullet_contract_addr = instantiate_cw20_contract(
         &mut app,
         bullet_cw20_code_id,
@@ -82,7 +71,7 @@ fn main() {
             address: ADDR1.to_string(),
             amount: Uint128::new(10000000),
         }],
-        Some(Uint128::new(2)),
+        Uint128::new(2),
         "cw20-tokens bullet",
     );
 
@@ -108,10 +97,12 @@ fn main() {
     let a = execute_main_all_msg(
         &mut app,
         main_contract_addr.as_ref(),
-        vec![FreightParams {
-            contract_addr: cw20_bullet_contract_addr.to_string(),
-            amount: Uint128::new(100),
-        }],
+        vec![
+            FreightParams {
+                contract_addr: cw20_bullet_contract_addr.to_string(),
+                amount: Uint128::new(100)
+            }
+        ],
         ADDR1,
         ADDR2,
     );

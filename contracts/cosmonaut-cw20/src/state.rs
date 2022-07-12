@@ -13,7 +13,7 @@ pub struct TokenInfo {
     pub decimals: u8,
     pub total_supply: Uint128,
     pub mint: Option<MinterResponse>,
-    pub unit_weight: Option<Uint128>,
+    pub unit_weight: Uint128,
 }
 
 impl TokenInfo {

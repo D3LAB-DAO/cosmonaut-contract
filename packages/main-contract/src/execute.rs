@@ -5,7 +5,7 @@ use cosmonaut_cw721::ContractError;
 use cosmonaut_main::contract::execute;
 use cosmonaut_main::msg::{ConfigResponse, ExecuteMsg, QueryMsg};
 use cosmonaut_main::state::CONFIG;
-use cosmwasm_std::{coin, Addr, Attribute, StdError, Uint128, from_binary};
+use cosmwasm_std::{coin, from_binary, Addr, Attribute, StdError, Uint128};
 use cw721_base::MintMsg;
 use cw_multi_test::BasicApp;
 use schemars::JsonSchema;
@@ -59,6 +59,7 @@ fn create_main_contract_execute_msgs(
     let mut freight_msgs = vec![];
 
     for i in freights {
+
         let add_freight_contract_msg = ExecuteMsg::AddFreightContract {
             address: i.clone().contract_addr,
         };
@@ -68,32 +69,15 @@ fn create_main_contract_execute_msgs(
             amount: i.amount,
         };
 
-        let load_freight_msg = ExecuteMsg::LoadFreight {
-            address: i.clone().contract_addr,
-            token_id: "1".to_string(),
-            amount: i.amount.multiply_ratio(1u128, 2u128),
-        };
-
-        let unload_freight_msg = ExecuteMsg::UnLoadFreight {
-            address: i.clone().contract_addr,
-            token_id: "1".to_string(),
-            amount: i.amount.multiply_ratio(1u128, 4u128),
-        };
-
         freight_msgs.push(add_freight_contract_msg);
         freight_msgs.push(buy_freight_token_msg);
-        freight_msgs.push(load_freight_msg);
-        freight_msgs.push(unload_freight_msg);
+        // freight_msgs.push(load_freight_msg);
+        // freight_msgs.push(unload_freight_msg);
     }
 
+    let msg_except_freight_vec = vec![buy_nft_msg, fuel_up_msg, burn_fuel_msg];
 
-    let msg_except_freight_vec = vec![
-        buy_nft_msg,
-        fuel_up_msg,
-        burn_fuel_msg,
-    ];
-
-    [msg_except_freight_vec, freight_msgs].concat()
+   [msg_except_freight_vec, freight_msgs].concat()
 }
 
 pub fn execute_main_all_msg(
@@ -133,7 +117,7 @@ pub fn execute_main_all_msg(
         expires: None,
     };
 
-    let increase_allowance_msg = cosmonaut_cw20::msg::ExecuteMsg::IncreaseAllowance {
+    let increase_allowance_msg = cw20_base::msg::ExecuteMsg::IncreaseAllowance {
         spender: main_contract_addr.to_string(),
         amount: Uint128::new(10000),
         expires: None,
@@ -166,41 +150,41 @@ pub fn execute_main_all_msg(
         );
     }
 
-
     let main_execute_msgs = create_main_contract_execute_msgs(freights);
     for msg in main_execute_msgs {
-        let execute_res = execute_contract(app, &Addr::unchecked(main_contract_addr), &msg, &[], admin);
+        let execute_res =
+            execute_contract(app, &Addr::unchecked(main_contract_addr), &msg, &[], admin);
         match execute_res {
             Ok(res) => total_attributes.push(res),
             Err(err) => total_errors.push(err.root_cause().to_string()),
         }
     }
-
-    execute_contract(
-        app,
-        &Addr::unchecked(main_contract_config.config.spaceship_cw721_contract.clone()),
-        &approve_nft_msg,
-        &[],
-        admin,
-    );
-
-    let play_game_msg = ExecuteMsg::PlayGame {
-        token_id: 1.to_string(),
-        epoch: Uint128::new(5),
-    };
-
-    let game_play_res = execute_contract(
-        app,
-        &Addr::unchecked(main_contract_addr),
-        &play_game_msg,
-        &[],
-        admin,
-    );
-
-    match game_play_res {
-        Ok(res) => total_attributes.push(res),
-        Err(err) => total_errors.push(err.root_cause().to_string())
-    }
+    //
+    // execute_contract(
+    //     app,
+    //     &Addr::unchecked(main_contract_config.config.spaceship_cw721_contract.clone()),
+    //     &approve_nft_msg,
+    //     &[],
+    //     admin,
+    // );
+    //
+    // let play_game_msg = ExecuteMsg::PlayGame {
+    //     token_id: 1.to_string(),
+    //     epoch: Uint128::new(5),
+    // };
+    //
+    // let game_play_res = execute_contract(
+    //     app,
+    //     &Addr::unchecked(main_contract_addr),
+    //     &play_game_msg,
+    //     &[],
+    //     admin,
+    // );
+    //
+    // match game_play_res {
+    //     Ok(res) => total_attributes.push(res),
+    //     Err(err) => total_errors.push(err.root_cause().to_string())
+    // }
 
     ExecuteAllResult {
         attributes: total_attributes,

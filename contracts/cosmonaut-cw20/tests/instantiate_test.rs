@@ -29,7 +29,7 @@ mod instantiate {
             mint: Some(mint_msg),
             marketing: None,
             total_supply: Uint128::zero(),
-            unit_weight: None,
+            unit_weight: Uint128::new(0),
         };
 
         let res = instantiate(deps.as_mut(), _env, info, msg).unwrap();

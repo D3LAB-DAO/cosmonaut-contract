@@ -1,5 +1,5 @@
 use crate::error::ContractError;
-use crate::msg::{Cw20InstantiateMsg, ExecuteMsg, InstantiateMsg, QueryMsg};
+use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{Config, CONFIG};
 use crate::{execute, query};
 use cosmonaut_cw721::state::Extension;
@@ -46,7 +46,7 @@ pub fn instantiate(
         WasmMsg::Instantiate {
             admin: Some(info.sender.to_string()),
             code_id: msg.money_cw20_id,
-            msg: to_binary(&Cw20InstantiateMsg {
+            msg: to_binary(&cosmonaut_cw20::msg::InstantiateMsg {
                 name: "MARS".to_string(),
                 symbol: "mars".to_string(),
                 decimals: 6,
@@ -57,7 +57,7 @@ pub fn instantiate(
                 }),
                 marketing: None,
                 total_supply: Default::default(),
-                unit_weight: None,
+                unit_weight: Uint128::new(1),
             })?,
             funds: vec![],
             label: "mars token for money".to_string(),
@@ -69,7 +69,7 @@ pub fn instantiate(
         WasmMsg::Instantiate {
             admin: Some(info.sender.to_string()),
             code_id: msg.fuel_cw20_id,
-            msg: to_binary(&Cw20InstantiateMsg {
+            msg: to_binary(&cosmonaut_cw20::msg::InstantiateMsg {
                 name: "fuel".to_string(),
                 symbol: "ufuel".to_string(),
                 decimals: 6,
@@ -80,7 +80,7 @@ pub fn instantiate(
                 }),
                 marketing: None,
                 total_supply: Default::default(),
-                unit_weight: Some(Uint128::new(1)),
+                unit_weight: Uint128::new(1),
             })?,
             funds: vec![],
             label: "fuel token for game".to_string(),
@@ -162,9 +162,7 @@ pub fn execute(
         ExecuteMsg::AddFreightContract { address } => {
             execute::execute_add_freight_contract(deps, address)
         }
-        ExecuteMsg::BuyNft {
-            nft_id,
-        } => execute::execute_buy_spaceship(deps, info, nft_id),
+        ExecuteMsg::BuyNft { nft_id } => execute::execute_buy_spaceship(deps, info, nft_id),
 
         ExecuteMsg::Mint(mint_msg) => execute::execute_mint_to_cw721_contract(deps, info, mint_msg),
 
