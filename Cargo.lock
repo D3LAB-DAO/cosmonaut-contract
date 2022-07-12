@@ -399,6 +399,9 @@ dependencies = [
  "cosmwasm-std",
  "cw-multi-test",
  "cw20",
+ "cw20-base",
+ "schemars",
+ "serde",
 ]
 
 [[package]]

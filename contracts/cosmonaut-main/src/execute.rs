@@ -1,17 +1,17 @@
 use crate::error::ContractError;
-use crate::msg::{ExecuteMsg};
+use crate::msg::ExecuteMsg;
 use crate::state::{FreightContractInfo, CONFIG};
-use cosmonaut_cw20::msg as cosmonaut_cw20_msg;
 use cosmonaut_cw721::msg as cosmonaut_cw721_msg;
 use cosmonaut_cw721::state::{Extension, Metadata};
 use cosmwasm_std::{
     attr, coin, to_binary, Addr, ContractInfoResponse, CosmosMsg, Deps, DepsMut, Env, MessageInfo,
     QueryRequest, Response, StdError, StdResult, Uint128, WasmMsg, WasmQuery,
 };
+use cw20::{BalanceResponse, TokenInfoResponse};
 use cw721::{Cw721QueryMsg, NftInfoResponse, OwnerOfResponse};
 use cw721_base::{MintMsg, QueryMsg};
 use std::ops::{Add, Div, Rem};
-use cw20::{Cw20QueryMsg, TokenInfoResponse};
+use cosmonaut_cw20::contract::TokenExtension;
 
 const MAX_FREIGHT_WEIGHT: u128 = 1000 * 1000;
 const FUEL_PER_GAME: u128 = 10;
@@ -47,8 +47,7 @@ pub fn execute_buy_spaceship(
         },
     )?;
 
-
-    let token_balance: cosmonaut_cw20_msg::BalanceResponse = deps.querier.query_wasm_smart(
+    let token_balance: BalanceResponse = deps.querier.query_wasm_smart(
         config.money_cw20_contract.as_ref(),
         &cw20_base::msg::QueryMsg::Balance {
             address: info.sender.to_string(),
@@ -115,15 +114,19 @@ pub fn execute_load_freight_to_nft(
     token_id: String,
     amount: Uint128,
 ) -> Result<Response, ContractError> {
-    let freight_info: cosmonaut_cw20::msg::TokenInfoResponse = deps.as_ref()
+    let token_extension: TokenExtension = deps
+        .as_ref()
+        .querier
+        .query_wasm_smart(address.clone(), &cosmonaut_cw20::msg::QueryMsg::TokenExtension {})?;
+
+    let token_info: TokenInfoResponse = deps
+        .as_ref()
         .querier
         .query_wasm_smart(address, &cw20_base::msg::QueryMsg::TokenInfo {})?;
-    println!("{:?}", freight_info);
 
-    let unit_weight = freight_info
-        .unit_weight;
+    let unit_weight = token_extension.unit_weight;
 
-    let denom = freight_info.symbol;
+    let denom = token_info.symbol;
 
     if amount * unit_weight > Uint128::new(MAX_FREIGHT_WEIGHT) {
         return Err(ContractError::FrightOverloaded {});
@@ -180,7 +183,8 @@ pub fn execute_unload_freight_from_nft(
     token_id: String,
     amount: Uint128,
 ) -> Result<Response, ContractError> {
-    let freight_info: cosmonaut_cw20::msg::TokenInfoResponse = deps.as_ref()
+    let freight_info: TokenInfoResponse = deps
+        .as_ref()
         .querier
         .query_wasm_smart(address, &cw20_base::msg::QueryMsg::TokenInfo {})?;
     let denom = freight_info.symbol;
@@ -232,12 +236,13 @@ pub fn execute_add_freight_contract(
     address: String,
 ) -> Result<Response, ContractError> {
     let contract_info: ContractInfoResponse =
-        deps.as_ref().querier
+        deps.as_ref()
+            .querier
             .query(&QueryRequest::Wasm(WasmQuery::ContractInfo {
                 contract_addr: address.clone(),
             }))?;
     let code_id = contract_info.code_id;
-    let freight_info: cosmonaut_cw20::msg::TokenInfoResponse = deps
+    let freight_info: TokenInfoResponse = deps
         .querier
         .query_wasm_smart(address.clone(), &cw20_base::msg::QueryMsg::TokenInfo {})?;
 
@@ -335,7 +340,8 @@ pub fn execute_buy_freight_token(
     address: String,
     amount: Uint128,
 ) -> Result<Response, ContractError> {
-    let freight_info: cosmonaut_cw20::msg::TokenInfoResponse = deps.as_ref()
+    let freight_info: TokenInfoResponse = deps
+        .as_ref()
         .querier
         .query_wasm_smart(address, &cw20_base::msg::QueryMsg::TokenInfo {})?;
     println!("{:?}", freight_info);
@@ -386,7 +392,7 @@ pub fn fuel_up(
     check_is_sender_owner_of_nft(deps.as_ref(), &info.sender, &token_id)?;
     let config = CONFIG.load(deps.storage)?;
 
-    execute_buy_freight_token(deps, info, config.fuel_cw20_contract.to_string(), amount);
+    execute_buy_freight_token(deps, info, config.fuel_cw20_contract.to_string(), amount)?;
 
     let fuel_up_msg = cosmonaut_cw721_msg::ExecuteMsg::FuelUp {
         token_id: token_id.clone(),
@@ -462,14 +468,13 @@ pub fn execute_play_game(
         .sum();
 
     let mut health_decrease_value = Uint128::zero();
-    let mut random_number = Uint128::zero();
     let mut spaceship_speed = Uint128::zero();
 
     for _ in 0..epoch.u128() {
         let timestamp_int_nanos = Uint128::new(u128::from(env.block.time.nanos()));
         let total_health = Uint128::new(nft_info.extension.health);
         let step = total_health.div(epoch);
-        random_number = _generate_random_number(timestamp_int_nanos);
+        let random_number = _generate_random_number(timestamp_int_nanos);
         spaceship_speed = Uint128::new(MAX_FREIGHT_WEIGHT)
             - Uint128::new(MAX_FREIGHT_WEIGHT)
             .multiply_ratio(total_freight_weight, MAX_FREIGHT_WEIGHT);

@@ -1,11 +1,8 @@
 use base::execute::execute_contract;
 use base::result::ExecuteAllResult;
-use cosmonaut_cw721::state::{Extension, Metadata};
-use cosmonaut_cw721::ContractError;
-use cosmonaut_main::contract::execute;
+use cosmonaut_cw721::state::Extension;
 use cosmonaut_main::msg::{ConfigResponse, ExecuteMsg, QueryMsg};
-use cosmonaut_main::state::CONFIG;
-use cosmwasm_std::{coin, from_binary, Addr, Attribute, StdError, Uint128};
+use cosmwasm_std::{coin, Addr, Attribute, Uint128};
 use cw721_base::MintMsg;
 use cw_multi_test::BasicApp;
 use schemars::JsonSchema;
@@ -27,7 +24,7 @@ fn create_main_contract_execute_msgs_before_approve(
         token_id: "1".to_string(),
         owner: recipient.to_string(),
         token_uri: None,
-        extension: Metadata {
+        extension: Extension {
             unit_denom: "mars".to_string(),
             price: 500,
             name: Some("cosmonaut spaceship".to_string()),
@@ -81,7 +78,7 @@ fn create_main_contract_execute_msgs(
         };
 
         freight_msgs.push(add_freight_contract_msg);
-        // freight_msgs.push(buy_freight_token_msg);
+        freight_msgs.push(buy_freight_token_msg);
         freight_msgs.push(load_freight_msg);
         freight_msgs.push(unload_freight_msg);
     }
@@ -140,7 +137,8 @@ pub fn execute_main_all_msg(
         &approve_nft_msg,
         &[],
         recipient,
-    );
+    )
+    .unwrap();
 
     execute_contract(
         app,
@@ -148,7 +146,8 @@ pub fn execute_main_all_msg(
         &increase_allowance_msg,
         &[],
         admin,
-    );
+    )
+    .unwrap();
 
     for freight in freights.clone() {
         let addr = freight.contract_addr;

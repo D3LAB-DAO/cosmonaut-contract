@@ -1,24 +1,10 @@
 use crate::state::Config;
-use cosmonaut_cw20::msg::MinterResponse;
 use cosmonaut_cw721::state::Extension;
 use cosmwasm_std::{Addr, Uint128};
-use cw20::Cw20Coin;
+use cw20::{Cw20Coin, MinterResponse};
 use cw721_base::MintMsg;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-#[serde(rename_all = "snake_case")]
-pub struct Cw20InstantiateMsg {
-    pub name: String,
-    pub symbol: String,
-    pub decimals: u8,
-    pub initial_balances: Vec<Cw20Coin>,
-    pub mint: Option<MinterResponse>,
-    pub marketing: Option<String>,
-    pub total_supply: Uint128,
-    pub unit_weight: Uint128,
-}
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct InstantiateMsg {

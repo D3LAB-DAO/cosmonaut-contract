@@ -5,9 +5,6 @@ use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 use std::fs::OpenOptions;
 use std::iter::zip;
-use cw721::NftInfoResponse;
-use cw721_base::{Extension, MinterResponse};
-
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct ExecuteAllResult {

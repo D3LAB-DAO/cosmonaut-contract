@@ -2,18 +2,16 @@ use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{Config, CONFIG};
 use crate::{execute, query};
-use cosmonaut_cw721::state::Extension;
 
-use cosmonaut_cw20::msg::MinterResponse;
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::WasmMsg::Execute;
 use cosmwasm_std::{
     to_binary, Addr, Binary, Deps, DepsMut, Env, MessageInfo, Reply, Response, StdError, StdResult,
     SubMsg, Uint128, WasmMsg,
 };
 use cw2::set_contract_version;
-use cw20::Cw20Coin;
+use cw20::{MinterResponse};
+use cw20_base::msg::InstantiateMsg as Cw20InstantiateMsg;
 use cw721_base::msg::InstantiateMsg as Cw721InstantiateMsg;
 use cw_utils::parse_reply_instantiate_data;
 
@@ -46,7 +44,7 @@ pub fn instantiate(
         WasmMsg::Instantiate {
             admin: Some(info.sender.to_string()),
             code_id: msg.money_cw20_id,
-            msg: to_binary(&cosmonaut_cw20::msg::InstantiateMsg {
+            msg: to_binary(&Cw20InstantiateMsg{
                 name: "MARS".to_string(),
                 symbol: "mars".to_string(),
                 decimals: 6,
@@ -56,8 +54,6 @@ pub fn instantiate(
                     cap: None,
                 }),
                 marketing: None,
-                total_supply: Default::default(),
-                unit_weight: Uint128::new(1),
             })?,
             funds: vec![],
             label: "mars token for money".to_string(),
@@ -69,7 +65,7 @@ pub fn instantiate(
         WasmMsg::Instantiate {
             admin: Some(info.sender.to_string()),
             code_id: msg.fuel_cw20_id,
-            msg: to_binary(&cosmonaut_cw20::msg::InstantiateMsg {
+            msg: to_binary(&Cw20InstantiateMsg {
                 name: "fuel".to_string(),
                 symbol: "ufuel".to_string(),
                 decimals: 6,
@@ -79,8 +75,6 @@ pub fn instantiate(
                     cap: None,
                 }),
                 marketing: None,
-                total_supply: Default::default(),
-                unit_weight: Uint128::new(1),
             })?,
             funds: vec![],
             label: "fuel token for game".to_string(),
@@ -124,7 +118,7 @@ pub fn reply(deps: DepsMut, _env: Env, msg: Reply) -> StdResult<Response> {
 }
 
 fn handle_cw20_money_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Response> {
-    let res = parse_reply_instantiate_data(msg.clone()).unwrap();
+    let res = parse_reply_instantiate_data(msg).unwrap();
     CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
         config.money_cw20_contract = Addr::unchecked(res.contract_address);
         Ok(config)
@@ -133,7 +127,7 @@ fn handle_cw20_money_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<R
 }
 
 fn handle_cw20_fuel_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Response> {
-    let res = parse_reply_instantiate_data(msg.clone()).unwrap();
+    let res = parse_reply_instantiate_data(msg).unwrap();
     CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
         config.fuel_cw20_contract = Addr::unchecked(res.contract_address);
         Ok(config)
@@ -142,7 +136,7 @@ fn handle_cw20_fuel_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Re
 }
 
 fn handle_cw721_spaceship_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Response> {
-    let res = parse_reply_instantiate_data(msg.clone()).unwrap();
+    let res = parse_reply_instantiate_data(msg).unwrap();
 
     CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
         config.spaceship_cw721_contract = Addr::unchecked(res.contract_address);

@@ -114,7 +114,7 @@ pub fn load_freight(
         })
     }
 
-    token.extension = Extension::from(extension);
+    token.extension = extension;
     contract.tokens.save(deps.storage, &token_id, &token)?;
 
     Ok(Response::new()
@@ -146,7 +146,7 @@ pub fn unload_freight(
     } else {
         return Err(ContractError::NotFound {});
     }
-    token.extension = Extension::from(extension);
+    token.extension = extension;
     contract.tokens.save(deps.storage, &token_id, &token)?;
 
     Ok(Response::new()
@@ -177,7 +177,7 @@ pub fn decrease_health(
 
     // handle with negative overflow
     extension.health = extension.health.saturating_sub(value.u128());
-    token.extension = Extension::from(extension);
+    token.extension = extension;
     cosmonaut_contract
         .tokens
         .save(deps.storage, &token_id, &token)?;
@@ -209,7 +209,7 @@ pub fn fuel_up(
         .checked_add(amount.u128())
         .ok_or(ContractError::NotFound {})?;
 
-    token.extension = Extension::from(extension);
+    token.extension = extension;
     contract.tokens.save(deps.storage, &token_id, &token)?;
 
     Ok(Response::new().add_attributes([
@@ -239,7 +239,7 @@ pub fn burn_fuel(
         .checked_sub(amount.u128())
         .ok_or(ContractError::NotFound {})?;
 
-    token.extension = Extension::from(extension);
+    token.extension = extension;
     contract.tokens.save(deps.storage, &token_id, &token)?;
 
     Ok(Response::new().add_attributes([

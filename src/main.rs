@@ -1,12 +1,16 @@
 use base::init::init_app;
 use base::result::Result;
 use cosmwasm_std::{to_binary, Uint128, WasmQuery};
-use cw20::Cw20Coin;
-use std::env::args;
 use cw20::Cw20QueryMsg::TokenInfo;
+use cw20::{Cw20Coin, Cw20QueryMsg};
+use cw20_tokens::execute::execute_cw20_all_msg;
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
+use std::env::args;
 
 use cw20_tokens::init::mock_cw20_contract;
 use cw20_tokens::instantiate::instantiate_cw20_contract;
+use cw20_tokens::query::query_all_cw20_msgs;
 
 use cw721_spaceship::execute::execute_cw721_all_msg;
 use cw721_spaceship::init::mock_cw721_contract;
@@ -47,7 +51,45 @@ fn main() {
                 ADDR1,
                 "cw721 nft",
             );
-            println!("{:?}", execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3)
+            println!(
+                "{:?}",
+                execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3)
+                    .check_answer(
+                        which_lesson,
+                        &format!(
+                            "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
+                            which_lesson, which_lesson
+                        ),
+                    )
+            );
+            // .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json", which_lesson, which_lesson));
+
+            println!(
+                "{:?}",
+                query_all_cw721_msgs(&app, &cw721_contract_addr, ADDR1, ADDR2).check_answer(
+                    which_lesson,
+                    &format!(
+                        "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
+                        which_lesson, which_lesson
+                    ),
+                )
+            );
+            // .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json", which_lesson, which_lesson));
+        }
+        "2" => {
+            let cw20_contract_addr = instantiate_cw20_contract(
+                &mut app,
+                money_cw20_code_id,
+                ADDR1,
+                ADDR1,
+                "mars",
+                "umars",
+                vec![],
+                Uint128::new(3),
+                "cw20 money",
+            );
+
+            println!("{:?}", execute_cw20_all_msg(&mut app, &cw20_contract_addr.as_ref(), ADDR1, ADDR2)
                 .check_answer(
                     which_lesson,
                     &format!(
@@ -57,7 +99,7 @@ fn main() {
                 ));
             // .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json", which_lesson, which_lesson));
 
-            println!("{:?}", query_all_cw721_msgs(&app, &cw721_contract_addr, ADDR1, ADDR2)
+            println!("{:?}", query_all_cw20_msgs(&app, &cw20_contract_addr, ADDR1, ADDR2)
                 .check_answer(
                     which_lesson,
                     &format!(
@@ -66,9 +108,6 @@ fn main() {
                     ),
                 ));
             // .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json", which_lesson, which_lesson));
-        },
-        "2" => {
-
         }
         _ => {}
     }

@@ -1,0 +1,155 @@
+{
+  "attributes": [
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "mint"
+      },
+      {
+        "key": "to",
+        "value": "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111"
+      },
+      {
+        "key": "amount",
+        "value": "10000"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "transfer"
+      },
+      {
+        "key": "from",
+        "value": "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111"
+      },
+      {
+        "key": "to",
+        "value": "wasm222rvne2lz6funpxxkk6yumc8ll4l3c2e3kk222"
+      },
+      {
+        "key": "amount",
+        "value": "1000"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "burn"
+      },
+      {
+        "key": "from",
+        "value": "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111"
+      },
+      {
+        "key": "amount",
+        "value": "10"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "increase_allowance"
+      },
+      {
+        "key": "owner",
+        "value": "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111"
+      },
+      {
+        "key": "spender",
+        "value": "wasm222rvne2lz6funpxxkk6yumc8ll4l3c2e3kk222"
+      },
+      {
+        "key": "amount",
+        "value": "5000"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "decrease_allowance"
+      },
+      {
+        "key": "owner",
+        "value": "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111"
+      },
+      {
+        "key": "spender",
+        "value": "wasm222rvne2lz6funpxxkk6yumc8ll4l3c2e3kk222"
+      },
+      {
+        "key": "amount",
+        "value": "30"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "transfer_from"
+      },
+      {
+        "key": "from",
+        "value": "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111"
+      },
+      {
+        "key": "to",
+        "value": "wasm222rvne2lz6funpxxkk6yumc8ll4l3c2e3kk222"
+      },
+      {
+        "key": "by",
+        "value": "wasm222rvne2lz6funpxxkk6yumc8ll4l3c2e3kk222"
+      },
+      {
+        "key": "amount",
+        "value": "300"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "burn_from"
+      },
+      {
+        "key": "from",
+        "value": "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111"
+      },
+      {
+        "key": "by",
+        "value": "wasm222rvne2lz6funpxxkk6yumc8ll4l3c2e3kk222"
+      },
+      {
+        "key": "amount",
+        "value": "10"
+      }
+    ]
+  ],
+  "errors": []
+}

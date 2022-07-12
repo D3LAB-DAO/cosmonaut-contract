@@ -1,24 +1,21 @@
 use base::execute::execute_contract;
 use base::result::ExecuteAllResult;
-use cosmonaut_cw721::state::{Extension as cosmonautExtension, Extension, Freight};
+use cosmonaut_cw721::msg::ExecuteMsg;
+use cosmonaut_cw721::state::Extension;
 use cosmwasm_std::{Addr, Attribute, Uint128};
+use cw721_base::MintMsg;
 use cw_multi_test::BasicApp;
-use cosmonaut_cw20::msg::MinterResponse;
 
 fn create_cw721_execute_msgs(
     admin: &str,
     recipient: &str,
     stranger: &str,
 ) -> Vec<cosmonaut_cw721::msg::ExecuteMsg> {
-    use cosmonaut_cw721::msg::ExecuteMsg;
-    use cosmonaut_cw721::state::{Extension, Metadata};
-    use cw721_base::MintMsg;
-
     let mint_msg = ExecuteMsg::Mint(MintMsg {
         token_id: "1".to_string(),
         owner: admin.to_string(),
         token_uri: None,
-        extension: Metadata {
+        extension: Extension {
             unit_denom: "mars".to_string(),
             price: 500,
             name: Some("cosmonaut spaceship".to_string()),
