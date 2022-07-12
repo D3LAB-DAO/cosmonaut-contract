@@ -1,31 +1,35 @@
 use base::execute::execute_contract;
 use base::result::ExecuteAllResult;
+use cosmonaut_cw20::msg::ExecuteMsg;
 use cosmwasm_std::{Addr, Attribute, Uint128};
-use cw20::Cw20ExecuteMsg;
 use cw_multi_test::BasicApp;
 
-fn create_cw20_execute_msgs_before_allowance(admin: &str, recipient: &str) -> Vec<Cw20ExecuteMsg> {
-    let mint_msg = Cw20ExecuteMsg::Mint {
+fn create_cw20_execute_msgs_before_allowance(admin: &str, recipient: &str) -> Vec<ExecuteMsg> {
+    let mint_msg = ExecuteMsg::Mint {
         recipient: admin.to_string(),
         amount: Uint128::new(10000),
     };
 
-    let transfer_msg = Cw20ExecuteMsg::Transfer {
+    let set_token_extension = ExecuteMsg::SetTokenExtension {
+        unit_weight: Uint128::new(1),
+    };
+
+    let transfer_msg = ExecuteMsg::Transfer {
         recipient: recipient.to_string(),
         amount: Uint128::new(1000),
     };
 
-    let burn_msg = Cw20ExecuteMsg::Burn {
+    let burn_msg = ExecuteMsg::Burn {
         amount: Uint128::new(10),
     };
 
-    let increase_allowance_msg = Cw20ExecuteMsg::IncreaseAllowance {
+    let increase_allowance_msg = ExecuteMsg::IncreaseAllowance {
         spender: recipient.to_string(),
         amount: Uint128::new(5000),
         expires: None,
     };
 
-    let decrease_allowance_msg = Cw20ExecuteMsg::DecreaseAllowance {
+    let decrease_allowance_msg = ExecuteMsg::DecreaseAllowance {
         spender: recipient.to_string(),
         amount: Uint128::new(30),
         expires: None,
@@ -33,6 +37,7 @@ fn create_cw20_execute_msgs_before_allowance(admin: &str, recipient: &str) -> Ve
 
     vec![
         mint_msg,
+        set_token_extension,
         transfer_msg,
         burn_msg,
         increase_allowance_msg,
@@ -60,13 +65,13 @@ pub fn execute_cw20_all_msg(
         }
     }
 
-    let transfer_from_msg = Cw20ExecuteMsg::TransferFrom {
+    let transfer_from_msg = ExecuteMsg::TransferFrom {
         owner: admin.to_string(),
         recipient: recipient.to_string(),
         amount: Uint128::new(300),
     };
 
-    let burn_from_msg = Cw20ExecuteMsg::BurnFrom {
+    let burn_from_msg = ExecuteMsg::BurnFrom {
         owner: admin.to_string(),
         amount: Uint128::new(10),
     };

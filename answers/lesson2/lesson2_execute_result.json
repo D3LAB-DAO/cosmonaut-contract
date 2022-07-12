@@ -25,6 +25,16 @@
       },
       {
         "key": "action",
+        "value": "set_token_extension"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
         "value": "transfer"
       },
       {

@@ -1,6 +1,11 @@
 {
   "responses": [
     {
+      "TokenExtension": {
+        "unit_weight": "1"
+      }
+    },
+    {
       "MinterResponse": {
         "minter": "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111",
         "cap": null

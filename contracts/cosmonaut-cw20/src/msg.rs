@@ -1,9 +1,66 @@
-use cosmwasm_std::StdError;
-use cw20_base::msg::QueryMsg as Cw20QueryMsg;
+use cosmwasm_std::{Binary, StdError, Uint128};
+use cw20::Logo;
+use cw20_base::msg::{ExecuteMsg as Cw20ExecuteMsg, QueryMsg as Cw20QueryMsg};
 use cw20_base::ContractError;
+use cw_utils::Expiration;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryFrom;
+
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+#[serde(rename_all = "snake_case")]
+pub enum ExecuteMsg {
+    Transfer {
+        recipient: String,
+        amount: Uint128,
+    },
+    Burn {
+        amount: Uint128,
+    },
+    Send {
+        contract: String,
+        amount: Uint128,
+        msg: Binary,
+    },
+    IncreaseAllowance {
+        spender: String,
+        amount: Uint128,
+        expires: Option<Expiration>,
+    },
+    DecreaseAllowance {
+        spender: String,
+        amount: Uint128,
+        expires: Option<Expiration>,
+    },
+    TransferFrom {
+        owner: String,
+        recipient: String,
+        amount: Uint128,
+    },
+    SendFrom {
+        owner: String,
+        contract: String,
+        amount: Uint128,
+        msg: Binary,
+    },
+    BurnFrom {
+        owner: String,
+        amount: Uint128,
+    },
+    Mint {
+        recipient: String,
+        amount: Uint128,
+    },
+    UpdateMarketing {
+        project: Option<String>,
+        description: Option<String>,
+        marketing: Option<String>,
+    },
+    UploadLogo(Logo),
+    SetTokenExtension {
+        unit_weight: Uint128,
+    },
+}
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
@@ -29,7 +86,6 @@ pub enum QueryMsg {
     MarketingInfo {},
     DownloadLogo {},
     TokenExtension {},
-    w,
 }
 
 impl TryFrom<QueryMsg> for Cw20QueryMsg {
