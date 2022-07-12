@@ -110,7 +110,7 @@ where
 
         for (i, j) in zip(&self.responses, &correct_answer.responses) {
             if i != j {
-                println!("your result: {:?}\ncorrect answer: {:?}", i, j);
+                println!("your result: {:?}\ncorrect answer: {:?}\n", i, j);
             }
         }
         if &correct_answer == self {

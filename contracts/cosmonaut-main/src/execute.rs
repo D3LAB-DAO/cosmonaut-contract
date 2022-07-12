@@ -1,6 +1,7 @@
 use crate::error::ContractError;
 use crate::msg::ExecuteMsg;
 use crate::state::{FreightContractInfo, CONFIG};
+use cosmonaut_cw20::contract::TokenExtension;
 use cosmonaut_cw721::msg as cosmonaut_cw721_msg;
 use cosmonaut_cw721::state::{Extension, Metadata};
 use cosmwasm_std::{
@@ -11,7 +12,6 @@ use cw20::{BalanceResponse, TokenInfoResponse};
 use cw721::{Cw721QueryMsg, NftInfoResponse, OwnerOfResponse};
 use cw721_base::{MintMsg, QueryMsg};
 use std::ops::{Add, Div, Rem};
-use cosmonaut_cw20::contract::TokenExtension;
 
 const MAX_FREIGHT_WEIGHT: u128 = 1000 * 1000;
 const FUEL_PER_GAME: u128 = 10;
@@ -114,10 +114,10 @@ pub fn execute_load_freight_to_nft(
     token_id: String,
     amount: Uint128,
 ) -> Result<Response, ContractError> {
-    let token_extension: TokenExtension = deps
-        .as_ref()
-        .querier
-        .query_wasm_smart(address.clone(), &cosmonaut_cw20::msg::QueryMsg::TokenExtension {})?;
+    let token_extension: TokenExtension = deps.as_ref().querier.query_wasm_smart(
+        address.clone(),
+        &cosmonaut_cw20::msg::QueryMsg::TokenExtension {},
+    )?;
 
     let token_info: TokenInfoResponse = deps
         .as_ref()
@@ -477,7 +477,7 @@ pub fn execute_play_game(
         let random_number = _generate_random_number(timestamp_int_nanos);
         spaceship_speed = Uint128::new(MAX_FREIGHT_WEIGHT)
             - Uint128::new(MAX_FREIGHT_WEIGHT)
-            .multiply_ratio(total_freight_weight, MAX_FREIGHT_WEIGHT);
+                .multiply_ratio(total_freight_weight, MAX_FREIGHT_WEIGHT);
         if random_number > spaceship_speed {
             health_decrease_value = health_decrease_value.add(step)
         }

@@ -1,7 +1,10 @@
 use base::query::query_contract;
 use base::result::QueryAllResult;
 use cosmwasm_std::{Addr, StdError};
-use cw20::{AllAccountsResponse, AllAllowancesResponse, AllowanceResponse, BalanceResponse, Cw20QueryMsg, MinterResponse, TokenInfoResponse};
+use cw20::{
+    AllAccountsResponse, AllAllowancesResponse, AllowanceResponse, BalanceResponse, Cw20QueryMsg,
+    MinterResponse, TokenInfoResponse,
+};
 use cw_multi_test::BasicApp;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};

@@ -10,7 +10,7 @@ use cosmwasm_std::{
     SubMsg, Uint128, WasmMsg,
 };
 use cw2::set_contract_version;
-use cw20::{MinterResponse};
+use cw20::MinterResponse;
 use cw20_base::msg::InstantiateMsg as Cw20InstantiateMsg;
 use cw721_base::msg::InstantiateMsg as Cw721InstantiateMsg;
 use cw_utils::parse_reply_instantiate_data;
@@ -44,7 +44,7 @@ pub fn instantiate(
         WasmMsg::Instantiate {
             admin: Some(info.sender.to_string()),
             code_id: msg.money_cw20_id,
-            msg: to_binary(&Cw20InstantiateMsg{
+            msg: to_binary(&Cw20InstantiateMsg {
                 name: "MARS".to_string(),
                 symbol: "mars".to_string(),
                 decimals: 6,

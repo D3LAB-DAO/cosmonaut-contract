@@ -89,24 +89,29 @@ fn main() {
                 "cw20 money",
             );
 
-            println!("{:?}", execute_cw20_all_msg(&mut app, &cw20_contract_addr.as_ref(), ADDR1, ADDR2)
-                .check_answer(
-                    which_lesson,
-                    &format!(
-                        "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
-                        which_lesson, which_lesson
-                    ),
-                ));
+            println!(
+                "{:?}\n",
+                execute_cw20_all_msg(&mut app, &cw20_contract_addr.as_ref(), ADDR1, ADDR2)
+                    .check_answer(
+                        which_lesson,
+                        &format!(
+                            "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
+                            which_lesson, which_lesson
+                        ),
+                    )
+            );
             // .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json", which_lesson, which_lesson));
 
-            println!("{:?}", query_all_cw20_msgs(&app, &cw20_contract_addr, ADDR1, ADDR2)
-                .check_answer(
+            println!(
+                "{:?}",
+                query_all_cw20_msgs(&app, &cw20_contract_addr, ADDR1, ADDR2).check_answer(
                     which_lesson,
                     &format!(
                         "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
                         which_lesson, which_lesson
                     ),
-                ));
+                )
+            );
             // .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json", which_lesson, which_lesson));
         }
         _ => {}
