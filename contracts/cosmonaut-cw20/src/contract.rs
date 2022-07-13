@@ -6,17 +6,15 @@ use crate::execute::set_token_extension;
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::query;
 use cosmwasm_std::{
-    to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
-    Uint128,
+    to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint128,
 };
 use cw20_base::allowances::{
     execute_burn_from, execute_decrease_allowance, execute_increase_allowance, execute_send_from,
     execute_transfer_from,
 };
 use cw20_base::contract::{
-    execute_burn, execute_mint, execute_send, execute_transfer,
-    execute_update_marketing, execute_upload_logo, instantiate as cw20_instantiate,
-    query as cw20_query,
+    execute_burn, execute_mint, execute_send, execute_transfer, execute_update_marketing,
+    execute_upload_logo, instantiate as cw20_instantiate, query as cw20_query,
 };
 use cw20_base::msg::InstantiateMsg as Cw20InstantiateMsg;
 use cw20_base::ContractError;

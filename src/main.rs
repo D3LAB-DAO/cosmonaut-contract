@@ -1,6 +1,6 @@
 use base::init::init_app;
 use base::result::Result;
-use cosmwasm_std::{Uint128};
+use cosmwasm_std::Uint128;
 use cw20_tokens::execute::execute_cw20_all_msg;
 use std::env::args;
 
