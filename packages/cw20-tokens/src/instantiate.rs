@@ -1,7 +1,8 @@
 use base::instantiate::instantiate_contract;
+use cosmonaut_cw20::contract::TokenExtension;
+use cosmonaut_cw20::msg::InstantiateMsg;
 use cosmwasm_std::{Addr, Uint128};
 use cw20::{Cw20Coin, MinterResponse};
-use cw20_base::msg::InstantiateMsg;
 use cw_multi_test::BasicApp;
 
 // function to generate cw20-tokens contracts
@@ -30,6 +31,7 @@ pub fn instantiate_cw20_contract(
             cap: None,
         }),
         marketing: None,
+        token_extension: Some(TokenExtension { unit_weight }),
     };
     instantiate_contract::<InstantiateMsg>(app, cw20_init_msg, code_id, sender, admin, label)
 }

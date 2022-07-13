@@ -36,6 +36,9 @@ pub enum ExecuteMsg {
         address: String,
         amount: Uint128,
     },
+    BuyFuelToken {
+        amount: Uint128,
+    },
     AddFreightContract {
         address: String,
     },
@@ -66,16 +69,21 @@ pub enum ExecuteMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum QueryMsg {
+    MoneyBalance { address: String },
+    OwnerOfSpaceShip { token_id: String },
+    FreightTokenBalance { symbol: String, address: String },
+    FuelBalance { address: String },
+    SpaceShipInfo { token_id: String },
     Config {},
-    MoneyContract {},
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-pub struct MoneyContractResponse {
-    pub address: Addr,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct ConfigResponse {
     pub config: Config,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct FreightTokenBalanceResponse {
+    pub symbol: String,
+    pub balance: Uint128,
 }

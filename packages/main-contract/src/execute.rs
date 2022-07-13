@@ -33,7 +33,10 @@ fn create_main_contract_execute_msgs_before_approve(
             fuel: 0,
         },
     });
-    vec![buy_money_token_msg, mint_msg]
+    let buy_fuel_token = ExecuteMsg::BuyFuelToken {
+        amount: Uint128::new(3000),
+    };
+    vec![buy_money_token_msg, mint_msg, buy_fuel_token]
 }
 
 fn create_main_contract_execute_msgs(
@@ -103,6 +106,21 @@ pub fn execute_main_all_msg(
         .query_wasm_smart(main_contract_addr, &QueryMsg::Config {})
         .unwrap();
 
+    let increase_allowance_msg = cw20_base::msg::ExecuteMsg::IncreaseAllowance {
+        spender: main_contract_addr.to_string(),
+        amount: Uint128::new(10000),
+        expires: None,
+    };
+
+    execute_contract(
+        app,
+        &Addr::unchecked(main_contract_config.config.money_cw20_contract),
+        &increase_allowance_msg,
+        &[],
+        admin,
+    )
+    .unwrap();
+
     let main_execute_msgs_before_approve =
         create_main_contract_execute_msgs_before_approve(recipient);
     for msg in main_execute_msgs_before_approve {
@@ -125,27 +143,12 @@ pub fn execute_main_all_msg(
         expires: None,
     };
 
-    let increase_allowance_msg = cw20_base::msg::ExecuteMsg::IncreaseAllowance {
-        spender: main_contract_addr.to_string(),
-        amount: Uint128::new(10000),
-        expires: None,
-    };
-
     execute_contract(
         app,
         &Addr::unchecked(main_contract_config.config.spaceship_cw721_contract.clone()),
         &approve_nft_msg,
         &[],
         recipient,
-    )
-    .unwrap();
-
-    execute_contract(
-        app,
-        &Addr::unchecked(main_contract_config.config.money_cw20_contract),
-        &increase_allowance_msg,
-        &[],
-        admin,
     )
     .unwrap();
 
@@ -157,8 +160,18 @@ pub fn execute_main_all_msg(
             &increase_allowance_msg,
             &[],
             admin,
-        );
+        )
+        .unwrap();
     }
+
+    execute_contract(
+        app,
+        &Addr::unchecked(main_contract_config.config.fuel_cw20_contract),
+        &increase_allowance_msg,
+        &[],
+        admin,
+    )
+    .unwrap();
 
     let main_execute_msgs = create_main_contract_execute_msgs(freights);
     for msg in main_execute_msgs {
@@ -169,14 +182,16 @@ pub fn execute_main_all_msg(
             Err(err) => total_errors.push(err.root_cause().to_string()),
         }
     }
-    //
-    // execute_contract(
-    //     app,
-    //     &Addr::unchecked(main_contract_config.config.spaceship_cw721_contract.clone()),
-    //     &approve_nft_msg,
-    //     &[],
-    //     admin,
-    // );
+
+    execute_contract(
+        app,
+        &Addr::unchecked(main_contract_config.config.spaceship_cw721_contract.clone()),
+        &approve_nft_msg,
+        &[],
+        admin,
+    )
+    .unwrap();
+
     //
     // let play_game_msg = ExecuteMsg::PlayGame {
     //     token_id: 1.to_string(),

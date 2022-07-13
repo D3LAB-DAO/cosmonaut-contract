@@ -20,6 +20,7 @@ use main_contract::execute::{execute_main_all_msg, FreightParams};
 
 use main_contract::init::mock_main_contract;
 use main_contract::instantiate::instantiate_main_contract;
+use main_contract::query::query_all_main_contract_msgs;
 
 const ADDR1: &str = "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111";
 const ADDR2: &str = "wasm222rvne2lz6funpxxkk6yumc8ll4l3c2e3kk222";
@@ -136,32 +137,51 @@ fn main() {
                 main_contract_addr.as_ref(),
                 "bullet",
                 "ubullet",
-                vec![Cw20Coin {
-                    address: ADDR1.to_string(),
-                    amount: Uint128::new(10000000),
-                }],
+                vec![],
                 Uint128::new(2),
                 "cw20-tokens bullet",
             );
 
-            execute_main_all_msg(
-                &mut app,
-                main_contract_addr.as_ref(),
-                vec![
-                    FreightParams {
+            // println!(
+            //     "{:?}\n",
+                execute_main_all_msg(
+                    &mut app,
+                    main_contract_addr.as_ref(),
+                    vec![FreightParams {
                         contract_addr: cw20_bullet_contract_addr.to_string(),
                         amount: Uint128::new(100),
-                    }
-                ],
-                ADDR1,
-                ADDR2,
-            ).check_answer(
-                which_lesson,
-                &format!(
-                    "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
-                    which_lesson, which_lesson
-                ),
-            ).write_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json", which_lesson, which_lesson))
+                    }],
+                    ADDR1,
+                    ADDR2,
+                )
+            .write_answer_to_file(&format!(
+                "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
+                which_lesson, which_lesson
+            ));
+            // );
+            //     .check_answer(
+            //     which_lesson,
+            //     &format!(
+            //         "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
+            //         which_lesson, which_lesson
+            //     ),
+            // )
+            //     .write_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json", which_lesson, which_lesson))
+
+            // println!(
+            //     "{:?}",
+                query_all_main_contract_msgs(&app, &main_contract_addr, ADDR1)
+                //     .check_answer(
+                //     which_lesson,
+                //     &format!(
+                //         "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
+                //         which_lesson, which_lesson
+                //     ),
+                // )
+                    .write_answer_to_file(&format!(
+                        "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
+                        which_lesson, which_lesson
+                    ));
         }
         _ => {}
     }

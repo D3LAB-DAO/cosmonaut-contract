@@ -1,11 +1,25 @@
+use crate::contract::TokenExtension;
 use cosmwasm_std::{Binary, StdError, Uint128};
-use cw20::Logo;
-use cw20_base::msg::{ExecuteMsg as Cw20ExecuteMsg, QueryMsg as Cw20QueryMsg};
+use cw20::{Cw20Coin, Logo, MinterResponse};
+use cw20_base::msg::{
+    ExecuteMsg as Cw20ExecuteMsg, InstantiateMarketingInfo, QueryMsg as Cw20QueryMsg,
+};
 use cw20_base::ContractError;
 use cw_utils::Expiration;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryFrom;
+
+#[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, PartialEq)]
+pub struct InstantiateMsg {
+    pub name: String,
+    pub symbol: String,
+    pub decimals: u8,
+    pub initial_balances: Vec<Cw20Coin>,
+    pub mint: Option<MinterResponse>,
+    pub marketing: Option<InstantiateMarketingInfo>,
+    pub token_extension: Option<TokenExtension>,
+}
 
 #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
 #[serde(rename_all = "snake_case")]

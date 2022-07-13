@@ -3,6 +3,8 @@ use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::state::{Config, CONFIG};
 use crate::{execute, query};
 
+use cosmonaut_cw20::contract::TokenExtension;
+use cosmonaut_cw20::msg::InstantiateMsg as Cw20InstantiateMsg;
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
 use cosmwasm_std::{
@@ -11,7 +13,6 @@ use cosmwasm_std::{
 };
 use cw2::set_contract_version;
 use cw20::MinterResponse;
-use cw20_base::msg::InstantiateMsg as Cw20InstantiateMsg;
 use cw721_base::msg::InstantiateMsg as Cw721InstantiateMsg;
 use cw_utils::parse_reply_instantiate_data;
 
@@ -54,6 +55,9 @@ pub fn instantiate(
                     cap: None,
                 }),
                 marketing: None,
+                token_extension: Some(TokenExtension {
+                    unit_weight: Uint128::new(0),
+                }),
             })?,
             funds: vec![],
             label: "mars token for money".to_string(),
@@ -75,6 +79,9 @@ pub fn instantiate(
                     cap: None,
                 }),
                 marketing: None,
+                token_extension: Some(TokenExtension {
+                    unit_weight: Uint128::new(1),
+                }),
             })?,
             funds: vec![],
             label: "fuel token for game".to_string(),
@@ -179,6 +186,7 @@ pub fn execute(
         ExecuteMsg::BuyFreightToken { address, amount } => {
             execute::execute_buy_freight_token(deps, info, address, amount)
         }
+        ExecuteMsg::BuyFuelToken { amount } => execute::buy_fuel_token(deps, info, amount),
         ExecuteMsg::FuelUp { token_id, amount } => execute::fuel_up(deps, info, token_id, amount),
         ExecuteMsg::BurnFuel { token_id, amount } => execute::burn_fuel(deps, token_id, amount),
         ExecuteMsg::PlayGame { token_id, epoch } => {
@@ -190,7 +198,13 @@ pub fn execute(
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
-        QueryMsg::MoneyContract {} => query::query_money_contract(deps),
+        QueryMsg::MoneyBalance { address } => query::money_balance(deps, address),
+        QueryMsg::OwnerOfSpaceShip { token_id } => query::owner_of_spaceship(deps, token_id),
+        QueryMsg::FreightTokenBalance { symbol, address } => {
+            query::freight_token_balance(deps, symbol, address)
+        }
+        QueryMsg::FuelBalance { address } => query::fuel_balance(deps, address),
+        QueryMsg::SpaceShipInfo { token_id } => query::spaceship_info(deps, token_id),
         QueryMsg::Config {} => query::query_config(deps),
     }
 }

@@ -3,7 +3,7 @@ use cosmwasm_std::entry_point;
 use std::convert::TryInto;
 
 use crate::execute::set_token_extension;
-use crate::msg::{ExecuteMsg, QueryMsg};
+use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::query;
 use cosmwasm_std::{
     to_binary, Addr, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdError, StdResult,
@@ -20,7 +20,7 @@ use cw20_base::contract::{
     execute_update_marketing, execute_upload_logo, instantiate as cw20_instantiate,
     query as cw20_query,
 };
-use cw20_base::msg::InstantiateMsg;
+use cw20_base::msg::InstantiateMsg as Cw20InstantiateMsg;
 use cw20_base::state::BALANCES;
 use cw20_base::ContractError;
 use cw_storage_plus::Item;
@@ -44,10 +44,19 @@ pub fn instantiate(
     _info: MessageInfo,
     msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
-    TOKEN_EXTENSION.save(deps.storage, &TokenExtension {
-        unit_weight: Uint128::zero()
-    })?;
-    cw20_instantiate(deps, _env, _info, msg)
+    if let Some(token_extension) = msg.token_extension {
+        TOKEN_EXTENSION.save(deps.storage, &token_extension)?;
+    }
+    let cw20_instantiate_msg = Cw20InstantiateMsg {
+        name: msg.name,
+        symbol: msg.symbol,
+        decimals: msg.decimals,
+        initial_balances: msg.initial_balances,
+        mint: msg.mint,
+        marketing: msg.marketing,
+    };
+
+    cw20_instantiate(deps, _env, _info, cw20_instantiate_msg)
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]

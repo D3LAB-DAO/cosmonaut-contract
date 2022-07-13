@@ -68,9 +68,10 @@ pub fn query_all_cw721_msgs(
     owner: &str,
     recipient: &str,
 ) -> QueryAllResult<QueryResponse> {
-    let cw721_query_msgs = create_all_query_msgs(owner);
     let mut responses: Vec<QueryResponse> = vec![];
     let mut errors: Vec<String> = vec![];
+
+    let cw721_query_msgs = create_all_query_msgs(owner);
 
     for msg in cw721_query_msgs {
         match msg {

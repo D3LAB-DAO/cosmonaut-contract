@@ -10,10 +10,6 @@ fn create_cw20_execute_msgs_before_allowance(admin: &str, recipient: &str) -> Ve
         amount: Uint128::new(10000),
     };
 
-    let set_token_extension = ExecuteMsg::SetTokenExtension {
-        unit_weight: Uint128::new(1),
-    };
-
     let transfer_msg = ExecuteMsg::Transfer {
         recipient: recipient.to_string(),
         amount: Uint128::new(1000),
@@ -37,7 +33,6 @@ fn create_cw20_execute_msgs_before_allowance(admin: &str, recipient: &str) -> Ve
 
     vec![
         mint_msg,
-        set_token_extension,
         transfer_msg,
         burn_msg,
         increase_allowance_msg,

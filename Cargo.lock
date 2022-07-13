@@ -663,6 +663,7 @@ dependencies = [
  "cw-multi-test",
  "cw20",
  "cw20-base",
+ "cw721",
  "cw721-base",
  "schemars",
  "serde",
