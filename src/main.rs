@@ -153,7 +153,8 @@ fn main() {
                     }],
                     ADDR1,
                     ADDR2,
-                ).check_answer(
+                )
+                .check_answer(
                     which_lesson,
                     &format!(
                         "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
@@ -168,18 +169,18 @@ fn main() {
 
             println!(
                 "{:?}",
-                query_all_main_contract_msgs(&app, &main_contract_addr, ADDR1)
-                    .check_answer(
-                        which_lesson,
-                        &format!(
-                            "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
-                            which_lesson, which_lesson
-                        ),
-                    ));
-            //     .write_answer_to_file(&format!(
-            //         "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
-            //         which_lesson, which_lesson
-            //     ));
+                query_all_main_contract_msgs(&app, &main_contract_addr, ADDR1).check_answer(
+                    which_lesson,
+                    &format!(
+                        "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
+                        which_lesson, which_lesson
+                    ),
+                )
+            );
+            // .write_answer_to_file(&format!(
+            //     "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
+            //     which_lesson, which_lesson
+            // ));
         }
         _ => {}
     }

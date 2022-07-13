@@ -171,6 +171,28 @@
         "key": "amount",
         "value": "50"
       }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "play_game"
+      },
+      {
+        "key": "decreased_health_value",
+        "value": "0"
+      },
+      {
+        "key": "decreased_fuel_value",
+        "value": "50"
+      },
+      {
+        "key": "spaceship_speed",
+        "value": "999996"
+      }
     ]
   ],
   "errors": []

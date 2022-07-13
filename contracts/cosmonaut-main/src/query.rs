@@ -1,3 +1,4 @@
+use crate::msg::{ConfigResponse, FreightTokenBalanceResponse};
 use crate::state::CONFIG;
 use cosmonaut_cw20::msg::QueryMsg as Cw20QueryMsg;
 use cosmonaut_cw721::state::Extension;
@@ -5,8 +6,6 @@ use cosmwasm_std::{to_binary, Binary, Deps, StdResult, Uint128};
 use cw20::BalanceResponse;
 use cw721::Cw721QueryMsg::NftInfo;
 use cw721::{Cw721QueryMsg, NftInfoResponse, OwnerOfResponse};
-use crate::msg::{ConfigResponse, FreightTokenBalanceResponse};
-
 
 pub fn query_config(deps: Deps) -> StdResult<Binary> {
     to_binary(&ConfigResponse {

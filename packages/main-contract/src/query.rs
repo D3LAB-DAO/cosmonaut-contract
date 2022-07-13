@@ -1,13 +1,13 @@
+use base::query::query_contract;
+use base::result::QueryAllResult;
+use cosmonaut_cw721::state::Extension;
+use cosmonaut_main::msg::{ConfigResponse, FreightTokenBalanceResponse, QueryMsg};
 use cosmwasm_std::{Addr, StdError};
 use cw20::BalanceResponse;
 use cw721::{NftInfoResponse, OwnerOfResponse};
 use cw_multi_test::BasicApp;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use base::query::query_contract;
-use base::result::QueryAllResult;
-use cosmonaut_cw721::state::Extension;
-use cosmonaut_main::msg::{ConfigResponse, FreightTokenBalanceResponse, QueryMsg};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub enum QueryResponse {
@@ -21,11 +21,11 @@ pub enum QueryResponse {
 
 fn create_all_query_msgs(owner: &str) -> Vec<QueryMsg> {
     let money_token_balance_msg = QueryMsg::MoneyBalance {
-        address: owner.to_string()
+        address: owner.to_string(),
     };
 
     let owner_of_spaceship_msg = QueryMsg::OwnerOfSpaceShip {
-        token_id: "1".to_string()
+        token_id: "1".to_string(),
     };
 
     let freight_token_balance_msg = QueryMsg::FreightTokenBalance {
@@ -34,11 +34,11 @@ fn create_all_query_msgs(owner: &str) -> Vec<QueryMsg> {
     };
 
     let fuel_balance_msg = QueryMsg::FuelBalance {
-        address: owner.to_string()
+        address: owner.to_string(),
     };
 
     let spaceship_info_msg = QueryMsg::SpaceShipInfo {
-        token_id: "1".to_string()
+        token_id: "1".to_string(),
     };
 
     let config_msg = QueryMsg::Config {};
@@ -92,8 +92,11 @@ pub fn query_all_main_contract_msgs(
             }
 
             QueryMsg::FreightTokenBalance { symbol, address } => {
-                let res: Result<FreightTokenBalanceResponse, StdError> =
-                    query_contract(app, contract_addr, &QueryMsg::FreightTokenBalance { symbol, address });
+                let res: Result<FreightTokenBalanceResponse, StdError> = query_contract(
+                    app,
+                    contract_addr,
+                    &QueryMsg::FreightTokenBalance { symbol, address },
+                );
                 match res {
                     Ok(res) => {
                         responses.push(QueryResponse::FreightTokenBalanceResponse(res));

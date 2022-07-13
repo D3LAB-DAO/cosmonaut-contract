@@ -192,24 +192,23 @@ pub fn execute_main_all_msg(
     )
     .unwrap();
 
-    //
-    // let play_game_msg = ExecuteMsg::PlayGame {
-    //     token_id: 1.to_string(),
-    //     epoch: Uint128::new(5),
-    // };
-    //
-    // let game_play_res = execute_contract(
-    //     app,
-    //     &Addr::unchecked(main_contract_addr),
-    //     &play_game_msg,
-    //     &[],
-    //     admin,
-    // );
-    //
-    // match game_play_res {
-    //     Ok(res) => total_attributes.push(res),
-    //     Err(err) => total_errors.push(err.root_cause().to_string())
-    // }
+    let play_game_msg = ExecuteMsg::PlayGame {
+        token_id: 1.to_string(),
+        epoch: Uint128::new(5),
+    };
+
+    let game_play_res = execute_contract(
+        app,
+        &Addr::unchecked(main_contract_addr),
+        &play_game_msg,
+        &[],
+        admin,
+    );
+
+    match game_play_res {
+        Ok(res) => total_attributes.push(res),
+        Err(err) => total_errors.push(err.root_cause().to_string()),
+    }
 
     ExecuteAllResult {
         attributes: total_attributes,
