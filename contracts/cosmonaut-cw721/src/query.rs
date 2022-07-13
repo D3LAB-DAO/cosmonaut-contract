@@ -6,12 +6,12 @@ use cw721::{
 };
 use cw721_base::{Cw721Contract, MinterResponse};
 
-pub fn query_minter(deps: Deps) -> StdResult<MinterResponse> {
+pub fn minter(deps: Deps) -> StdResult<MinterResponse> {
     let contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
     contract.minter(deps)
 }
 
-pub fn query_owner_of(
+pub fn owner_of(
     deps: Deps,
     env: Env,
     token_id: String,
@@ -21,7 +21,7 @@ pub fn query_owner_of(
     contract.owner_of(deps, env, token_id, include_expired)
 }
 
-pub fn query_approved_for_all(
+pub fn approved_for_all(
     deps: Deps,
     env: Env,
     token_id: String,
@@ -31,17 +31,17 @@ pub fn query_approved_for_all(
     contract.approvals(deps, env, token_id, include_expired)
 }
 
-pub fn query_num_tokens(deps: Deps) -> StdResult<NumTokensResponse> {
+pub fn num_tokens(deps: Deps) -> StdResult<NumTokensResponse> {
     let contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
     contract.num_tokens(deps)
 }
 
-pub fn query_nft_info(deps: Deps, token_id: String) -> StdResult<NftInfoResponse<Extension>> {
+pub fn nft_info(deps: Deps, token_id: String) -> StdResult<NftInfoResponse<Extension>> {
     let contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
     contract.nft_info(deps, token_id)
 }
 
-pub fn query_all_nft_info(
+pub fn all_nft_info(
     deps: Deps,
     env: Env,
     token_id: String,
@@ -51,7 +51,7 @@ pub fn query_all_nft_info(
     contract.all_nft_info(deps, env, token_id, include_expired)
 }
 
-pub fn query_tokens(
+pub fn tokens(
     deps: Deps,
     owner: String,
     start_after: Option<String>,
@@ -61,7 +61,7 @@ pub fn query_tokens(
     contract.tokens(deps, owner, start_after, limit)
 }
 
-pub fn query_contract_info(deps: Deps) -> StdResult<ContractInfoResponse> {
+pub fn contract_info(deps: Deps) -> StdResult<ContractInfoResponse> {
     let contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
     contract.contract_info(deps)
 }

@@ -16,7 +16,7 @@ use std::ops::{Add, Div, Rem};
 const MAX_FREIGHT_WEIGHT: u128 = 1000 * 1000;
 const FUEL_PER_GAME: u128 = 10;
 
-pub fn execute_mint_to_cw721_contract(
+pub fn mint_to_cw721_contract(
     deps: DepsMut,
     _info: MessageInfo,
     mint_msg: MintMsg<Extension>,
@@ -34,7 +34,7 @@ pub fn execute_mint_to_cw721_contract(
         .add_message(mint_msg_wrap))
 }
 
-pub fn execute_buy_spaceship(
+pub fn buy_spaceship(
     deps: DepsMut,
     info: MessageInfo,
     nft_id: String,
@@ -87,7 +87,7 @@ pub fn execute_buy_spaceship(
         .add_messages([transfer_money_msg_wrap, transfer_nft_msg_wrap]))
 }
 
-pub fn execute_set_minter_to_cw721_contract(
+pub fn set_minter_to_cw721_contract(
     deps: DepsMut,
     minter: String,
 ) -> Result<Response, ContractError> {
@@ -106,7 +106,7 @@ pub fn execute_set_minter_to_cw721_contract(
         .add_message(set_minter_msg_wrapper))
 }
 
-pub fn execute_load_freight_to_nft(
+pub fn load_freight_to_nft(
     deps: DepsMut,
     info: MessageInfo,
     address: String,
@@ -173,7 +173,7 @@ pub fn execute_load_freight_to_nft(
         .add_messages([burn_cw20_token_msg_wrap, load_freight_msg_wrap]))
 }
 
-pub fn execute_unload_freight_from_nft(
+pub fn unload_freight_from_nft(
     deps: DepsMut,
     info: MessageInfo,
     address: String,
@@ -227,7 +227,7 @@ pub fn execute_unload_freight_from_nft(
         .add_messages([mint_cw20_token_msg_wrap, unload_freight_msg_wrap]))
 }
 
-pub fn execute_add_freight_contract(
+pub fn add_freight_contract(
     deps: DepsMut,
     address: String,
 ) -> Result<Response, ContractError> {
@@ -294,7 +294,7 @@ fn check_is_sender_owner_of_nft(
     Ok(())
 }
 
-pub fn execute_buy_money_token(
+pub fn buy_money_token(
     deps: DepsMut,
     info: MessageInfo,
     amount: Uint128,
@@ -327,7 +327,7 @@ pub fn execute_buy_money_token(
         .add_message(mint_token_msg))
 }
 
-pub fn execute_buy_freight_token(
+pub fn buy_freight_token(
     deps: DepsMut,
     info: MessageInfo,
     address: String,
@@ -473,7 +473,7 @@ fn _generate_random_number(timestamp_int_nanos: Uint128) -> Uint128 {
     timestamp_int_nanos.rem(Uint128::new(MAX_FREIGHT_WEIGHT))
 }
 
-pub fn execute_play_game(
+pub fn play_game(
     deps: DepsMut,
     env: Env,
     token_id: String,

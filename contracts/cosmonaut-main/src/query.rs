@@ -7,7 +7,7 @@ use cw20::BalanceResponse;
 use cw721::Cw721QueryMsg::NftInfo;
 use cw721::{Cw721QueryMsg, NftInfoResponse, OwnerOfResponse};
 
-pub fn query_config(deps: Deps) -> StdResult<Binary> {
+pub fn config(deps: Deps) -> StdResult<Binary> {
     to_binary(&ConfigResponse {
         config: CONFIG.load(deps.storage)?,
     })

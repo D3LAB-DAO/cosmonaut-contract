@@ -70,11 +70,11 @@ pub fn execute(
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
-        QueryMsg::Minter {} => to_binary(&query::query_minter(deps)?),
+        QueryMsg::Minter {} => to_binary(&query::minter(deps)?),
         QueryMsg::OwnerOf {
             token_id,
             include_expired,
-        } => to_binary(&query::query_owner_of(
+        } => to_binary(&query::owner_of(
             deps,
             env,
             token_id,
@@ -83,29 +83,29 @@ pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
         QueryMsg::Approvals {
             token_id,
             include_expired,
-        } => to_binary(&query::query_approved_for_all(
+        } => to_binary(&query::approved_for_all(
             deps,
             env,
             token_id,
             include_expired.unwrap_or(false),
         )?),
-        QueryMsg::NftInfo { token_id } => to_binary(&query::query_nft_info(deps, token_id)?),
+        QueryMsg::NftInfo { token_id } => to_binary(&query::nft_info(deps, token_id)?),
         QueryMsg::AllNftInfo {
             token_id,
             include_expired,
-        } => to_binary(&query::query_all_nft_info(
+        } => to_binary(&query::all_nft_info(
             deps,
             env,
             token_id,
             include_expired.unwrap_or_default(),
         )?),
-        QueryMsg::NumTokens {} => to_binary(&query::query_num_tokens(deps)?),
+        QueryMsg::NumTokens {} => to_binary(&query::num_tokens(deps)?),
         QueryMsg::Tokens {
             owner,
             start_after,
             limit,
-        } => to_binary(&query::query_tokens(deps, owner, start_after, limit)?),
-        QueryMsg::ContractInfo {} => to_binary(&query::query_contract_info(deps)?),
+        } => to_binary(&query::tokens(deps, owner, start_after, limit)?),
+        QueryMsg::ContractInfo {} => to_binary(&query::contract_info(deps)?),
 
         _ => StdResult::Ok(Default::default()),
     }
