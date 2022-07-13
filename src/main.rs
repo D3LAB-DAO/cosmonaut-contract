@@ -1,11 +1,7 @@
 use base::init::init_app;
 use base::result::Result;
-use cosmwasm_std::{to_binary, Uint128, WasmQuery};
-use cw20::Cw20QueryMsg::TokenInfo;
-use cw20::{Cw20Coin, Cw20QueryMsg};
+use cosmwasm_std::{Uint128};
 use cw20_tokens::execute::execute_cw20_all_msg;
-use schemars::JsonSchema;
-use serde::{Deserialize, Serialize};
 use std::env::args;
 
 use cw20_tokens::init::mock_cw20_contract;
