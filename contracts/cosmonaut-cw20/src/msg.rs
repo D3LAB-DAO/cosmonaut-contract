@@ -1,10 +1,7 @@
 use crate::contract::TokenExtension;
 use cosmwasm_std::{Binary, StdError, Uint128};
 use cw20::{Cw20Coin, Logo, MinterResponse};
-use cw20_base::msg::{
-    ExecuteMsg as Cw20ExecuteMsg, InstantiateMarketingInfo, QueryMsg as Cw20QueryMsg,
-};
-use cw20_base::ContractError;
+use cw20_base::msg::{InstantiateMarketingInfo, QueryMsg as Cw20QueryMsg};
 use cw_utils::Expiration;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};

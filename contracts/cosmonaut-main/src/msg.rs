@@ -1,7 +1,6 @@
 use crate::state::Config;
 use cosmonaut_cw721::state::Extension;
 use cosmwasm_std::{Addr, Uint128};
-use cw20::{Cw20Coin, MinterResponse};
 use cw721_base::MintMsg;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};

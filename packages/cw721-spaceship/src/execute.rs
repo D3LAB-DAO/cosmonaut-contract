@@ -83,7 +83,6 @@ pub fn execute_cw721_all_msg(
     recipient: &str,
     stranger: &str,
 ) -> ExecuteAllResult {
-    use cosmonaut_cw721::msg::ExecuteMsg;
     let mut total_attributes: Vec<Vec<Attribute>> = vec![];
     let mut total_errors: Vec<String> = vec![];
 

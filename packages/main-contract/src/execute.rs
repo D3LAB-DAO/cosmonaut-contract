@@ -185,7 +185,7 @@ pub fn execute_main_all_msg(
 
     execute_contract(
         app,
-        &Addr::unchecked(main_contract_config.config.spaceship_cw721_contract.clone()),
+        &Addr::unchecked(main_contract_config.config.spaceship_cw721_contract),
         &approve_nft_msg,
         &[],
         admin,

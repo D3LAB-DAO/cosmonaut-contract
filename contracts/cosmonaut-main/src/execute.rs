@@ -2,7 +2,6 @@ use crate::error::ContractError;
 use crate::msg::ExecuteMsg;
 use crate::state::{FreightContractInfo, CONFIG};
 use cosmonaut_cw20::contract::TokenExtension;
-use cosmonaut_cw20::msg::ExecuteMsg as Cw20ExecuteMsg;
 use cosmonaut_cw721::msg::ExecuteMsg as Cw721ExecuteMsg;
 use cosmonaut_cw721::state::{Extension, Metadata};
 use cosmwasm_std::{
