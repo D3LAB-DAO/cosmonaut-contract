@@ -142,8 +142,8 @@ fn main() {
                 "cw20-tokens bullet",
             );
 
-            // println!(
-            //     "{:?}\n",
+            println!(
+                "{:?}\n",
                 execute_main_all_msg(
                     &mut app,
                     main_contract_addr.as_ref(),
@@ -153,35 +153,33 @@ fn main() {
                     }],
                     ADDR1,
                     ADDR2,
-                )
-            .write_answer_to_file(&format!(
-                "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
-                which_lesson, which_lesson
-            ));
-            // );
-            //     .check_answer(
-            //     which_lesson,
-            //     &format!(
-            //         "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
-            //         which_lesson, which_lesson
-            //     ),
-            // )
-            //     .write_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json", which_lesson, which_lesson))
-
-            // println!(
-            //     "{:?}",
-                query_all_main_contract_msgs(&app, &main_contract_addr, ADDR1)
-                //     .check_answer(
-                //     which_lesson,
-                //     &format!(
-                //         "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
-                //         which_lesson, which_lesson
-                //     ),
-                // )
-                    .write_answer_to_file(&format!(
-                        "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
+                ).check_answer(
+                    which_lesson,
+                    &format!(
+                        "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
                         which_lesson, which_lesson
+                    ),
+                )
+            );
+            // .write_answer_to_file(&format!(
+            //     "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
+            //     which_lesson, which_lesson
+            // ));
+
+            println!(
+                "{:?}",
+                query_all_main_contract_msgs(&app, &main_contract_addr, ADDR1)
+                    .check_answer(
+                        which_lesson,
+                        &format!(
+                            "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
+                            which_lesson, which_lesson
+                        ),
                     ));
+            //     .write_answer_to_file(&format!(
+            //         "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
+            //         which_lesson, which_lesson
+            //     ));
         }
         _ => {}
     }
