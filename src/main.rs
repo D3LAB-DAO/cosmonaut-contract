@@ -150,13 +150,13 @@ fn main() {
                     ADDR1,
                     ADDR2,
                 )
-                .check_answer(
-                    which_lesson,
-                    &format!(
-                        "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
-                        which_lesson, which_lesson
-                    ),
-                )
+                    .check_answer(
+                        which_lesson,
+                        &format!(
+                            "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
+                            which_lesson, which_lesson
+                        ),
+                    )
             );
             // .write_answer_to_file(&format!(
             //     "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",

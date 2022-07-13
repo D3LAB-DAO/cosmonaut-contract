@@ -227,10 +227,7 @@ pub fn unload_freight_from_nft(
         .add_messages([mint_cw20_token_msg_wrap, unload_freight_msg_wrap]))
 }
 
-pub fn add_freight_contract(
-    deps: DepsMut,
-    address: String,
-) -> Result<Response, ContractError> {
+pub fn add_freight_contract(deps: DepsMut, address: String) -> Result<Response, ContractError> {
     let contract_info: ContractInfoResponse =
         deps.as_ref()
             .querier
