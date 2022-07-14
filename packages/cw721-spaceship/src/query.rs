@@ -2,10 +2,7 @@ use base::query::query_contract;
 use base::result::QueryAllResult;
 use cosmonaut_cw721::state::Extension;
 use cosmwasm_std::{Addr, StdError};
-use cw721::{
-    AllNftInfoResponse, ContractInfoResponse, NftInfoResponse, NumTokensResponse, OwnerOfResponse,
-    TokensResponse,
-};
+use cw721::{AllNftInfoResponse, ApprovalResponse, ApprovalsResponse, ContractInfoResponse, NftInfoResponse, NumTokensResponse, OwnerOfResponse, TokensResponse};
 use cw721_base::msg::QueryMsg;
 use cw721_base::MinterResponse;
 use cw_multi_test::BasicApp;
@@ -22,6 +19,8 @@ pub enum QueryResponse {
     OwnerOfResponse(OwnerOfResponse),
     TokensResponse(TokensResponse),
     MinterResponse(MinterResponse),
+    ApprovalResponse(ApprovalResponse),
+    ApprovalsResponse(ApprovalsResponse),
 }
 
 fn create_all_query_msgs(owner: &str) -> Vec<QueryMsg> {
@@ -29,6 +28,17 @@ fn create_all_query_msgs(owner: &str) -> Vec<QueryMsg> {
 
     let nft_info_query_msg = QueryMsg::NftInfo {
         token_id: "1".to_string(),
+    };
+
+    let approval_query_msg = QueryMsg::Approval {
+        token_id: "1".to_string(),
+        spender: owner.to_string(),
+        include_expired: None,
+    };
+
+    let approvals_query_msg = QueryMsg::Approvals {
+        token_id: "1".to_string(),
+        include_expired: None,
     };
 
     let all_nft_info_query_msg = QueryMsg::AllNftInfo {
@@ -53,6 +63,8 @@ fn create_all_query_msgs(owner: &str) -> Vec<QueryMsg> {
 
     vec![
         minter_query_msg,
+        approval_query_msg,
+        approvals_query_msg,
         nft_info_query_msg,
         all_nft_info_query_msg,
         owner_of_query_msg,
@@ -81,6 +93,41 @@ pub fn query_all_cw721_msgs(
                 match res {
                     Ok(res) => {
                         responses.push(QueryResponse::MinterResponse(res));
+                    }
+                    Err(err) => {
+                        errors.push(err.to_string());
+                    }
+                }
+            }
+            QueryMsg::Approval {
+                token_id,
+                spender,
+                include_expired
+            } => {
+                let res: Result<ApprovalResponse, StdError> =
+                    query_contract(app, contract_addr, &QueryMsg::Approval {
+                        token_id,
+                        spender,
+                        include_expired
+                    });
+                match res {
+                    Ok(res) => {
+                        responses.push(QueryResponse::ApprovalResponse(res));
+                    }
+                    Err(err) => {
+                        errors.push(err.to_string());
+                    }
+                }
+            }
+            QueryMsg::Approvals {
+                token_id,
+                include_expired
+            } => {
+                let res: Result<ApprovalsResponse, StdError> =
+                    query_contract(app, contract_addr, &QueryMsg::Approvals { token_id, include_expired });
+                match res {
+                    Ok(res) => {
+                        responses.push(QueryResponse::ApprovalsResponse(res));
                     }
                     Err(err) => {
                         errors.push(err.to_string());

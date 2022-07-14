@@ -2,7 +2,7 @@
 use cosmwasm_std::entry_point;
 use std::convert::TryInto;
 
-use crate::execute::set_token_extension;
+use crate::execute::{execute_update_minter, set_token_extension};
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 use crate::query;
 use cosmwasm_std::{
@@ -96,6 +96,7 @@ pub fn execute(
             description,
             marketing,
         } => execute_update_marketing(deps, env, info, project, description, marketing),
+        ExecuteMsg::UpdateMinter { new_minter } => execute_update_minter(deps, info, new_minter),
         ExecuteMsg::UploadLogo(logo) => execute_upload_logo(deps, env, info, logo),
         ExecuteMsg::SetTokenExtension { unit_weight } => set_token_extension(deps, unit_weight),
     }

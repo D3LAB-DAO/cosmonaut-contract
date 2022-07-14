@@ -68,6 +68,9 @@ pub enum ExecuteMsg {
         marketing: Option<String>,
     },
     UploadLogo(Logo),
+    UpdateMinter {
+        new_minter: String
+    },
     SetTokenExtension {
         unit_weight: Uint128,
     },
