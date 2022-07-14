@@ -67,7 +67,9 @@ pub enum ExecuteMsg {
         description: Option<String>,
         marketing: Option<String>,
     },
-    UploadLogo(Logo),
+    UploadLogo {
+        Logo
+    },
     SetTokenExtension {
         unit_weight: Uint128,
     },
