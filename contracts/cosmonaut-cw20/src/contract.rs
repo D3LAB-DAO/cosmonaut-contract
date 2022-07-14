@@ -96,7 +96,7 @@ pub fn execute(
             description,
             marketing,
         } => execute_update_marketing(deps, env, info, project, description, marketing),
-        ExecuteMsg::UploadLogo(logo) => execute_upload_logo(deps, env, info, logo),
+        ExecuteMsg::UploadLogo { logo } => execute_upload_logo(deps, env, info, logo),
         ExecuteMsg::SetTokenExtension { unit_weight } => set_token_extension(deps, unit_weight),
     }
 }
