@@ -5,5 +5,9 @@ then
   rm -r ./target
 fi
 
-docker run --rm -v $(pwd)/contracts:/home/app/contracts cosmonaut:1.0.0 $1
+docker run --rm \
+-v $(pwd)/$1/contracts:/home/app/contracts \
+-v  $(pwd)/packages:/home/app/packages \
+-v $(pwd)/answers:/home/app/answers \
+cosmonaut:1.0.0 $2
 

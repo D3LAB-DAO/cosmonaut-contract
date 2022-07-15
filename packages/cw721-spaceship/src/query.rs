@@ -2,7 +2,10 @@ use base::query::query_contract;
 use base::result::QueryAllResult;
 use cosmonaut_cw721::state::Extension;
 use cosmwasm_std::{Addr, StdError};
-use cw721::{AllNftInfoResponse, ApprovalResponse, ApprovalsResponse, ContractInfoResponse, NftInfoResponse, NumTokensResponse, OwnerOfResponse, TokensResponse};
+use cw721::{
+    AllNftInfoResponse, ApprovalResponse, ApprovalsResponse, ContractInfoResponse, NftInfoResponse,
+    NumTokensResponse, OwnerOfResponse, TokensResponse,
+};
 use cw721_base::msg::QueryMsg;
 use cw721_base::MinterResponse;
 use cw_multi_test::BasicApp;
@@ -102,14 +105,17 @@ pub fn query_all_cw721_msgs(
             QueryMsg::Approval {
                 token_id,
                 spender,
-                include_expired
+                include_expired,
             } => {
-                let res: Result<ApprovalResponse, StdError> =
-                    query_contract(app, contract_addr, &QueryMsg::Approval {
+                let res: Result<ApprovalResponse, StdError> = query_contract(
+                    app,
+                    contract_addr,
+                    &QueryMsg::Approval {
                         token_id,
                         spender,
-                        include_expired
-                    });
+                        include_expired,
+                    },
+                );
                 match res {
                     Ok(res) => {
                         responses.push(QueryResponse::ApprovalResponse(res));
@@ -121,10 +127,16 @@ pub fn query_all_cw721_msgs(
             }
             QueryMsg::Approvals {
                 token_id,
-                include_expired
+                include_expired,
             } => {
-                let res: Result<ApprovalsResponse, StdError> =
-                    query_contract(app, contract_addr, &QueryMsg::Approvals { token_id, include_expired });
+                let res: Result<ApprovalsResponse, StdError> = query_contract(
+                    app,
+                    contract_addr,
+                    &QueryMsg::Approvals {
+                        token_id,
+                        include_expired,
+                    },
+                );
                 match res {
                     Ok(res) => {
                         responses.push(QueryResponse::ApprovalsResponse(res));
