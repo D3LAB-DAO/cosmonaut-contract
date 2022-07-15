@@ -73,6 +73,12 @@ impl Result for ExecuteAllResult {
             .unwrap();
         let correct_answer: ExecuteAllResult = serde_json::from_str(&content).unwrap();
 
+        for (i, j) in zip(&self.attributes, &correct_answer.attributes) {
+            if i != j {
+                println!("your result: {:?}\ncorrect answer: {:?}\n", i, j);
+            }
+        }
+
         if &correct_answer == self {
             AnswerCheck {
                 answer_type: "execute".to_string(),

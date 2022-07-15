@@ -1,0 +1,12 @@
+[package]
+name = "run"
+version = "0.1.0"
+authors = ["sebastian <s@porto5.com>"]
+description = "A simple menu to run a command"
+license = "MIT"
+
+[dependencies]
+toml = "0.4.2"
+serde = "1.0.10"
+serde_derive = "1.0.10"
+term-painter = "0.2.3"

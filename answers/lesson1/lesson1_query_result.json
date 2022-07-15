@@ -6,6 +6,11 @@
       }
     },
     {
+      "ApprovalsResponse": {
+        "approvals": []
+      }
+    },
+    {
       "NftInfoResponse": {
         "token_uri": null,
         "extension": {
@@ -74,5 +79,7 @@
       }
     }
   ],
-  "errors": []
+  "errors": [
+    "Error parsing into type cw721::query::ApprovalResponse: EOF while parsing a JSON value."
+  ]
 }

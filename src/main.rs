@@ -49,7 +49,7 @@ fn main() {
                 "cw721 nft",
             );
             println!(
-                "{:?}\n",
+                "{:?}",
                 execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3)
                     .check_answer(
                         which_lesson,
@@ -87,7 +87,7 @@ fn main() {
             );
 
             println!(
-                "{:?}\n",
+                "{:?}",
                 execute_cw20_all_msg(&mut app, &cw20_contract_addr.as_ref(), ADDR1, ADDR2)
                     .check_answer(
                         which_lesson,
@@ -139,7 +139,7 @@ fn main() {
             );
 
             println!(
-                "{:?}\n",
+                "{:?}",
                 execute_main_all_msg(
                     &mut app,
                     main_contract_addr.as_ref(),
