@@ -48,31 +48,30 @@ fn main() {
                 ADDR1,
                 "cw721 nft",
             );
-            // println!(
-            //     "{:?}",
+            println!(
+                "{:?}",
                 execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3)
-            //         .check_answer(
-            //             which_lesson,
-            //             &format!(
-            //                 "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
-            //                 which_lesson, which_lesson
-            //             ),
-            //         )
-            // );
-            .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json", which_lesson, which_lesson));
+                    .check_answer(
+                        which_lesson,
+                        &format!(
+                            "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
+                            which_lesson, which_lesson
+                        ),
+                    )
+            );
+            // .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json", which_lesson, which_lesson));
 
-            // println!(
-            //     "{:?}",
-                query_all_cw721_msgs(&app, &cw721_contract_addr, ADDR1, ADDR2)
-            //         .check_answer(
-            //         which_lesson,
-            //         &format!(
-            //             "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
-            //             which_lesson, which_lesson
-            //         ),
-            //     )
-            // );
-            .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json", which_lesson, which_lesson));
+            println!(
+                "{:?}",
+                query_all_cw721_msgs(&app, &cw721_contract_addr, ADDR1, ADDR2).check_answer(
+                    which_lesson,
+                    &format!(
+                        "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
+                        which_lesson, which_lesson
+                    ),
+                )
+            );
+            // .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json", which_lesson, which_lesson));
         }
         "2" => {
             let cw20_contract_addr = instantiate_cw20_contract(
@@ -87,34 +86,33 @@ fn main() {
                 "cw20 money",
             );
 
-            // println!(
-            //     "{:?}",
+            println!(
+                "{:?}",
                 execute_cw20_all_msg(&mut app, &cw20_contract_addr.as_ref(), ADDR1, ADDR2)
-            //         .check_answer(
-            //             which_lesson,
-            //             &format!(
-            //                 "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
-            //                 which_lesson, which_lesson
-            //             ),
-            //         )
-            // );
-            .write_answer_to_file(&format!(
-                "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
-                which_lesson, which_lesson
-            ));
+                    .check_answer(
+                        which_lesson,
+                        &format!(
+                            "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
+                            which_lesson, which_lesson
+                        ),
+                    )
+            );
+            // .write_answer_to_file(&format!(
+            //     "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
+            //     which_lesson, which_lesson
+            // ));
 
-            // println!(
-            //     "{:?}",
-                query_all_cw20_msgs(&app, &cw20_contract_addr, ADDR1, ADDR2)
-            //         .check_answer(
-            //         which_lesson,
-            //         &format!(
-            //             "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
-            //             which_lesson, which_lesson
-            //         ),
-            //     )
-            // );
-            .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json", which_lesson, which_lesson));
+            println!(
+                "{:?}",
+                query_all_cw20_msgs(&app, &cw20_contract_addr, ADDR1, ADDR2).check_answer(
+                    which_lesson,
+                    &format!(
+                        "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
+                        which_lesson, which_lesson
+                    ),
+                )
+            );
+            // .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json", which_lesson, which_lesson));
         }
         "3" => {
             let main_contract_addr = instantiate_main_contract(
@@ -140,8 +138,8 @@ fn main() {
                 "cw20-tokens bullet",
             );
 
-            // println!(
-            //     "{:?}",
+            println!(
+                "{:?}",
                 execute_main_all_msg(
                     &mut app,
                     main_contract_addr.as_ref(),
@@ -152,34 +150,33 @@ fn main() {
                     ADDR1,
                     ADDR2,
                 )
-            //     .check_answer(
-            //         which_lesson,
-            //         &format!(
-            //             "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
-            //             which_lesson, which_lesson
-            //         ),
-            //     )
-            // );
-            .write_answer_to_file(&format!(
-                "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
-                which_lesson, which_lesson
-            ));
+                .check_answer(
+                    which_lesson,
+                    &format!(
+                        "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
+                        which_lesson, which_lesson
+                    ),
+                )
+            );
+            // .write_answer_to_file(&format!(
+            //     "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
+            //     which_lesson, which_lesson
+            // ));
 
-            // println!(
-            //     "{:?}",
-                query_all_main_contract_msgs(&app, &main_contract_addr, ADDR1)
-            //         .check_answer(
-            //         which_lesson,
-            //         &format!(
-            //             "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
-            //             which_lesson, which_lesson
-            //         ),
-            //     )
-            // );
-            .write_answer_to_file(&format!(
-                "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
-                which_lesson, which_lesson
-            ));
+            println!(
+                "{:?}",
+                query_all_main_contract_msgs(&app, &main_contract_addr, ADDR1).check_answer(
+                    which_lesson,
+                    &format!(
+                        "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
+                        which_lesson, which_lesson
+                    ),
+                )
+            );
+            // .write_answer_to_file(&format!(
+            //     "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
+            //     which_lesson, which_lesson
+            // ));
         }
         _ => {}
     }
