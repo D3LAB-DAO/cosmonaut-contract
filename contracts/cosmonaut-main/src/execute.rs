@@ -14,7 +14,7 @@ use cw721_base::{MintMsg, QueryMsg};
 use std::ops::{Add, Div, Rem};
 
 const MAX_FREIGHT_WEIGHT: u128 = 1000 * 1000;
-const FUEL_PER_GAME: u128 = 10;
+const FUEL_PER_GAME: u128 = 100;
 
 pub fn mint_to_cw721_contract(
     deps: DepsMut,
