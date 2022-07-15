@@ -1,6 +1,6 @@
 ## How to Run
 ```shell
-cargo run --  lesson_num
+./run.sh lesson_num
 ```
 
 *** IMPORTANT: you must pass lesson number ***
