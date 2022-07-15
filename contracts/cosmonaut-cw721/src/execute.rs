@@ -1,7 +1,9 @@
 use crate::msg::ExecuteMsg;
 use crate::state::{Extension, Freight};
 use crate::ContractError;
-use cosmwasm_std::{attr, Addr, Deps, DepsMut, Empty, Env, MessageInfo, Response, Uint128, StdError};
+use cosmwasm_std::{
+    attr, Addr, Deps, DepsMut, Empty, Env, MessageInfo, Response, StdError, Uint128,
+};
 use cw721_base::state::TokenInfo;
 use cw721_base::Cw721Contract;
 use std::convert::{TryFrom, TryInto};
