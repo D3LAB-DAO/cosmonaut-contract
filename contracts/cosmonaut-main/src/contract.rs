@@ -161,7 +161,7 @@ pub fn execute(
 ) -> Result<Response, ContractError> {
     match msg {
         ExecuteMsg::AddFreightContract { address } => execute::add_freight_contract(deps, address),
-        ExecuteMsg::BuyNft { nft_id } => execute::buy_spaceship(deps, info, nft_id),
+        ExecuteMsg::BuyNft { nft_id } => execute::buy_spaceship(deps, env, info, nft_id),
 
         ExecuteMsg::Mint(mint_msg) => execute::mint_to_cw721_contract(deps, info, mint_msg),
 

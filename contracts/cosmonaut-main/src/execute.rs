@@ -36,6 +36,7 @@ pub fn mint_to_cw721_contract(
 
 pub fn buy_spaceship(
     deps: DepsMut,
+    env: Env,
     info: MessageInfo,
     nft_id: String,
 ) -> Result<Response, ContractError> {
@@ -60,7 +61,7 @@ pub fn buy_spaceship(
 
     let transfer_money_msg = cw20_base::msg::ExecuteMsg::TransferFrom {
         owner: info.sender.to_string(),
-        recipient: config.money_cw20_contract.as_ref().to_string(),
+        recipient: env.contract.address.to_string(),
         amount: Uint128::from(nft_info.extension.price),
     };
 
