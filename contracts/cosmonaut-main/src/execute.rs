@@ -490,7 +490,7 @@ pub fn play_game(
         .extension
         .freight
         .iter()
-        .map(|f| f.unit_weight * f.unit_weight)
+        .map(|f| f.unit_weight * f.amount)
         .sum();
 
     let mut health_decrease_value = Uint128::zero();
