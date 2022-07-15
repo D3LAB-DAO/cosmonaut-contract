@@ -14,7 +14,7 @@ use cw721_base::{MintMsg, QueryMsg};
 use std::ops::{Add, Div, Rem};
 
 const MAX_FREIGHT_WEIGHT: u128 = 1000 * 1000;
-const FUEL_PER_GAME: u128 = 10;
+const FUEL_PER_GAME: u128 = 100;
 
 pub fn mint_to_cw721_contract(
     deps: DepsMut,
@@ -55,7 +55,7 @@ pub fn buy_spaceship(
         },
     )?;
 
-    if token_balance.balance.u128() < nft_info.extension.price {
+    if token_balance.balance < nft_info.extension.price {
         return Err(ContractError::NotEnoughToken {});
     }
 
@@ -490,7 +490,7 @@ pub fn play_game(
         .extension
         .freight
         .iter()
-        .map(|f| f.unit_weight * f.amount.u128())
+        .map(|f| f.unit_weight.u128() * f.amount.u128())
         .sum();
 
     let mut health_decrease_value = Uint128::zero();
@@ -498,7 +498,7 @@ pub fn play_game(
 
     for _ in 0..epoch.u128() {
         let timestamp_int_nanos = Uint128::new(u128::from(env.block.time.nanos()));
-        let total_health = Uint128::new(nft_info.extension.health);
+        let total_health = nft_info.extension.health;
         let step = total_health.div(epoch);
         let random_number = _generate_random_number(timestamp_int_nanos);
         spaceship_speed = Uint128::new(MAX_FREIGHT_WEIGHT)

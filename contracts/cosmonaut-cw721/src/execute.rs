@@ -1,7 +1,7 @@
 use crate::msg::ExecuteMsg;
 use crate::state::{Extension, Freight};
 use crate::ContractError;
-use cosmwasm_std::{attr, Addr, Deps, DepsMut, Empty, Env, MessageInfo, Response, Uint128};
+use cosmwasm_std::{attr, Addr, Deps, DepsMut, Empty, Env, MessageInfo, Response, Uint128, StdError};
 use cw721_base::state::TokenInfo;
 use cw721_base::Cw721Contract;
 use std::convert::{TryFrom, TryInto};
@@ -110,7 +110,7 @@ pub fn load_freight(
         extension.freight.push(Freight {
             denom: denom.clone(),
             amount,
-            unit_weight: unit_weight.u128(),
+            unit_weight,
         })
     }
 
@@ -176,7 +176,7 @@ pub fn decrease_health(
     let mut extension = token.extension;
 
     // handle with negative overflow
-    extension.health = extension.health.saturating_sub(value.u128());
+    extension.health = extension.health.saturating_sub(value);
     token.extension = extension;
     cosmonaut_contract
         .tokens
@@ -206,8 +206,8 @@ pub fn fuel_up(
 
     extension.fuel = extension
         .fuel
-        .checked_add(amount.u128())
-        .ok_or(ContractError::NotFound {})?;
+        .checked_add(amount)
+        .map_err(StdError::overflow)?;
 
     token.extension = extension;
     contract.tokens.save(deps.storage, &token_id, &token)?;
@@ -236,8 +236,8 @@ pub fn burn_fuel(
 
     extension.fuel = extension
         .fuel
-        .checked_sub(amount.u128())
-        .ok_or(ContractError::NotFound {})?;
+        .checked_sub(amount)
+        .map_err(StdError::overflow)?;
 
     token.extension = extension;
     contract.tokens.save(deps.storage, &token_id, &token)?;

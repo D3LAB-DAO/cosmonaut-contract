@@ -17,11 +17,11 @@ fn create_cw721_execute_msgs(
         token_uri: None,
         extension: Extension {
             unit_denom: "mars".to_string(),
-            price: 500,
+            price: Uint128::new(500),
             name: Some("cosmonaut spaceship".to_string()),
             freight: vec![],
-            health: 10,
-            fuel: 0,
+            health: Uint128::new(10),
+            fuel: Uint128::zero(),
         },
     });
 

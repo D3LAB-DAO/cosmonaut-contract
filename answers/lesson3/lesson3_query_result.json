@@ -26,7 +26,7 @@
     },
     {
       "FuelBalanceResponse": {
-        "balance": "2700"
+        "balance": "500"
       }
     },
     {
@@ -34,17 +34,17 @@
         "token_uri": null,
         "extension": {
           "unit_denom": "mars",
-          "price": 500,
+          "price": "500",
           "name": "cosmonaut spaceship",
           "freight": [
             {
               "denom": "ubullet",
               "amount": "50",
-              "unit_weight": 2
+              "unit_weight": "2"
             }
           ],
-          "health": 10,
-          "fuel": 240
+          "health": "10",
+          "fuel": "2440"
         }
       }
     },

@@ -15,17 +15,17 @@
         "token_uri": null,
         "extension": {
           "unit_denom": "mars",
-          "price": 500,
+          "price": "500",
           "name": "cosmonaut spaceship",
           "freight": [
             {
               "denom": "oil",
               "amount": "5000",
-              "unit_weight": 1
+              "unit_weight": "1"
             }
           ],
-          "health": 5,
-          "fuel": 50
+          "health": "5",
+          "fuel": "50"
         }
       }
     },
@@ -39,17 +39,17 @@
           "token_uri": null,
           "extension": {
             "unit_denom": "mars",
-            "price": 500,
+            "price": "500",
             "name": "cosmonaut spaceship",
             "freight": [
               {
                 "denom": "oil",
                 "amount": "5000",
-                "unit_weight": 1
+                "unit_weight": "1"
               }
             ],
-            "health": 5,
-            "fuel": 50
+            "health": "5",
+            "fuel": "50"
           }
         }
       }

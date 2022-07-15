@@ -26,11 +26,11 @@ fn create_main_contract_execute_msgs_before_approve(
         token_uri: None,
         extension: Extension {
             unit_denom: "mars".to_string(),
-            price: 500,
+            price: Uint128::new(500),
             name: Some("cosmonaut spaceship".to_string()),
             freight: vec![],
-            health: 10,
-            fuel: 0,
+            health: Uint128::new(10),
+            fuel: Uint128::zero(),
         },
     });
     let buy_fuel_token = ExecuteMsg::BuyFuelToken {
@@ -48,7 +48,7 @@ fn create_main_contract_execute_msgs(
 
     let fuel_up_msg = ExecuteMsg::FuelUp {
         token_id: "1".to_string(),
-        amount: Uint128::new(300),
+        amount: Uint128::new(2500),
     };
 
     let burn_fuel_msg = ExecuteMsg::BurnFuel {

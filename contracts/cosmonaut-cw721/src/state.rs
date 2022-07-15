@@ -16,18 +16,18 @@ pub struct State {
 pub struct Freight {
     pub denom: String,
     pub amount: Uint128,
-    pub unit_weight: u128,
+    pub unit_weight: Uint128,
 }
 
 // custom metadata for cw721 extension
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct Metadata {
     pub unit_denom: String,
-    pub price: u128,
+    pub price: Uint128,
     pub name: Option<String>,
     pub freight: Vec<Freight>,
-    pub health: u128,
-    pub fuel: u128,
+    pub health: Uint128,
+    pub fuel: Uint128,
 }
 
 pub const STATE: Item<State> = Item::new("state");
