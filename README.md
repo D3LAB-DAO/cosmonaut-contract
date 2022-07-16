@@ -9,6 +9,7 @@ i.g)
 ```
 
 1. Create or copy&paste user customized contract into {user}/contracts
-2. In order to increase compilation speed, copy&paste target directory which is made based on same architecture as rust's base image
+2. In order to increase compilation speed, copy&paste debug directory which is made based on same architecture as rust's base image
+   * target directory of user1(user1/target/lesson/debug) is an example
 
 *** IMPORTANT: you must pass lesson number ***
