@@ -18,6 +18,6 @@ overflow-checks = true
 [workspace]
 
 [dependencies]
-cw721-spaceship = {path="/Users/ogsang-yun/Documents/IdeaProjects/cosmonaut-contract/packages/cw721-spaceship"}
+cw721-spaceship = {path="../../packages/cw721-spaceship"}
 base = {path="../../packages/base"}
 cosmwasm-std = { version = "1.0.0" }
