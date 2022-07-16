@@ -386,22 +386,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cw20-tokens"
-version = "0.1.0"
-dependencies = [
- "base",
- "cosmonaut-cw20",
- "cosmonaut-cw721",
- "cosmonaut-main",
- "cosmwasm-std",
- "cw-multi-test",
- "cw20",
- "cw20-base",
- "schemars",
- "serde",
-]
-
-[[package]]
 name = "cw721"
 version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -427,24 +411,6 @@ dependencies = [
  "schemars",
  "serde",
  "thiserror",
-]
-
-[[package]]
-name = "cw721-spaceship"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "base",
- "cosmonaut-cw20",
- "cosmonaut-cw721",
- "cosmonaut-main",
- "cosmwasm-std",
- "cw-multi-test",
- "cw721",
- "cw721-base",
- "schemars",
- "serde",
- "serde_json",
 ]
 
 [[package]]
@@ -643,57 +609,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "lesson1"
-version = "0.1.0"
-dependencies = [
- "base",
- "cosmwasm-std",
- "cw721-spaceship",
-]
-
-[[package]]
-name = "lesson2"
-version = "0.1.0"
-dependencies = [
- "base",
- "cosmwasm-std",
- "cw20-tokens",
-]
-
-[[package]]
-name = "lesson3"
-version = "0.1.0"
-dependencies = [
- "base",
- "cosmwasm-std",
- "cw20-tokens",
- "cw721-spaceship",
- "main-contract",
-]
-
-[[package]]
 name = "libc"
 version = "0.2.126"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "349d5a591cd28b49e1d1037471617a32ddcda5731b99419008085f72d5a53836"
-
-[[package]]
-name = "main-contract"
-version = "0.1.0"
-dependencies = [
- "base",
- "cosmonaut-cw20",
- "cosmonaut-cw721",
- "cosmonaut-main",
- "cosmwasm-std",
- "cw-multi-test",
- "cw20",
- "cw20-base",
- "cw721",
- "cw721-base",
- "schemars",
- "serde",
-]
 
 [[package]]
 name = "memchr"

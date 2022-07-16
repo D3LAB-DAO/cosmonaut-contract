@@ -1,0 +1,2 @@
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=/home/app/lessons/lesson1/target/debug/build/typenum-51cb0a5ebce06ca7/out/consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=/home/app/lessons/lesson1/target/debug/build/typenum-51cb0a5ebce06ca7/out/op.rs

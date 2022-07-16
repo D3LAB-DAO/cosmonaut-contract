@@ -9,8 +9,6 @@ edition = "2021"
 cosmwasm-std = { version = "1.0.0" }
 
 cosmonaut-cw20 = {path= "../../contracts/cosmonaut-cw20", features=["library"]}
-cosmonaut-cw721 = {path= "../../contracts/cosmonaut-cw721", features=["library"]}
-cosmonaut-main = {path="../../contracts/cosmonaut-main", features=["library"]}
 cw20 = "0.13.4"
 cw20-base = { version = "0.13.2", features = ["library"] }
 base = {path="../base"}

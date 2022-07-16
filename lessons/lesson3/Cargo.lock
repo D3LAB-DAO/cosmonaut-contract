@@ -366,8 +366,6 @@ version = "0.1.0"
 dependencies = [
  "base",
  "cosmonaut-cw20",
- "cosmonaut-cw721",
- "cosmonaut-main",
  "cosmwasm-std",
  "cw-multi-test",
  "cw20",
@@ -410,9 +408,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "base",
- "cosmonaut-cw20",
  "cosmonaut-cw721",
- "cosmonaut-main",
  "cosmwasm-std",
  "cw-multi-test",
  "cw721",

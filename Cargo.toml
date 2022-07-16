@@ -7,8 +7,7 @@ edition = "2021"
 
 [workspace]
 members = [
-  "contracts/*",
-  "lessons/*"
+  "contracts/*"
 ]
 
 [profile.release]
