@@ -10,4 +10,4 @@ i.g)
 
 * Create or copy&paste user customized contract into {user}/contracts
 
-*** IMPORTANT: you must pass lesson number ***
+*** IMPORTANT: you must pass "user" and "lesson number" ***
