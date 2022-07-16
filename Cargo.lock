@@ -122,9 +122,6 @@ dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std",
  "cw20",
- "cw20-tokens",
- "cw721-spaceship",
- "main-contract",
  "schemars",
  "serde",
 ]
@@ -643,6 +640,35 @@ dependencies = [
  "elliptic-curve",
  "sec1",
  "sha2",
+]
+
+[[package]]
+name = "lesson1"
+version = "0.1.0"
+dependencies = [
+ "base",
+ "cosmwasm-std",
+ "cw721-spaceship",
+]
+
+[[package]]
+name = "lesson2"
+version = "0.1.0"
+dependencies = [
+ "base",
+ "cosmwasm-std",
+ "cw20-tokens",
+]
+
+[[package]]
+name = "lesson3"
+version = "0.1.0"
+dependencies = [
+ "base",
+ "cosmwasm-std",
+ "cw20-tokens",
+ "cw721-spaceship",
+ "main-contract",
 ]
 
 [[package]]
