@@ -1,0 +1,15 @@
+/Users/ogsang-yun/Documents/IdeaProjects/cosmonaut-contract/lessons/lesson1/target/debug/deps/libcw20_base-ad1b70543b86ae69.dylib: /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/lib.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/allowances.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/contract.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/enumerable.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/error.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/msg.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/state.rs
+
+/Users/ogsang-yun/Documents/IdeaProjects/cosmonaut-contract/lessons/lesson1/target/debug/deps/libcw20_base-ad1b70543b86ae69.rlib: /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/lib.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/allowances.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/contract.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/enumerable.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/error.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/msg.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/state.rs
+
+/Users/ogsang-yun/Documents/IdeaProjects/cosmonaut-contract/lessons/lesson1/target/debug/deps/cw20_base-ad1b70543b86ae69.d: /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/lib.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/allowances.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/contract.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/enumerable.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/error.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/msg.rs /Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/state.rs
+
+/Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/lib.rs:
+/Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/allowances.rs:
+/Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/contract.rs:
+/Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/enumerable.rs:
+/Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/error.rs:
+/Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/msg.rs:
+/Users/ogsang-yun/.cargo/registry/src/github.com-1ecc6299db9ec823/cw20-base-0.13.4/src/state.rs:
+
+# env-dep:CARGO_PKG_VERSION=0.13.4
