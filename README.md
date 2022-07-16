@@ -11,14 +11,14 @@ i.g)
 ```
 
 * Create or copy&paste user customized contract into {user}/contracts
-
-```shell
+* {user}/targets will be generated after the execution
+```
 users
 └── user1
     ├── contracts
-    │   ├── cosmonaut-cw20
-    │   ├── cosmonaut-cw721
-    │   └── cosmonaut-main
+    │   ├── cosmonaut-cw20
+    │   ├── cosmonaut-cw721
+    │   └── cosmonaut-main
     └── targets
         ├── lesson1
         ├── lesson2
