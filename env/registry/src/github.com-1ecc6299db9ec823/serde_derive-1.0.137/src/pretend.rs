@@ -9,13 +9,13 @@ use internals::ast::{Container, Data, Field, Style, Variant};
 // never has its variants constructed.
 //
 //     warning: field is never used: `i`
-//      --> src/main.rs:4:20
+//      --> src/lib:4:20
 //       |
 //     4 | struct StructDef { i: i32 }
 //       |                    ^^^^^^
 //
 //     warning: variant is never constructed: `V`
-//      --> src/main.rs:8:16
+//      --> src/lib:8:16
 //       |
 //     8 | enum EnumDef { V }
 //       |                ^

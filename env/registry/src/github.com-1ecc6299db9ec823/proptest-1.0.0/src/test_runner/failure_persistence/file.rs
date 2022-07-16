@@ -41,7 +41,7 @@ pub enum FileFailurePersistence {
     Off,
     /// The path given to `TestRunner::set_source_file()` is parsed. The path
     /// is traversed up the directory tree until a directory containing a file
-    /// named `lib.rs` or `main.rs` is found. A sibling to that directory with
+    /// named `lib.rs` or `lib` is found. A sibling to that directory with
     /// the name given by the string in this configuration is created, and a
     /// file with the same name and path relative to the source directory, but
     /// with the extension changed to `.txt`, is used.
@@ -49,10 +49,10 @@ pub enum FileFailurePersistence {
     /// For example, given a source path of
     /// `/home/jsmith/code/project/src/foo/bar.rs` and a configuration of
     /// `SourceParallel("proptest-regressions")` (the default), assuming the
-    /// `src` directory has a `lib.rs` or `main.rs`, the resulting file would
+    /// `src` directory has a `lib.rs` or `lib`, the resulting file would
     /// be `/home/jsmith/code/project/proptest-regressions/foo/bar.txt`.
     ///
-    /// If no `lib.rs` or `main.rs` can be found, a warning is printed and this
+    /// If no `lib.rs` or `lib` can be found, a warning is printed and this
     /// behaves like `WithSource`.
     ///
     /// If no source file has been configured, a warning is printed and this
@@ -340,7 +340,7 @@ impl FileFailurePersistence {
                     let mut found = false;
                     while dir.pop() {
                         if dir.join("lib.rs").is_file()
-                            || dir.join("main.rs").is_file()
+                            || dir.join("lib").is_file()
                         {
                             found = true;
                             break;
@@ -350,7 +350,7 @@ impl FileFailurePersistence {
                     if !found {
                         eprintln!(
                             "proptest: FileFailurePersistence::SourceParallel set, \
-                             but failed to find lib.rs or main.rs"
+                             but failed to find lib.rs or lib"
                         );
                         WithSource(sibling).resolve(Some(&*source_path))
                     } else {
@@ -490,7 +490,7 @@ mod tests {
             ),
             SourceParallel("sib").resolve(Some(&TEST_PATHS.subdir_file))
         );
-        // ... but if we can't find lib.rs / main.rs, give up and set the
+        // ... but if we can't find lib.rs / lib, give up and set the
         // extension instead ...
         assert_eq!(
             Some(TEST_PATHS.crate_root.join("foo.sib")),

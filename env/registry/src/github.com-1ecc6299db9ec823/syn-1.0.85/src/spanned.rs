@@ -57,7 +57,7 @@
 //!
 //! ```text
 //! error[E0277]: the trait bound `*const i32: std::marker::Sync` is not satisfied
-//!   --> src/main.rs:10:21
+//!   --> src/lib:10:21
 //!    |
 //! 10 |     bad_field: *const i32,
 //!    |                ^^^^^^^^^^ `*const i32` cannot be shared between threads safely

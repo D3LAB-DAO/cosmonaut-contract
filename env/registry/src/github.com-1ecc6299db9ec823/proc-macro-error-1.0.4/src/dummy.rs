@@ -31,7 +31,7 @@
 //! }
 //!
 //! // ================
-//! // in main.rs
+//! // in lib
 //!
 //! // this derive triggers an error
 //! #[derive(MyTrait)] // first BOOM!
@@ -54,7 +54,7 @@
 //!   |                    ^^^^^^^
 //!
 //! error[E0599]: no function or associated item named `do_thing` found for type `Foo` in the current scope
-//!  --> src\main.rs:3:10
+//!  --> src\lib:3:10
 //!   |
 //! 1 | struct Foo;
 //!   | ----------- function or associated item `do_thing` not found for this
@@ -102,7 +102,7 @@
 //!  }
 //!
 //!  // ================
-//!  // in main.rs
+//!  // in lib
 //!
 //!  // this derive triggers an error
 //!  #[derive(MyTrait)] // first BOOM!

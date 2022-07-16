@@ -662,11 +662,11 @@ mod tests {
 
     ignored!(ig1, ROOT, "months", "months");
     ignored!(ig2, ROOT, "*.lock", "Cargo.lock");
-    ignored!(ig3, ROOT, "*.rs", "src/main.rs");
-    ignored!(ig4, ROOT, "src/*.rs", "src/main.rs");
+    ignored!(ig3, ROOT, "*.rs", "src/lib");
+    ignored!(ig4, ROOT, "src/*.rs", "src/lib");
     ignored!(ig5, ROOT, "/*.c", "cat-file.c");
-    ignored!(ig6, ROOT, "/src/*.rs", "src/main.rs");
-    ignored!(ig7, ROOT, "!src/main.rs\n*.rs", "src/main.rs");
+    ignored!(ig6, ROOT, "/src/*.rs", "src/lib");
+    ignored!(ig7, ROOT, "!src/lib\n*.rs", "src/lib");
     ignored!(ig8, ROOT, "foo/", "foo", true);
     ignored!(ig9, ROOT, "**/foo", "foo");
     ignored!(ig10, ROOT, "**/foo", "src/foo");
@@ -707,10 +707,10 @@ mod tests {
 
     not_ignored!(ignot1, ROOT, "amonths", "months");
     not_ignored!(ignot2, ROOT, "monthsa", "months");
-    not_ignored!(ignot3, ROOT, "/src/*.rs", "src/grep/src/main.rs");
+    not_ignored!(ignot3, ROOT, "/src/*.rs", "src/grep/src/lib");
     not_ignored!(ignot4, ROOT, "/*.c", "mozilla-sha1/sha1.c");
-    not_ignored!(ignot5, ROOT, "/src/*.rs", "src/grep/src/main.rs");
-    not_ignored!(ignot6, ROOT, "*.rs\n!src/main.rs", "src/main.rs");
+    not_ignored!(ignot5, ROOT, "/src/*.rs", "src/grep/src/lib");
+    not_ignored!(ignot6, ROOT, "*.rs\n!src/lib", "src/lib");
     not_ignored!(ignot7, ROOT, "foo/", "foo", false);
     not_ignored!(ignot8, ROOT, "**/foo/**", "wat/src/afoo/bar/baz");
     not_ignored!(ignot9, ROOT, "**/foo/**", "wat/src/fooa/bar/baz");
@@ -726,7 +726,7 @@ mod tests {
     );
     not_ignored!(ignot15, ROOT, "!/bar", "foo/bar");
     not_ignored!(ignot16, ROOT, "*\n!**/", "foo", true);
-    not_ignored!(ignot17, ROOT, "src/*.rs", "src/grep/src/main.rs");
+    not_ignored!(ignot17, ROOT, "src/*.rs", "src/grep/src/lib");
     not_ignored!(ignot18, ROOT, "path1/*", "path2/path1/foo");
     not_ignored!(ignot19, ROOT, "s*.rs", "src/foo.rs");
 

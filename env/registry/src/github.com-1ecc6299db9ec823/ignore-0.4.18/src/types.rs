@@ -553,7 +553,7 @@ mod tests {
     matched!(match1, types(), vec!["rust"], vec![], "lib.rs");
     matched!(match2, types(), vec!["html"], vec![], "index.html");
     matched!(match3, types(), vec!["html"], vec![], "index.htm");
-    matched!(match4, types(), vec!["html", "rust"], vec![], "main.rs");
+    matched!(match4, types(), vec!["html", "rust"], vec![], "lib");
     matched!(match5, types(), vec![], vec![], "index.html");
     matched!(match6, types(), vec![], vec!["rust"], "index.html");
     matched!(match7, types(), vec!["foo"], vec!["rust"], "main.foo");
@@ -561,9 +561,9 @@ mod tests {
     matched!(match9, types(), vec!["combo"], vec![], "lib.rs");
 
     matched!(not, matchnot1, types(), vec!["rust"], vec![], "index.html");
-    matched!(not, matchnot2, types(), vec![], vec!["rust"], "main.rs");
-    matched!(not, matchnot3, types(), vec!["foo"], vec!["rust"], "main.rs");
-    matched!(not, matchnot4, types(), vec!["rust"], vec!["foo"], "main.rs");
+    matched!(not, matchnot2, types(), vec![], vec!["rust"], "lib");
+    matched!(not, matchnot3, types(), vec!["foo"], vec!["rust"], "lib");
+    matched!(not, matchnot4, types(), vec!["rust"], vec!["foo"], "lib");
     matched!(not, matchnot5, types(), vec!["rust"], vec!["foo"], "main.foo");
     matched!(not, matchnot6, types(), vec!["combo"], vec![], "leftpad.js");
 

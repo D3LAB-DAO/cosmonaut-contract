@@ -19,7 +19,7 @@
 //! ```text
 //! thread 'main' panicked at 'assertion failed: `left < right`
 //!  left: `4`,
-//! right: `3`', src/main.rs:47:5
+//! right: `3`', src/lib:47:5
 //! note: Run with `RUST_BACKTRACE=1` for a backtrace.
 //! ```
 //!

@@ -888,7 +888,7 @@ mod tests {
         assert!(!set.is_match("foo.rs"));
         assert!(!set.is_match("tests/foo.rs"));
         assert!(set.is_match("src/foo.rs"));
-        assert!(set.is_match("src/grep/src/main.rs"));
+        assert!(set.is_match("src/grep/src/lib"));
 
         let matches = set.matches("src/lib.rs");
         assert_eq!(2, matches.len());

@@ -59,7 +59,7 @@ use core::num::NonZeroU32;
 /// getrandom = { version = "0.2", features = ["custom"] }
 /// ```
 ///
-/// Then, we register the function in `src/main.rs`:
+/// Then, we register the function in `src/lib`:
 /// ```rust
 /// # mod failure_getrandom { pub fn always_fail(_: &mut [u8]) -> Result<(), getrandom::Error> { unimplemented!() } }
 /// use failure_getrandom::always_fail;

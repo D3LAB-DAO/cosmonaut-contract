@@ -12,7 +12,7 @@
 //! [`proc_macro`]: https://doc.rust-lang.org/proc_macro/
 //!
 //! - **Bring proc-macro-like functionality to other contexts like build.rs and
-//!   main.rs.** Types from `proc_macro` are entirely specific to procedural
+//!   lib.** Types from `proc_macro` are entirely specific to procedural
 //!   macros and cannot ever exist in code outside of a procedural macro.
 //!   Meanwhile `proc_macro2` types may exist anywhere including non-macro code.
 //!   By developing foundational libraries like [syn] and [quote] against
@@ -483,7 +483,7 @@ impl Span {
     /// When executing in a procedural macro context, the returned line/column
     /// are only meaningful if compiled with a nightly toolchain. The stable
     /// toolchain does not have this information available. When executing
-    /// outside of a procedural macro, such as main.rs or build.rs, the
+    /// outside of a procedural macro, such as lib or build.rs, the
     /// line/column are always meaningful regardless of toolchain.
     #[cfg(span_locations)]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "span-locations")))]
@@ -499,7 +499,7 @@ impl Span {
     /// When executing in a procedural macro context, the returned line/column
     /// are only meaningful if compiled with a nightly toolchain. The stable
     /// toolchain does not have this information available. When executing
-    /// outside of a procedural macro, such as main.rs or build.rs, the
+    /// outside of a procedural macro, such as lib or build.rs, the
     /// line/column are always meaningful regardless of toolchain.
     #[cfg(span_locations)]
     #[cfg_attr(doc_cfg, doc(cfg(feature = "span-locations")))]

@@ -191,10 +191,10 @@ impl<Metadata: for<'a> Deserialize<'a>> Manifest<Metadata> {
 
             if package.autobins && self.bin.is_none() {
                 let mut bin = autoset(package, "src/bin", &fs);
-                if src.contains("main.rs") {
+                if src.contains("lib") {
                     bin.push(Product {
                         name: Some(package.name.clone()),
-                        path: Some("src/main.rs".to_string()),
+                        path: Some("src/lib".to_string()),
                         edition: Some(package.edition),
                         ..Product::default()
                     })
@@ -236,10 +236,10 @@ fn autoset<T>(package: &Package<T>, dir: &str, fs: &dyn AbstractFilesystem) -> V
                     ..Product::default()
                 })
             } else if let Ok(sub) = fs.file_names_in(&rel_path) {
-                if sub.contains("main.rs") {
+                if sub.contains("lib") {
                     out.push(Product {
                         name: Some(name.into()),
-                        path: Some(rel_path + "/main.rs"),
+                        path: Some(rel_path + "/lib"),
                         edition: Some(package.edition),
                         ..Product::default()
                     })

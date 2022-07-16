@@ -149,7 +149,7 @@ fn _main() -> Result<(), anyhow::Error> {
                 eprintln!("WARNING stdout appears to be a terminal.");
                 eprintln!(
                     "cargo-chef is not meant to be run in an interactive environment \
-                and will overwrite some existing files (namely any `lib.rs`, `main.rs` and \
+                and will overwrite some existing files (namely any `lib.rs`, `lib` and \
                 `Cargo.toml` it finds)."
                 );
                 eprintln!();

@@ -312,7 +312,7 @@ macro_rules! crate_name {
 /// and therefore won't change the generated output until you recompile.
 ///
 /// In some cases you can "trick" the compiler into triggering a rebuild when your
-/// `Cargo.toml` is changed by including this in your `src/main.rs` file
+/// `Cargo.toml` is changed by including this in your `src/lib` file
 /// `include_str!("../Cargo.toml");`
 ///
 /// # Examples

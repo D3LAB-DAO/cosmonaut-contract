@@ -53,7 +53,7 @@ impl Skeleton {
 
     /// Given the manifests in the current skeleton, create the minimum set of files required to
     /// have a valid Rust project (i.e. write all manifests to disk and create dummy `lib.rs`,
-    /// `main.rs` and `build.rs` files where needed).
+    /// `lib` and `build.rs` files where needed).
     ///
     /// This function should be called on an empty canvas - i.e. an empty directory apart from
     /// the recipe file used to restore the skeleton.
@@ -104,7 +104,7 @@ fn panic(_: &core::panic::PanicInfo) -> ! {
                 // Relative to the manifest path
                 let binary_relative_path = bin.path.to_owned().unwrap_or_else(|| match &bin.name {
                     Some(name) => format!("src/bin/{}.rs", name),
-                    None => "src/main.rs".to_owned(),
+                    None => "src/lib".to_owned(),
                 });
                 let binary_path = parent_directory.join(binary_relative_path);
                 if let Some(parent_directory) = binary_path.parent() {

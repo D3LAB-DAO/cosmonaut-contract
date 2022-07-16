@@ -175,7 +175,7 @@ pub mod spanned;
 /// The difference between the two types is that `proc_macro` types are entirely
 /// specific to procedural macros and cannot ever exist in code outside of a
 /// procedural macro, while `proc_macro2` types may exist anywhere including
-/// tests and non-macro code like main.rs and build.rs. This is why even the
+/// tests and non-macro code like lib and build.rs. This is why even the
 /// procedural macro ecosystem is largely built around `proc_macro2`, because
 /// that ensures the libraries are unit testable and accessible in non-macro
 /// contexts.
@@ -567,7 +567,7 @@ macro_rules! quote {
 ///
 /// ```text
 /// error[E0277]: the trait bound `*const (): std::marker::Sync` is not satisfied
-///   --> src/main.rs:10:21
+///   --> src/lib:10:21
 ///    |
 /// 10 |     static ref PTR: *const () = &();
 ///    |                     ^^^^^^^^^ `*const ()` cannot be shared between threads safely

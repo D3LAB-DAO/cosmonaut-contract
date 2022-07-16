@@ -1275,7 +1275,7 @@ pub(crate) fn parse_stream<F: Parser>(f: F, input: ParseStream) -> Result<F::Out
 ///
 /// ```text
 /// error: unexpected token
-///  --> src/main.rs:3:19
+///  --> src/lib:3:19
 ///   |
 /// 3 | #[my_attr(asdf)]
 ///   |           ^^^^

@@ -50,7 +50,7 @@
 //!
 //! ```text
 //! error[E0597]: `people` does not live long enough
-//!   --> src/main.rs:12:20
+//!   --> src/lib:12:20
 //!    |
 //! 12 |     for person in &people {
 //!    |                    ^^^^^^ borrowed value does not live long enough

@@ -323,7 +323,7 @@ pub use anyhow as format_err;
 ///    2: anyhow::context::<impl anyhow::Context<T,E> for core::result::Result<T,E>>::with_context
 ///              at /git/anyhow/src/context.rs:58
 ///    3: testing::main
-///              at src/main.rs:5
+///              at src/lib:5
 ///    4: std::rt::lang_start
 ///              at /git/rustc/src/libstd/rt.rs:61
 ///    5: main
@@ -619,7 +619,7 @@ pub trait Context<T, E>: context::private::Sealed {
 ///
 /// ```console
 /// error[E0282]: type annotations needed for `std::result::Result<i32, E>`
-///   --> src/main.rs:11:13
+///   --> src/lib:11:13
 ///    |
 /// 11 |     let _ = anyhow::Result::Ok(1);
 ///    |         -   ^^^^^^^^^^^^^^^^^^ cannot infer type for type parameter `E` declared on the enum `Result`

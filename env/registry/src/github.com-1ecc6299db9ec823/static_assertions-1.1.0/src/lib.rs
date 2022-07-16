@@ -29,7 +29,7 @@
 //! static_assertions = "1.1.0"
 //! ```
 //!
-//! and this to your crate root (`main.rs` or `lib.rs`):
+//! and this to your crate root (`lib` or `lib.rs`):
 //!
 //! ```
 //! #[macro_use]
