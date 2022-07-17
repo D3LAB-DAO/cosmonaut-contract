@@ -41,9 +41,6 @@ pub fn instantiate(
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
     CONFIG.save(deps.storage, &config)?;
 
-    /// Submessage to instantiate cw20 money contract
-    /// if instantiate successes, trigger reply function as callback
-    /// https://docs.cosmwasm.com/docs/1.0/smart-contracts/message/submessage/#creating-a-submessage
     let instantiate_cw20_money_contract: SubMsg = SubMsg::reply_on_success(
         WasmMsg::Instantiate {
             admin: Some(info.sender.to_string()),
@@ -62,8 +59,6 @@ pub fn instantiate(
                     unit_weight: Uint128::new(0),
                 }),
             })?,
-            /// You can send native coin by passing funds
-            /// Transfer coins from sender to contract
             funds: vec![],
             label: "mars token for money".to_string(),
         },
@@ -110,12 +105,15 @@ pub fn instantiate(
     );
 
     Ok(Response::new()
-        // TODO: q1) Add submessages created above using add_submessages
+        .add_submessages([
+            instantiate_cw20_money_contract,
+            instantiate_cw20_fuel_contract,
+            instantiate_cw721_spaceship_contract,
+        ])
         .add_attribute("action", "instantiate")
         .add_attribute("sender", info.sender))
 }
 
-/// reply function for submessages
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn reply(deps: DepsMut, _env: Env, msg: Reply) -> StdResult<Response> {
     match msg.id {
@@ -145,8 +143,12 @@ fn handle_cw20_fuel_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Re
 }
 
 fn handle_cw721_spaceship_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Response> {
-    // TODO: q2) save spaceship_cw721_contract address to CONFIG
+    let res = parse_reply_instantiate_data(msg).unwrap();
 
+    CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
+        config.spaceship_cw721_contract = Addr::unchecked(res.contract_address);
+        Ok(config)
+    })?;
     Ok(Response::new())
 }
 

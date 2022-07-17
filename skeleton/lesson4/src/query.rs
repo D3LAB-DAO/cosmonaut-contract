@@ -56,7 +56,10 @@ pub fn freight_token_balance(deps: Deps, symbol: String, address: String) -> Std
                 balance: res.balance,
             })
         }
-        // TODO: q11) if balance of target_contract_addr is None, return FreightTokenBalanceResponse with zero balance
+        None => to_binary(&FreightTokenBalanceResponse {
+            symbol,
+            balance: Uint128::zero(),
+        }),
     }
 }
 
