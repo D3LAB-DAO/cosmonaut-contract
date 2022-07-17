@@ -73,9 +73,11 @@ pub fn buy_spaceship(
         token_id: nft_id,
     };
 
-    // TODO: q4) Wrap transfer_nft_msg with WasmMsg::Execute
-    // save wrapped msg to transfer_nft_msg_wrap
-
+    let transfer_nft_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
+        contract_addr: config.spaceship_cw721_contract.to_string(),
+        msg: to_binary(&transfer_nft_msg)?,
+        funds: vec![],
+    });
 
     Ok(Response::new()
         .add_attribute("action", "buy_spaceship")
@@ -122,11 +124,11 @@ pub fn load_freight_to_nft(
     let unit_weight = token_extension.unit_weight;
     let denom = token_info.symbol;
 
-    // TODO: q5) Check if amount * unit_weight is bigger than MAX_FREIGHT_WEIGHT.
+    // TODO: q4) Check if amount * unit_weight is bigger than MAX_FREIGHT_WEIGHT.
     // if it's true, return ContractError::FrightOverloaded
 
     let config = CONFIG.load(deps.storage)?;
-    // TODO: q6) Find the freight contract address from config, whose denom is same with parameter denom, save it to target_contract_addr
+    // TODO: q5) Find the freight contract address from config, whose denom is same with parameter denom, save it to target_contract_addr
     // if there is no target_contract, return ContractError::TokenNotFound
 
 
@@ -162,7 +164,7 @@ pub fn load_freight_to_nft(
         .add_attribute("token_id", &token_id)
         .add_attribute("denom", &denom)
         .add_attribute("amount", amount.to_string())
-        // TODO: q7) add messages (burn_cw20_token_msg_wrap, load_freight_msg_wrap)
+        // TODO: q6) add messages (burn_cw20_token_msg_wrap, load_freight_msg_wrap)
         )
 }
 
@@ -192,7 +194,7 @@ pub fn unload_freight_from_nft(
     check_is_sender_owner_of_nft(deps.as_ref(), &info.sender, &token_id)?;
 
 
-    // TODO: q8) Create Msg to mint freight tokens to info.sender
+    // TODO: q7) Create Msg to mint freight tokens to info.sender
     // Hint: Wrap cw20_base::msg::ExecuteMsg::Mint with WasmMsg::Execute
 
     let unload_freight_msg = Cw721ExecuteMsg::UnloadFreight {
@@ -292,7 +294,7 @@ pub fn buy_money_token(
     /// info.funds holds the income of native coins
     let income_asset = info.funds;
 
-    // TODO q9) Find coin income whose denom is "uatom" iterating income_asset
+    // TODO q8) Find coin income whose denom is "uatom" iterating income_asset
     // save it to atom_income
     // hint: chain .into_iter and .find
 
@@ -339,7 +341,7 @@ pub fn buy_freight_token(
         return Err(ContractError::TokenNotFound {});
     }
 
-    // TODO: q10) Burn token of config.money_cw20_contract as many as parameter amount from info.sender,
+    // TODO: q9) Burn token of config.money_cw20_contract as many as parameter amount from info.sender,
     // mint token of validated_token_addr to info.sender
 
     /// If the main contract add message burn_money_token_msg and mint_freight_token_msg to execute,

@@ -35,7 +35,6 @@ q5)
 cw721_contract.instantiate(deps, env, info.clone(), msg)?;
 ```
 
-
 * ### execute.rs
 
 q6)

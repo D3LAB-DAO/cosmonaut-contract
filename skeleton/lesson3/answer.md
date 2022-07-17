@@ -32,21 +32,12 @@ let token_balance: BalanceResponse = deps.querier.query_wasm_smart(
 
 q4)
 ```rust
-let transfer_nft_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
-    contract_addr: config.spaceship_cw721_contract.to_string(),
-    msg: to_binary(&transfer_nft_msg)?,
-    funds: vec![],
-});
-```
-
-q5)
-```rust
 if amount * unit_weight > Uint128::new(MAX_FREIGHT_WEIGHT) {
     return Err(ContractError::FrightOverloaded {});
 }
 ```
 
-q6)
+q5)
 ```rust
 let target_contract_addr = config
     .freight_contracts
@@ -58,12 +49,12 @@ if target_contract_addr.is_none() {
 }
 ```
 
-q7)
+q6)
 ```rust
 .add_messages([burn_cw20_token_msg_wrap, load_freight_msg_wrap])
 ```
 
-q8)
+q7)
 ```rust
 let mint_cw20_token_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
     contract_addr: target_contract_addr.unwrap().address,
@@ -75,7 +66,7 @@ let mint_cw20_token_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
 });
 ```
 
-q9)
+q8)
 ```rust
 let atom_income = income_asset
   .into_iter()
@@ -83,7 +74,7 @@ let atom_income = income_asset
   .unwrap_or_else(|| coin(0, "uatom"));
 ```
 
-q10)
+q9)
 ```rust
 let burn_money_token_msg = CosmosMsg::Wasm(WasmMsg::Execute {
     contract_addr: config.money_cw20_contract.to_string(),
@@ -105,6 +96,7 @@ let mint_freight_token_msg = CosmosMsg::Wasm(WasmMsg::Execute {
 ```
 
 * ### query.rs
+q10)
 ```rust
 None => to_binary(&FreightTokenBalanceResponse {
     symbol,
