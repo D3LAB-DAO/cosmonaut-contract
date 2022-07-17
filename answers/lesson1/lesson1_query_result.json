@@ -17,7 +17,7 @@
           "unit_denom": "mars",
           "price": "500",
           "name": "cosmonaut spaceship",
-          "freight": [
+          "freights": [
             {
               "denom": "oil",
               "amount": "5000",
@@ -41,7 +41,7 @@
             "unit_denom": "mars",
             "price": "500",
             "name": "cosmonaut spaceship",
-            "freight": [
+            "freights": [
               {
                 "denom": "oil",
                 "amount": "5000",

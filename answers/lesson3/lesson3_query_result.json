@@ -36,7 +36,7 @@
           "unit_denom": "mars",
           "price": "500",
           "name": "cosmonaut spaceship",
-          "freight": [
+          "freights": [
             {
               "denom": "ubullet",
               "amount": "50",

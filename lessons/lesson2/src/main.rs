@@ -15,6 +15,10 @@ pub fn main() {
     }
 
     let which_lesson: &str = &args().nth(1).unwrap();
+
+    let volume_path: &str = "/Users/ogsang-yun/Documents/IdeaProjects/cosmonaut-contract";
+
+
     let mut app = init_app(ADDR1);
 
     let money_cw20_code_id = app.store_code(mock_cw20_contract());
@@ -30,30 +34,25 @@ pub fn main() {
         "cw20 money",
     );
 
-    println!(
-        "{:?}",
-        execute_cw20_all_msg(&mut app, &cw20_contract_addr.as_ref(), ADDR1, ADDR2).check_answer(
-            which_lesson,
-            &format!(
-                "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
-                which_lesson, which_lesson
-            ),
-        )
+    // println!(
+    //     "{:?}",
+        execute_cw20_all_msg(&mut app, &cw20_contract_addr.as_ref(), ADDR1, ADDR2)
+    //         .check_answer(
+    //         which_lesson,
+    //         &format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson),
+    //     )
+    // );
+    .write_answer_to_file(
+        &format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson)
     );
-    // .write_answer_to_file(&format!(
-    //     "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json",
-    //     which_lesson, which_lesson
-    // ));
 
-    println!(
-        "{:?}",
-        query_all_cw20_msgs(&app, &cw20_contract_addr, ADDR1, ADDR2).check_answer(
-            which_lesson,
-            &format!(
-                "./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json",
-                which_lesson, which_lesson
-            ),
-        )
-    );
-    // .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_query_result.json", which_lesson, which_lesson));
+    // println!(
+    //     "{:?}",
+        query_all_cw20_msgs(&app, &cw20_contract_addr, ADDR1, ADDR2)
+    //         .check_answer(
+    //         which_lesson,
+    //         &format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson),
+    //     )
+    // );
+    .write_answer_to_file(&format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson));
 }
