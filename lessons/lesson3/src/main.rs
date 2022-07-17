@@ -52,32 +52,25 @@ pub fn main() {
         "cw20-tokens bullet",
     );
 
-    // println!(
-    //     "{:?}",
-        execute_main_all_msg(
-            &mut app,
-            main_contract_addr.as_ref(),
-            vec![FreightParams {
-                contract_addr: cw20_bullet_contract_addr.to_string(),
-                amount: Uint128::new(100),
-            }],
-            ADDR1,
-            ADDR2,
-        )
-    //         .check_answer(
-    //             which_lesson,
-    //             &format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson),
-    //         )
-    // );
-    .write_answer_to_file(&format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson));
+    execute_main_all_msg(
+        &mut app,
+        main_contract_addr.as_ref(),
+        vec![FreightParams {
+            contract_addr: cw20_bullet_contract_addr.to_string(),
+            amount: Uint128::new(100),
+        }],
+        ADDR1,
+        ADDR2,
+    ).check_answer(
+        which_lesson,
+        &format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson),
+    ).print_serialized();
+    // .write_answer_to_file(&format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson));
 
-    // println!(
-    //     "{:?}",
-        query_all_main_contract_msgs(&app, &main_contract_addr, ADDR1)
-    //         .check_answer(
-    //         which_lesson,
-    //         &format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson),
-    //     )
-    // );
-    .write_answer_to_file(&format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson));
+    query_all_main_contract_msgs(&app, &main_contract_addr, ADDR1)
+        .check_answer(
+            which_lesson,
+            &format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson),
+        ).print_serialized();
+    // .write_answer_to_file(&format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson));
 }

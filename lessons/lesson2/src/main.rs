@@ -34,25 +34,20 @@ pub fn main() {
         "cw20 money",
     );
 
-    // println!(
-    //     "{:?}",
-        execute_cw20_all_msg(&mut app, &cw20_contract_addr.as_ref(), ADDR1, ADDR2)
-    //         .check_answer(
-    //         which_lesson,
-    //         &format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson),
-    //     )
+    execute_cw20_all_msg(&mut app, &cw20_contract_addr.as_ref(), ADDR1, ADDR2)
+        .check_answer(
+            which_lesson,
+            &format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson),
+        ).print_serialized();
+    // .write_answer_to_file(
+    //     &format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson)
     // );
-    .write_answer_to_file(
-        &format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson)
-    );
 
-    // println!(
-    //     "{:?}",
-        query_all_cw20_msgs(&app, &cw20_contract_addr, ADDR1, ADDR2)
-    //         .check_answer(
-    //         which_lesson,
-    //         &format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson),
-    //     )
-    // );
-    .write_answer_to_file(&format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson));
+    query_all_cw20_msgs(&app, &cw20_contract_addr, ADDR1, ADDR2)
+        .check_answer(
+            which_lesson,
+            &format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson),
+        ).print_serialized();
+
+    // .write_answer_to_file(&format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson));
 }
