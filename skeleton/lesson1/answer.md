@@ -35,32 +35,20 @@ q5)
 cw721_contract.instantiate(deps, env, info.clone(), msg)?;
 ```
 
-q6)
-```rust
-ExecuteMsg::LoadFreight {
-          token_id,
-          denom,
-          amount,
-          unit_weight,
-      } => execute::load_freight(deps, token_id, denom, amount, unit_weight),
-```
 
 * ### execute.rs
-q7)
-```rust
-let cw721_msg = msg.try_into()?;
-```
-q8)
+
+q6)
 ```rust
 let execute_res = self.execute(deps, env, info, cw721_msg);
 ```
 
-q9)
+q7)
 ```rust
 let candidate_idx = extension.freights.iter().position(|l| l.denom == denom);
 ```
 
-q10)
+q8)
 ```rust
 if extension.freights[idx].amount.u128() - amount.u128() == 0 {
     extension.freights.remove(idx);

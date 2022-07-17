@@ -46,7 +46,12 @@ pub fn execute(
     match msg {
         ExecuteMsg::SetMinter { minter } => execute::set_minter(deps, info, minter),
         // msg to load cw20-tokens token data on nft
-        // TODO: q6) route msg by calling execute::load_freight when msg is ExecuteMsg::LoadFreight.
+        ExecuteMsg::LoadFreight {
+            token_id,
+            denom,
+            amount,
+            unit_weight,
+        } => execute::load_freight(deps, token_id, denom, amount, unit_weight),
         // msg to unload cw20-tokens token data on nft
         ExecuteMsg::UnloadFreight {
             token_id,
