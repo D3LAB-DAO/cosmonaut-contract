@@ -518,9 +518,8 @@ pub fn play_game(
 
     let burn_fuel_msg = Cw721ExecuteMsg::BurnFuel {
         token_id,
-        amount: Uint128::new(FUEL_PER_GAME)
-            .checked_mul(epoch)
-            .map_err(StdError::overflow)?,
+        amount: // TODO: q6) wrap FUEL_PER_GAME with Uint128 and multiply with epoch parameter
+                // Use checked_mul and chain map_err(StdError::overflow)?
     };
 
     let burn_fuel_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {

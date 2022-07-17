@@ -39,3 +39,10 @@ let burn_fuel_msg = Cw721ExecuteMsg::BurnFuel {
         .map_err(StdError::overflow)?,
 };
 ```
+
+q6)
+```rust
+Uint128::new(FUEL_PER_GAME)
+    .checked_mul(epoch)
+    .map_err(StdError::overflow)?,
+```
