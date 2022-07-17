@@ -22,10 +22,9 @@ use cw_storage_plus::Item;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-pub struct TokenExtension {
-    pub unit_weight: Uint128,
-}
+// TODO: q1) Declare TokenExtension struct witch implements Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema
+// TokenExtension has unit_weight: Uint128 as public field
+
 
 pub const TOKEN_EXTENSION: Item<TokenExtension> = Item::new("token_extension");
 
@@ -59,10 +58,10 @@ pub fn execute(
     msg: ExecuteMsg,
 ) -> Result<Response, ContractError> {
     match msg {
-        ExecuteMsg::Transfer { recipient, amount } => {
-            execute_transfer(deps, env, info, recipient, amount)
-        }
-        ExecuteMsg::Burn { amount } => execute_burn(deps, env, info, amount),
+        // TODO: q2) Route ExecuteMsg::Transfer, ExecuteMsg::Burn
+        // call execute_transfer for Transfer,
+        // call execute_burn for Burn
+
         ExecuteMsg::Send {
             contract,
             amount,

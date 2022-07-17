@@ -28,6 +28,8 @@ ExecuteMsg::TransferNft {
             }),
 ```
 
+* ### contract.rs
+
 q5)
 ```rust
 cw721_contract.instantiate(deps, env, info.clone(), msg)?;
@@ -43,6 +45,7 @@ ExecuteMsg::LoadFreight {
       } => execute::load_freight(deps, token_id, denom, amount, unit_weight),
 ```
 
+* ### execute.rs
 q7)
 ```rust
 let cw721_msg = msg.try_into()?;

@@ -31,6 +31,7 @@ pub fn instantiate(
     info: MessageInfo,
     msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
+
     let config = Config {
         money_cw20_contract: Addr::unchecked(""),
         spaceship_cw721_contract: Addr::unchecked(""),
