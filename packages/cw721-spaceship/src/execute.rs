@@ -11,23 +11,37 @@ fn create_cw721_execute_msgs(
     recipient: &str,
     stranger: &str,
 ) -> Vec<cosmonaut_cw721::msg::ExecuteMsg> {
-    let mint_msg = ExecuteMsg::Mint(MintMsg {
+    let mint_msg_1 = ExecuteMsg::Mint(MintMsg {
         token_id: "1".to_string(),
         owner: admin.to_string(),
         token_uri: None,
         extension: Extension {
             unit_denom: "mars".to_string(),
             price: Uint128::new(500),
-            name: Some("cosmonaut spaceship".to_string()),
+            name: Some("cosmonaut spaceship1".to_string()),
             freights: vec![],
             health: Uint128::new(10),
             fuel: Uint128::zero(),
         },
     });
 
+    let mint_msg_2 = ExecuteMsg::Mint(MintMsg {
+        token_id: "2".to_string(),
+        owner: admin.to_string(),
+        token_uri: None,
+        extension: Extension {
+            unit_denom: "mars".to_string(),
+            price: Uint128::new(700),
+            name: Some("cosmonaut spaceship2".to_string()),
+            freights: vec![],
+            health: Uint128::new(15),
+            fuel: Uint128::zero(),
+        },
+    });
+
     let transfer_nft_msg = ExecuteMsg::TransferNft {
         recipient: recipient.to_string(),
-        token_id: "1".to_string(),
+        token_id: "2".to_string(),
     };
 
     let approve_nft_msg = ExecuteMsg::Approve {
@@ -65,7 +79,8 @@ fn create_cw721_execute_msgs(
     };
 
     vec![
-        mint_msg,
+        mint_msg_1,
+        mint_msg_2,
         approve_nft_msg,
         load_freight_msg,
         unload_freight_msg,

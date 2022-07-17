@@ -2,7 +2,7 @@ use crate::state::Extension;
 use cosmwasm_std::{Deps, Empty, Env, StdResult};
 use cw721::{
     AllNftInfoResponse, ApprovalsResponse, ContractInfoResponse, Cw721Query, NftInfoResponse,
-    NumTokensResponse, OwnerOfResponse, TokensResponse,
+    NumTokensResponse, OwnerOfResponse, TokensResponse, ApprovalResponse
 };
 use cw721_base::{Cw721Contract, MinterResponse};
 
@@ -19,6 +19,17 @@ pub fn owner_of(
 ) -> StdResult<OwnerOfResponse> {
     let contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
     contract.owner_of(deps, env, token_id, include_expired)
+}
+
+pub fn approval(
+    deps: Deps,
+    env: Env,
+    token_id: String,
+    spender: String,
+    include_expired: bool,
+) -> StdResult<ApprovalResponse> {
+    let contract: Cw721Contract<Extension, Empty> = Cw721Contract::default();
+    contract.approval(deps, env, token_id, spender, include_expired)
 }
 
 pub fn approved_for_all(

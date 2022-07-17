@@ -6,8 +6,25 @@
       }
     },
     {
+      "ApprovalResponse": {
+        "approval": {
+          "spender": "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111",
+          "expires": {
+            "never": {}
+          }
+        }
+      }
+    },
+    {
       "ApprovalsResponse": {
-        "approvals": []
+        "approvals": [
+          {
+            "spender": "wasm333rvne2lz6funpxxkk6yumc8ll4l3c2e3kk333",
+            "expires": {
+              "never": {}
+            }
+          }
+        ]
       }
     },
     {
@@ -16,7 +33,7 @@
         "extension": {
           "unit_denom": "mars",
           "price": "500",
-          "name": "cosmonaut spaceship",
+          "name": "cosmonaut spaceship1",
           "freights": [
             {
               "denom": "oil",
@@ -32,15 +49,22 @@
     {
       "AllNftInfoResponse": {
         "access": {
-          "owner": "wasm222rvne2lz6funpxxkk6yumc8ll4l3c2e3kk222",
-          "approvals": []
+          "owner": "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111",
+          "approvals": [
+            {
+              "spender": "wasm333rvne2lz6funpxxkk6yumc8ll4l3c2e3kk333",
+              "expires": {
+                "never": {}
+              }
+            }
+          ]
         },
         "info": {
           "token_uri": null,
           "extension": {
             "unit_denom": "mars",
             "price": "500",
-            "name": "cosmonaut spaceship",
+            "name": "cosmonaut spaceship1",
             "freights": [
               {
                 "denom": "oil",
@@ -56,19 +80,26 @@
     },
     {
       "OwnerOfResponse": {
-        "owner": "wasm222rvne2lz6funpxxkk6yumc8ll4l3c2e3kk222",
-        "approvals": []
+        "owner": "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111",
+        "approvals": [
+          {
+            "spender": "wasm333rvne2lz6funpxxkk6yumc8ll4l3c2e3kk333",
+            "expires": {
+              "never": {}
+            }
+          }
+        ]
       }
     },
     {
       "NumTokensResponse": {
-        "count": 1
+        "count": 2
       }
     },
     {
       "TokensResponse": {
         "tokens": [
-          "1"
+          "2"
         ]
       }
     },
@@ -79,7 +110,5 @@
       }
     }
   ],
-  "errors": [
-    "Error parsing into type cw721::query::ApprovalResponse: EOF while parsing a JSON value."
-  ]
+  "errors": []
 }

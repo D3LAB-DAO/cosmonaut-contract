@@ -1,4 +1,3 @@
-use std::env;
 use base::consts::*;
 use base::init::init_app;
 use base::result::Result;
@@ -6,6 +5,7 @@ use cw721_spaceship::execute::execute_cw721_all_msg;
 use cw721_spaceship::init::mock_cw721_contract;
 use cw721_spaceship::instantiate::instantiate_spaceship_nft_contract;
 use cw721_spaceship::query::query_all_cw721_msgs;
+use std::env;
 use std::env::args;
 
 pub fn main() {
@@ -31,21 +31,27 @@ pub fn main() {
 
     // println!(
     //     "{:?}",
-        execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3)
-    //         .check_answer(
-    //             which_lesson,
-    //             &format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson),
-    //         )
-    // );
-    .write_answer_to_file( &format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson));
+    execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3)
+        //         .check_answer(
+        //             which_lesson,
+        //             &format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson),
+        //         )
+        // );
+        .write_answer_to_file(&format!(
+            "{}/answers/lesson{}/lesson{}_execute_result.json",
+            volume_path, which_lesson, which_lesson
+        ));
 
     // println!(
     //     "{:?}",
-        query_all_cw721_msgs(&app, &cw721_contract_addr, ADDR1, ADDR2)
-    //         .check_answer(
-    //         which_lesson,
-    //         &format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson),
-    //     )
-    // );
-    .write_answer_to_file( &format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson));
+    query_all_cw721_msgs(&app, &cw721_contract_addr, ADDR1, ADDR2)
+        //         .check_answer(
+        //         which_lesson,
+        //         &format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson),
+        //     )
+        // );
+        .write_answer_to_file(&format!(
+            "{}/answers/lesson{}/lesson{}_query_result.json",
+            volume_path, which_lesson, which_lesson
+        ));
 }
