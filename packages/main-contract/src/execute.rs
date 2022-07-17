@@ -28,7 +28,7 @@ fn create_main_contract_execute_msgs_before_approve(
             unit_denom: "mars".to_string(),
             price: Uint128::new(500),
             name: Some("cosmonaut spaceship".to_string()),
-            freight: vec![],
+            freights: vec![],
             health: Uint128::new(10),
             fuel: Uint128::zero(),
         },
