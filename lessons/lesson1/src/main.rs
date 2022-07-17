@@ -8,7 +8,7 @@ use cw721_spaceship::query::query_all_cw721_msgs;
 use std::env::args;
 
 pub fn main() {
-    if args().count() != 2 {
+    if args().count() != 3 {
         println!("args are not sufficient");
         std::process::exit(0);
     }
@@ -32,7 +32,7 @@ pub fn main() {
         execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3)
             .check_answer(
                 which_lesson,
-                volume_path,
+                &format!("{}/lesson{}_execute_result.json", volume_path, which_lesson),
             )
     );
     // .write_answer_to_file(&format!("./{DEFAULT_ANSWER_PATH}/lesson{}/lesson{}_execute_result.json", which_lesson, which_lesson));

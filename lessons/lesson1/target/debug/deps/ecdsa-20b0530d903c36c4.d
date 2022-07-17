@@ -1,0 +1,13 @@
+C:\Users\PC\IdeaProjects\cosmonaut-contract\lessons\lesson1\target\debug\deps\ecdsa-20b0530d903c36c4.rmeta: C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\lib.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\recovery.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\der.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\hazmat.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\sign.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\verify.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\../README.md
+
+C:\Users\PC\IdeaProjects\cosmonaut-contract\lessons\lesson1\target\debug\deps\libecdsa-20b0530d903c36c4.rlib: C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\lib.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\recovery.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\der.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\hazmat.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\sign.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\verify.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\../README.md
+
+C:\Users\PC\IdeaProjects\cosmonaut-contract\lessons\lesson1\target\debug\deps\ecdsa-20b0530d903c36c4.d: C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\lib.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\recovery.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\der.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\hazmat.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\sign.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\verify.rs C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\../README.md
+
+C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\lib.rs:
+C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\recovery.rs:
+C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\der.rs:
+C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\hazmat.rs:
+C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\sign.rs:
+C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\verify.rs:
+C:\Users\PC\.cargo\registry\src\github.com-1ecc6299db9ec823\ecdsa-0.13.4\src\../README.md:
