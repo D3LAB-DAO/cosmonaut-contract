@@ -469,7 +469,6 @@ pub fn burn_fuel(
 
 fn _generate_random_number(timestamp_int_nanos: Uint128) -> Uint128 {
     // TODO: q3) return remainder of timestamp_int_nanos divided by MAX_FREIGHT_WEIGHT
-
 }
 
 pub fn play_game(
@@ -487,7 +486,7 @@ pub fn play_game(
     let mut health_decrease_value = Uint128::zero();
     let mut spaceship_speed = Uint128::zero();
 
-    for _ in 0..epoch.u128() {
+    for // TODO: q4) iterate for parameter epoch with anonymous variable _ {
         let timestamp_int_nanos = Uint128::new(u128::from(env.block.time.nanos()));
         let total_health = nft_info.extension.health;
         let step = total_health.div(epoch);
@@ -512,7 +511,7 @@ pub fn play_game(
         funds: vec![],
     });
 
-    // TODO: q4) create msg to BurnFuel as much as FUEL_PER_GAME * epoch
+    // TODO: q5) create msg to BurnFuel as much as FUEL_PER_GAME * epoch
     // Hint: use Cw721ExecuteMsg::BurnFuel
 
 

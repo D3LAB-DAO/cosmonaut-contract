@@ -27,6 +27,11 @@ timestamp_int_nanos.rem(Uint128::new(MAX_FREIGHT_WEIGHT))
 
 q4)
 ```rust
+_ in 0..epoch.u128()
+```
+
+q5)
+```rust
 let burn_fuel_msg = Cw721ExecuteMsg::BurnFuel {
     token_id,
     amount: Uint128::new(FUEL_PER_GAME)
