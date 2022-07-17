@@ -24,7 +24,15 @@ pub struct AnswerCheck {
     pub answer_type: String,
     pub lesson: String,
     pub result: String,
-    pub error: Vec<String>,
+    pub errors: Vec<String>,
+    pub differences: Vec<Difference>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub struct Difference {
+    pub yours: String,
+    pub expected: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
@@ -47,8 +55,8 @@ pub struct Metadata {
 pub trait Result {
     fn print_results(&self);
     fn write_answer_to_file(&self, path: &str)
-    where
-        Self: Serialize,
+        where
+            Self: Serialize,
     {
         let file = OpenOptions::new()
             .create(true)
@@ -67,15 +75,20 @@ impl Result for ExecuteAllResult {
         }
     }
     fn check_answer(&self, lesson: &str, correct_answer_path: &str) -> AnswerCheck {
+        let mut differences: Vec<Difference> = vec![];
+
         let content: String = std::fs::read_to_string(correct_answer_path)
             .unwrap()
             .parse()
             .unwrap();
         let correct_answer: ExecuteAllResult = serde_json::from_str(&content).unwrap();
 
-        for (i, j) in zip(&self.attributes, &correct_answer.attributes) {
-            if i != j {
-                println!("your result: {:?}\ncorrect answer: {:?}\n", i, j);
+        for (yours, expected) in zip(&self.attributes, &correct_answer.attributes) {
+            if yours != expected {
+                differences.push(Difference {
+                    yours: serde_json::to_string(&yours).unwrap(),
+                    expected: serde_json::to_string(&expected).unwrap(),
+                });
             }
         }
 
@@ -84,22 +97,24 @@ impl Result for ExecuteAllResult {
                 answer_type: "execute".to_string(),
                 lesson: lesson.to_string(),
                 result: "success".to_string(),
-                error: vec![],
+                errors: vec![],
+                differences: vec![],
             }
         } else {
             AnswerCheck {
                 answer_type: "execute".to_string(),
                 lesson: lesson.to_string(),
                 result: "fail".to_string(),
-                error: self.errors.clone(),
+                errors: self.errors.clone(),
+                differences,
             }
         }
     }
 }
 
 impl<T> Result for QueryAllResult<T>
-where
-    T: Debug + DeserializeOwned + PartialEq + Serialize + Clone,
+    where
+        T: Debug + DeserializeOwned + PartialEq + Serialize + Clone,
 {
     fn print_results(&self) {
         for result in &self.responses {
@@ -108,15 +123,20 @@ where
     }
 
     fn check_answer(&self, lesson: &str, correct_answer_path: &str) -> AnswerCheck {
+        let mut differences: Vec<Difference> = vec![];
+
         let content: String = std::fs::read_to_string(correct_answer_path)
             .unwrap()
             .parse()
             .unwrap();
         let correct_answer: QueryAllResult<T> = serde_json::from_str(&content).unwrap();
 
-        for (i, j) in zip(&self.responses, &correct_answer.responses) {
-            if i != j {
-                println!("your result: {:?}\ncorrect answer: {:?}\n", i, j);
+        for (yours, expected) in zip(&self.responses, &correct_answer.responses) {
+            if yours != expected {
+                differences.push(Difference {
+                    yours: serde_json::to_string(&yours).unwrap(),
+                    expected: serde_json::to_string(&expected).unwrap(),
+                })
             }
         }
         if &correct_answer == self {
@@ -124,14 +144,16 @@ where
                 answer_type: "query".to_string(),
                 lesson: lesson.to_string(),
                 result: "success".to_string(),
-                error: vec![],
+                errors: vec![],
+                differences: vec![],
             }
         } else {
             AnswerCheck {
                 answer_type: "query".to_string(),
                 lesson: lesson.to_string(),
                 result: "fail".to_string(),
-                error: self.errors.clone(),
+                errors: self.errors.clone(),
+                differences,
             }
         }
     }
@@ -146,5 +168,9 @@ impl AnswerCheck {
             .open(file_path)
             .unwrap();
         serde_json::to_writer_pretty(&file, &self).unwrap();
+    }
+
+    pub fn print_serialized(&self) {
+        println!("{}", serde_json::to_string(self).unwrap());
     }
 }

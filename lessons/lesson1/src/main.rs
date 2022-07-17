@@ -29,29 +29,23 @@ pub fn main() {
         "cw721 nft",
     );
 
-    // println!(
-    //     "{:?}",
     execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3)
-        //         .check_answer(
-        //             which_lesson,
-        //             &format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson),
-        //         )
-        // );
-        .write_answer_to_file(&format!(
-            "{}/answers/lesson{}/lesson{}_execute_result.json",
-            volume_path, which_lesson, which_lesson
-        ));
+        .check_answer(
+            which_lesson,
+            &format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson),
+        ).print_serialized();
+    // .write_answer_to_file(&format!(
+    //     "{}/answers/lesson{}/lesson{}_execute_result.json",
+    //     volume_path, which_lesson, which_lesson
+    // ));
 
-    // println!(
-    //     "{:?}",
     query_all_cw721_msgs(&app, &cw721_contract_addr, ADDR1, ADDR2)
-        //         .check_answer(
-        //         which_lesson,
-        //         &format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson),
-        //     )
-        // );
-        .write_answer_to_file(&format!(
-            "{}/answers/lesson{}/lesson{}_query_result.json",
-            volume_path, which_lesson, which_lesson
-        ));
+        .check_answer(
+            which_lesson,
+            &format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson),
+        ).print_serialized();
+    // .write_answer_to_file(&format!(
+    //     "{}/answers/lesson{}/lesson{}_query_result.json",
+    //     volume_path, which_lesson, which_lesson
+    // ));
 }
