@@ -8,7 +8,7 @@ use cw721_spaceship::query::query_all_cw721_msgs;
 use std::env::args;
 
 pub fn main() {
-    if args().count() != 3 {
+    if args().count() != 2 {
         println!("args are not sufficient");
         std::process::exit(0);
     }

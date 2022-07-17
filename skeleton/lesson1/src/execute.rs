@@ -26,8 +26,9 @@ impl<'a> BaseExecute for Cw721Contract<'a, Extension, Empty> {
         info: MessageInfo,
         msg: ExecuteMsg,
     ) -> Result<Response, ContractError> {
-        let cw721_msg = msg.try_into()?;
-        let execute_res = self.execute(deps, env, info, cw721_msg);
+        // TODO: q7) Convert msg into Cw721ExecuteMsg. Remember we implemented TryFrom trait at msg.rs.
+        // TODO: q8) execute converted msg with self.execute
+
         match execute_res {
             Ok(res) => Ok(res),
             Err(err) => Err(ContractError::try_from(err)?),
@@ -102,7 +103,8 @@ pub fn load_freight(
     let mut extension = token.extension;
 
     // iterate freight to find target cw20-tokens by denom
-    let candidate_idx = extension.freights.iter().position(|l| l.denom == denom);
+    // TODO: q9) Declare candidated_idx iterating extension.freights whose denom is same with parameter's denom
+
     // if there is token with given denom
     if let Some(idx) = candidate_idx {
         // update token amount
@@ -139,12 +141,10 @@ pub fn unload_freight(
 
     let candidate_idx = extension.freights.iter().position(|l| l.denom == denom);
     if let Some(idx) = candidate_idx {
-        if extension.freights[idx].amount.u128() - amount.u128() == 0 {
-            extension.freights.remove(idx);
-        } else {
-            extension.freights[idx].amount =
-                extension.freights[idx].amount.checked_sub(amount).unwrap();
-        }
+        // TODO: q10) Remove freight from extension.freights if result amount is zero.
+        // else, just decrease amount.
+        // There can be multiple ways to handle it!
+
     } else {
         return Err(ContractError::NotFound {});
     }

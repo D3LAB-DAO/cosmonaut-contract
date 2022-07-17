@@ -24,8 +24,11 @@ pub fn instantiate(
     msg: InstantiateMsg,
 ) -> StdResult<Response> {
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
+    /// cw721_contract is constructed with <Extension, Empty>.
+    /// Extension type is for IndexedMap as index.
+    /// We wouldn't use custom reponse, passing cosmwasm_std::Empty is appropriate.
     let cw721_contract = Cw721Contract::<Extension, Empty>::default();
-    cw721_contract.instantiate(deps, env, info.clone(), msg)?;
+    // TODO: q5) instantiate cw721_contract with instantiate method
     Ok(Response::new()
         .add_attribute("action", "instantiate")
         .add_attribute("sender", info.sender.to_string()))
@@ -43,12 +46,7 @@ pub fn execute(
     match msg {
         ExecuteMsg::SetMinter { minter } => execute::set_minter(deps, info, minter),
         // msg to load cw20-tokens token data on nft
-        ExecuteMsg::LoadFreight {
-            token_id,
-            denom,
-            amount,
-            unit_weight,
-        } => execute::load_freight(deps, token_id, denom, amount, unit_weight),
+        // TODO: q6) route msg by calling execute::load_freight when msg is ExecuteMsg::LoadFreight.
         // msg to unload cw20-tokens token data on nft
         ExecuteMsg::UnloadFreight {
             token_id,

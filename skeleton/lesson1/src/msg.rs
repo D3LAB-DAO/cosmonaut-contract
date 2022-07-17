@@ -37,7 +37,7 @@ pub enum ExecuteMsg {
         operator: String,
     },
 
-    Mint(MintMsg<Extension>),
+    // TODO: q3) message "Mint" which extends MintMsg of cw721_base with Extension type declared at state.rs
 
     Burn {
         token_id: String,
@@ -80,13 +80,7 @@ impl TryFrom<ExecuteMsg> for Cw721ExecuteMsg<Extension> {
 
     fn try_from(msg: ExecuteMsg) -> Result<Self, Self::Error> {
         match msg {
-            ExecuteMsg::TransferNft {
-                recipient,
-                token_id,
-            } => Ok(Cw721ExecuteMsg::TransferNft {
-                recipient,
-                token_id,
-            }),
+            //TODO: q4) Convert ExecuteMsg::TransferNft to Cw721ExecuteMsg::TransferNft
             ExecuteMsg::Mint(mint_msg) => Ok(Cw721ExecuteMsg::Mint(mint_msg)),
             ExecuteMsg::SendNft {
                 contract,
