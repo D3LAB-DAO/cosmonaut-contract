@@ -171,6 +171,14 @@ impl AnswerCheck {
     }
 
     pub fn print_serialized(&self) {
-        println!("{}", serde_json::to_string(self).unwrap().replace("\\", ""));
+        println!("{}", serde_json::to_string(self).unwrap()
+            .replace("\\", "")
+            .replace("\"[", "[")
+            .replace("]\"", "]")
+            .replace("\\", "")
+            .replace("\"{", "{")
+            .replace("}\"", "}")
+            .replace("\n", "")
+        );
     }
 }
