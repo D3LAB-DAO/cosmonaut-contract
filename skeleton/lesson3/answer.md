@@ -74,29 +74,9 @@ let atom_income = income_asset
   .unwrap_or_else(|| coin(0, "uatom"));
 ```
 
-q9)
-```rust
-let burn_money_token_msg = CosmosMsg::Wasm(WasmMsg::Execute {
-    contract_addr: config.money_cw20_contract.to_string(),
-    msg: to_binary(&cosmonaut_cw20::msg::ExecuteMsg::BurnFrom {
-        owner: info.sender.to_string(),
-        amount,
-    })?,
-    funds: vec![],
-});
-
-let mint_freight_token_msg = CosmosMsg::Wasm(WasmMsg::Execute {
-    contract_addr: validated_token_addr.to_string(),
-    msg: to_binary(&cosmonaut_cw20::msg::ExecuteMsg::Mint {
-        recipient: info.sender.to_string(),
-        amount,
-    })?,
-    funds: vec![],
-});
-```
 
 * ### query.rs
-q10)
+q9)
 ```rust
 None => to_binary(&FreightTokenBalanceResponse {
     symbol,

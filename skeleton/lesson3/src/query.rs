@@ -56,7 +56,7 @@ pub fn freight_token_balance(deps: Deps, symbol: String, address: String) -> Std
                 balance: res.balance,
             })
         }
-        // TODO: q10) if balance of target_contract_addr is None, return FreightTokenBalanceResponse with zero balance
+        // TODO: q9) if balance of target_contract_addr is None, return FreightTokenBalanceResponse with zero balance
     }
 }
 

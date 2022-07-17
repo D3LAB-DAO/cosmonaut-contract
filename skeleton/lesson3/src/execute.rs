@@ -341,8 +341,23 @@ pub fn buy_freight_token(
         return Err(ContractError::TokenNotFound {});
     }
 
-    // TODO: q9) Burn token of config.money_cw20_contract as many as parameter amount from info.sender,
-    // mint token of validated_token_addr to info.sender
+    let burn_money_token_msg = CosmosMsg::Wasm(WasmMsg::Execute {
+        contract_addr: config.money_cw20_contract.to_string(),
+        msg: to_binary(&cosmonaut_cw20::msg::ExecuteMsg::BurnFrom {
+            owner: info.sender.to_string(),
+            amount,
+        })?,
+        funds: vec![],
+    });
+
+    let mint_freight_token_msg = CosmosMsg::Wasm(WasmMsg::Execute {
+        contract_addr: validated_token_addr.to_string(),
+        msg: to_binary(&cosmonaut_cw20::msg::ExecuteMsg::Mint {
+            recipient: info.sender.to_string(),
+            amount,
+        })?,
+        funds: vec![],
+    });
 
     /// If the main contract add message burn_money_token_msg and mint_freight_token_msg to execute,
     /// main contract is the info.sender of Cw20Contract.
