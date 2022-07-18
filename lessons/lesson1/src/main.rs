@@ -9,12 +9,13 @@ use std::env;
 use std::env::args;
 
 pub fn main() {
-    if args().count() != 2 {
+    if args().count() != 3 {
         println!("args are not sufficient");
         std::process::exit(0);
     }
 
     let which_lesson: &str = &args().nth(1).unwrap();
+    let which_chapter: &str = &args().nth(2).unwrap();
     // let volume_path: &str = &env::var("BASE_VOLUME_DIR").unwrap();
     let volume_path: &str = "/Users/ogsang-yun/Documents/IdeaProjects/cosmonaut-contract";
 
@@ -32,20 +33,27 @@ pub fn main() {
     execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3)
         .check_answer(
             which_lesson,
-            &format!("{}/answers/lesson{}/lesson{}_execute_result.json", volume_path, which_lesson, which_lesson),
+            &format!(
+                "{}/answers/lesson{}/chapter{}/execute_result.json",
+                volume_path, which_lesson, which_chapter,
+            ),
         ).print_serialized();
+
     // .write_answer_to_file(&format!(
-    //     "{}/answers/lesson{}/lesson{}_execute_result.json",
-    //     volume_path, which_lesson, which_lesson
+    //     "{}/answers/lesson{}/chapter{}/execute_result.json",
+    //     volume_path, which_lesson, which_chapter,
     // ));
 
     query_all_cw721_msgs(&app, &cw721_contract_addr, ADDR1, ADDR2)
         .check_answer(
             which_lesson,
-            &format!("{}/answers/lesson{}/lesson{}_query_result.json", volume_path, which_lesson, which_lesson),
+            &format!(
+                "{}/answers/lesson{}/chapter{}/query_result.json",
+                volume_path, which_lesson, which_chapter,
+            ),
         ).print_serialized();
     // .write_answer_to_file(&format!(
-    //     "{}/answers/lesson{}/lesson{}_query_result.json",
-    //     volume_path, which_lesson, which_lesson
+    //     "{}/answers/lesson{}/chapter{}/query_result.json",
+    //     volume_path, which_lesson, which_chapter,
     // ));
 }
