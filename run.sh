@@ -1,8 +1,8 @@
 BASE_VOLUME_DIR=/home/app/base
-USER_VOLUME_NAME=user
-USER_CONTRACT_DIR=/home/app/user1
+USER_VOLUME_NAME=user1
+USER_CONTRACT_DIR=/home/app/user
 
-docker run --rm -it \
+docker run --rm \
   -v base-volume:$BASE_VOLUME_DIR \
   -v $USER_VOLUME_NAME:$USER_CONTRACT_DIR \
   -e BASE_VOLUME_DIR=$BASE_VOLUME_DIR \

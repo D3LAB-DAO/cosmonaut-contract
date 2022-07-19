@@ -3,7 +3,7 @@
 
 1. Build docker image and create volume for common packages
 ```shell
-./init.sh
+./init.sh $cargo_registry_mount_path
 ```
 2. Create volume for user packages
 

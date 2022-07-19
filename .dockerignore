@@ -6,3 +6,6 @@ packages
 users/user1
 lessons
 env
+init.sh
+run.sh
+rustfmt.toml

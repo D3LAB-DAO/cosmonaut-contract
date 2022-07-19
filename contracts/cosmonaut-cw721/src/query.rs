@@ -1,8 +1,8 @@
 use crate::state::Extension;
 use cosmwasm_std::{Deps, Empty, Env, StdResult};
 use cw721::{
-    AllNftInfoResponse, ApprovalsResponse, ContractInfoResponse, Cw721Query, NftInfoResponse,
-    NumTokensResponse, OwnerOfResponse, TokensResponse, ApprovalResponse
+    AllNftInfoResponse, ApprovalResponse, ApprovalsResponse, ContractInfoResponse, Cw721Query,
+    NftInfoResponse, NumTokensResponse, OwnerOfResponse, TokensResponse,
 };
 use cw721_base::{Cw721Contract, MinterResponse};
 

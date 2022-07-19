@@ -83,8 +83,14 @@ pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
         QueryMsg::Approval {
             token_id,
             spender,
-            include_expired
-        } => to_binary(&query::approval(deps, env, token_id, spender, include_expired.unwrap_or(false))?),
+            include_expired,
+        } => to_binary(&query::approval(
+            deps,
+            env,
+            token_id,
+            spender,
+            include_expired.unwrap_or(false),
+        )?),
         QueryMsg::Approvals {
             token_id,
             include_expired,

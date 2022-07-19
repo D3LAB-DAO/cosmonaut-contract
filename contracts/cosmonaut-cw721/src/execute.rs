@@ -106,7 +106,8 @@ pub fn load_freight(
     // if there is token with given denom
     if let Some(idx) = candidate_idx {
         // update token amount
-        extension.freights[idx].amount = extension.freights[idx].amount.checked_add(amount).unwrap();
+        extension.freights[idx].amount =
+            extension.freights[idx].amount.checked_add(amount).unwrap();
     } else {
         // if not, push a new freight data
         extension.freights.push(Freight {
