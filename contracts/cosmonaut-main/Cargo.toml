@@ -1,7 +1,7 @@
 [package]
 name = "cosmonaut-main"
 version = "0.1.0"
-authors = ["Sangyun Ock <demibun@a41ventures.com>"]
+authors = ["D3LAB-DAO"]
 edition = "2018"
 
 exclude = [

@@ -77,6 +77,16 @@ impl Result for ExecuteAllResult {
     fn check_answer(&self, lesson: &str, correct_answer_path: &str) -> AnswerCheck {
         let mut differences: Vec<Difference> = vec![];
 
+        if !self.errors.is_empty() {
+            return AnswerCheck {
+                answer_type: "execute".to_string(),
+                lesson: lesson.to_string(),
+                result: "error".to_string(),
+                errors: vec![],
+                differences: vec![],
+            };
+        }
+
         let content: String = std::fs::read_to_string(correct_answer_path)
             .unwrap()
             .parse()
@@ -104,7 +114,7 @@ impl Result for ExecuteAllResult {
             AnswerCheck {
                 answer_type: "execute".to_string(),
                 lesson: lesson.to_string(),
-                result: "fail".to_string(),
+                result: "incorrect".to_string(),
                 errors: self.errors.clone(),
                 differences,
             }
@@ -124,6 +134,16 @@ impl<T> Result for QueryAllResult<T>
 
     fn check_answer(&self, lesson: &str, correct_answer_path: &str) -> AnswerCheck {
         let mut differences: Vec<Difference> = vec![];
+
+        if !self.errors.is_empty() {
+            return AnswerCheck {
+                answer_type: "query".to_string(),
+                lesson: lesson.to_string(),
+                result: "error".to_string(),
+                errors: vec![],
+                differences: vec![],
+            };
+        }
 
         let content: String = std::fs::read_to_string(correct_answer_path)
             .unwrap()
@@ -151,7 +171,7 @@ impl<T> Result for QueryAllResult<T>
             AnswerCheck {
                 answer_type: "query".to_string(),
                 lesson: lesson.to_string(),
-                result: "fail".to_string(),
+                result: "incorrect".to_string(),
                 errors: self.errors.clone(),
                 differences,
             }

@@ -1,3 +1,4 @@
+use std::env;
 use base::consts::*;
 use base::init::init_app;
 use base::result::Result;
@@ -21,7 +22,7 @@ pub fn main() {
     let which_lesson: &str = &args().nth(1).unwrap();
     let which_chapter: &str = &args().nth(2).unwrap();
 
-    let volume_path: &str = "/Users/ogsang-yun/Documents/IdeaProjects/cosmonaut-contract";
+    let volume_path: &str = &env::var("BASE_VOLUME_DIR").unwrap();
 
     let mut app = init_app(ADDR1);
 

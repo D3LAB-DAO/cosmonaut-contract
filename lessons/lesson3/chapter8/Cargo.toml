@@ -1,5 +1,5 @@
 [package]
-name = "lesson2"
+name = "lesson3"
 version = "0.1.0"
 edition = "2021"
 
@@ -18,6 +18,8 @@ overflow-checks = true
 [workspace]
 
 [dependencies]
-cw20-tokens = {path="../../packages/cw20-tokens"}
-base = {path="../../packages/base"}
+cw20-tokens = {path= "../../../packages/cw20-tokens" }
+cw721-spaceship = {path= "../../../packages/cw721-spaceship" }
+main-contract = {path= "../../../packages/main-contract" }
+base = {path= "../../../packages/base" }
 cosmwasm-std = { version = "1.0.0" }

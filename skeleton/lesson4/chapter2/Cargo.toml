@@ -1,7 +1,7 @@
 [package]
 name = "cosmonaut-main"
 version = "0.1.0"
-authors = ["Sangyun Ock <demibun@a41ventures.com>"]
+authors = ["D3LAB-DAO"]
 edition = "2018"
 
 exclude = [
@@ -37,8 +37,8 @@ cw721-base = { version = "0.13.2", features = ["library"] }
 schemars = "0.8.10"
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 thiserror = { version = "1.0" }
-cosmonaut-cw721 = {path= "../lesson1", features=["library"]}
-cosmonaut-cw20 = {path= "../lesson2", features=["library"]}
+cosmonaut-cw721 = {path= "../../lesson1", features=["library"]}
+cosmonaut-cw20 = {path= "../../lesson2", features=["library"]}
 cw-multi-test = "0.13.4"
 
 [dev-dependencies]

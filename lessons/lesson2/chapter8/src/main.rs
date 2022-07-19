@@ -1,11 +1,12 @@
+use std::env;
 use base::consts::*;
 use base::init::init_app;
 use base::result::Result;
-use cw721_spaceship::execute::execute_cw721_all_msg;
-use cw721_spaceship::init::mock_cw721_contract;
-use cw721_spaceship::instantiate::instantiate_spaceship_nft_contract;
-use cw721_spaceship::query::query_all_cw721_msgs;
-use std::env;
+use cosmwasm_std::Uint128;
+use cw20_tokens::execute::execute_cw20_all_msg;
+use cw20_tokens::init::mock_cw20_contract;
+use cw20_tokens::instantiate::instantiate_cw20_contract;
+use cw20_tokens::query::query_all_cw20_msgs;
 use std::env::args;
 
 pub fn main() {
@@ -16,21 +17,25 @@ pub fn main() {
 
     let which_lesson: &str = &args().nth(1).unwrap();
     let which_chapter: &str = &args().nth(2).unwrap();
-    // let volume_path: &str = &env::var("BASE_VOLUME_DIR").unwrap();
-    let volume_path: &str = "/Users/ogsang-yun/Documents/IdeaProjects/cosmonaut-contract";
+    let volume_path: &str = &env::var("BASE_VOLUME_DIR").unwrap();
+
 
     let mut app = init_app(ADDR1);
 
-    let spaceship_cw721_code_id = app.store_code(mock_cw721_contract());
-    let cw721_contract_addr = instantiate_spaceship_nft_contract(
+    let money_cw20_code_id = app.store_code(mock_cw20_contract());
+    let cw20_contract_addr = instantiate_cw20_contract(
         &mut app,
-        spaceship_cw721_code_id,
+        money_cw20_code_id,
         ADDR1,
         ADDR1,
-        "cw721 nft",
+        "mars",
+        "umars",
+        vec![],
+        Uint128::new(3),
+        "cw20 money",
     );
 
-    execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3)
+    execute_cw20_all_msg(&mut app, &cw20_contract_addr.as_ref(), ADDR1, ADDR2)
         .check_answer(
             which_lesson,
             &format!(
@@ -38,13 +43,13 @@ pub fn main() {
                 volume_path, which_lesson, which_chapter,
             ),
         ).print_serialized();
+    // .write_answer_to_file(
+    //     &format!(
+    //         "{}/answers/lesson{}/chapter{}/execute_result.json",
+    //         volume_path, which_lesson, which_chapter,
+    //     ));
 
-    // .write_answer_to_file(&format!(
-    //     "{}/answers/lesson{}/chapter{}/execute_result.json",
-    //     volume_path, which_lesson, which_chapter,
-    // ));
-
-    query_all_cw721_msgs(&app, &cw721_contract_addr, ADDR1, ADDR2)
+    query_all_cw20_msgs(&app, &cw20_contract_addr, ADDR1, ADDR2)
         .check_answer(
             which_lesson,
             &format!(
