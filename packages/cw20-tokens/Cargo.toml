@@ -16,4 +16,4 @@ schemars = "0.8.10"
 serde = { version = "1.0.137", default-features = false, features = ["derive"] }
 cw-multi-test = "0.13.2"
 
-cosmonaut-cw20 = {path= "/home/app/user/contracts/cosmonaut-cw20", features=["library"]}
+cosmonaut-cw20 = {path= "../../contracts/cosmonaut-cw20", features=["library"]}

@@ -1,19 +1,11 @@
 ## How to Run
 
-
-1. Build docker image and create volume for common packages
+1. Create Docker image, common package volume
 ```shell
-./init.sh $cargo_registry_mount_path
+./init.sh
 ```
-2. Create volume for user packages
 
-3. Edit contract path for dependency of packages
+2. Run
 ```shell
-packages/*/Cargo.toml
-```
-4. Edit parameters in run.sh
-
-5. Run target lesson-chapter binary
-```shell
-./run.sh $lesson_number $chaper_number
+./run.sh $lesson_num $chapter_run
 ```

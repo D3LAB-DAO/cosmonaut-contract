@@ -1,9 +1,14 @@
+#!/bin/bash
+
 BASE_VOLUME_DIR=/home/app/base
 USER_VOLUME_NAME=user1
 USER_CONTRACT_DIR=/home/app/user
+
+WHICH_LESSON=$1
+WHICH_CHAPTER=$2
 
 docker run --rm \
   -v base-volume:$BASE_VOLUME_DIR \
   -v $USER_VOLUME_NAME:$USER_CONTRACT_DIR \
   -e BASE_VOLUME_DIR=$BASE_VOLUME_DIR \
-  cosmonaut:1.0.0 cargo run --manifest-path $BASE_VOLUME_DIR/lessons/lesson$1/chapter$2/Cargo.toml $1 $2
+  cosmonaut:1.0.0 ./internal_run.sh $USER_CONTRACT_DIR $BASE_VOLUME_DIR $WHICH_LESSON $WHICH_CHAPTER

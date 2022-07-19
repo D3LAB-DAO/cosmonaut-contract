@@ -18,4 +18,4 @@ serde = { version = "1.0.137", default-features = false, features = ["derive"] }
 schemars = "0.8.10"
 base = {path="../base"}
 
-cosmonaut-cw721 = {path= "/home/app/user/contracts/cosmonaut-cw721", features=["library"]}
+cosmonaut-cw721 = {path= "../../contracts/cosmonaut-cw721", features=["library"]}
