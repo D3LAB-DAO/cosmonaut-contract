@@ -5,7 +5,9 @@
 ./init.sh
 ```
 
-2. Run
+2. Edit parameters in run.sh
+
+3. Run
 ```shell
 ./run.sh $lesson_num $chapter_run
 ```
