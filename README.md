@@ -1,28 +1,18 @@
 ## How to Run
 
+1. Create volume for common packages
 ```shell
-./run.sh user lesson_num
+./init_volume.sh
 ```
 
-i.g)
+2. Create volume for user packages
 
+3. Edit contract path for dependency of packages
 ```shell
-./run.sh user1 1
+packages/*/Cargo.toml
 ```
 
-* Create or copy&paste user customized contract into {user}/contracts
-* {user}/targets will be generated after the execution
-```
-users
-└── user1
-    ├── contracts
-    │   ├── cosmonaut-cw20
-    │   ├── cosmonaut-cw721
-    │   └── cosmonaut-main
-    └── targets
-        ├── lesson1
-        ├── lesson2
-        └── lesson3
-```
+4. Run target lesson-chapter binary
+```shell
 
-*** IMPORTANT: you must pass "user" and "lesson number" ***
+```
