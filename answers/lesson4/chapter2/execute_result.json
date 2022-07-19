@@ -1,0 +1,199 @@
+{
+  "attributes": [
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "buy_money_token"
+      },
+      {
+        "key": "sender",
+        "value": "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111"
+      },
+      {
+        "key": "amount",
+        "value": "10000"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "mint"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "buy_fuel_token"
+      },
+      {
+        "key": "amount",
+        "value": "3000"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "buy_spaceship"
+      },
+      {
+        "key": "price",
+        "value": "500"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "fuel_up"
+      },
+      {
+        "key": "to",
+        "value": "1"
+      },
+      {
+        "key": "amount",
+        "value": "2500"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "burn_fuel"
+      },
+      {
+        "key": "of",
+        "value": "1"
+      },
+      {
+        "key": "amount",
+        "value": "10"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "add_freight_contract"
+      },
+      {
+        "key": "addr",
+        "value": "contract4"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "buy_freight_token"
+      },
+      {
+        "key": "sender",
+        "value": "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111"
+      },
+      {
+        "key": "denom",
+        "value": "ubullet"
+      },
+      {
+        "key": "amount",
+        "value": "100"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "load_freight"
+      },
+      {
+        "key": "token_id",
+        "value": "1"
+      },
+      {
+        "key": "denom",
+        "value": "ubullet"
+      },
+      {
+        "key": "amount",
+        "value": "100"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "unload_freight"
+      },
+      {
+        "key": "token_id",
+        "value": "1"
+      },
+      {
+        "key": "denom",
+        "value": "ubullet"
+      },
+      {
+        "key": "amount",
+        "value": "50"
+      }
+    ],
+    [
+      {
+        "key": "_contract_addr",
+        "value": "contract0"
+      },
+      {
+        "key": "action",
+        "value": "play_game"
+      },
+      {
+        "key": "decreased_health_value",
+        "value": "0"
+      },
+      {
+        "key": "decreased_fuel_value",
+        "value": "500"
+      },
+      {
+        "key": "spaceship_speed",
+        "value": "999900"
+      }
+    ]
+  ],
+  "errors": []
+}

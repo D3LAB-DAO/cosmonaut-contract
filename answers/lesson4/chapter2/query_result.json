@@ -1,0 +1,69 @@
+{
+  "responses": [
+    {
+      "MoneyBalanceResponse": {
+        "balance": "6400"
+      }
+    },
+    {
+      "OwnerOfResponse": {
+        "owner": "wasm111rvne2lz6funpxxkk6yumc8ll4l3c2e3kk111",
+        "approvals": [
+          {
+            "spender": "contract0",
+            "expires": {
+              "never": {}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "FreightTokenBalanceResponse": {
+        "symbol": "ubullet",
+        "balance": "50"
+      }
+    },
+    {
+      "FuelBalanceResponse": {
+        "balance": "500"
+      }
+    },
+    {
+      "SpaceShipInfoResponse": {
+        "token_uri": null,
+        "extension": {
+          "unit_denom": "mars",
+          "price": "500",
+          "name": "cosmonaut spaceship",
+          "freights": [
+            {
+              "denom": "ubullet",
+              "amount": "50",
+              "unit_weight": "2"
+            }
+          ],
+          "health": "10",
+          "fuel": "1990"
+        }
+      }
+    },
+    {
+      "ConfigResponse": {
+        "config": {
+          "spaceship_cw721_contract": "contract3",
+          "money_cw20_contract": "contract1",
+          "fuel_cw20_contract": "contract2",
+          "freight_contracts": [
+            {
+              "address": "contract4",
+              "denom": "ubullet",
+              "code_id": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "errors": []
+}

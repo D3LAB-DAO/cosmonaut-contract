@@ -1,5 +1,7 @@
 #!/bin/bash
 
+docker build . --build-arg /home/base/env/registry -t cosmonaut:1.0.0
+
 docker volume create base-volume
 
 docker container create --name temp -v base-volume:/data busybox
