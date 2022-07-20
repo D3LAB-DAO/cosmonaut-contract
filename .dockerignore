@@ -5,6 +5,6 @@ answers
 packages
 lessons
 env
-init.sh
+scripts/init.sh
 run.sh
 rustfmt.toml
