@@ -484,7 +484,7 @@ pub fn play_game(
 
     let total_freight_weight: u128 = nft_info
         .extension
-        .freight
+        .freights
         .iter()
         .map(|f| f.unit_weight.u128() * f.amount.u128())
         .sum();
