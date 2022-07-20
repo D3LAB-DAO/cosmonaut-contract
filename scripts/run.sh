@@ -13,4 +13,4 @@ docker run --rm \
   -v base-volume:$BASE_VOLUME_DIR \
   -v cosmonaut-api_cosmproj:$BASE_DIR \
   -e BASE_VOLUME_DIR=$BASE_VOLUME_DIR \
-  cosmonaut-contract:1.0.0 ./internal_run.sh $USER_CONTRACT_DIR $BASE_VOLUME_DIR $WHICH_LESSON $WHICH_CHAPTER
+  cosmonaut-contract:1.0.0 scripts/internal_run.sh $USER_CONTRACT_DIR $BASE_VOLUME_DIR $WHICH_LESSON $WHICH_CHAPTER
