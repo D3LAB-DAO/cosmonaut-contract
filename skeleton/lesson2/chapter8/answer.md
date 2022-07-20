@@ -15,14 +15,14 @@ ExecuteMsg::Transfer { recipient, amount } => {
 ExecuteMsg::Burn { amount } => execute_burn(deps, env, info, amount),
 ```
 
+* ### execute.rs
+
 q3)
 ```rust
 if mint.minter != info.sender {
-    return Err(ContractError::Unauthorized {});
+return Err(ContractError::Unauthorized {});
 }
 ```
-
-* ### execute.rs
 q4)
 ```rust
 config.mint = Some(minter_data);

@@ -10,12 +10,12 @@ q2)
 pub freights: Vec<Freight>,
 ```
 
+* ### msg.rs
+
 q3)
 ```rust
 Mint(MintMsg<Extension>),
 ```
-
-* ### msg.rs
 
 q4)
 ```rust
