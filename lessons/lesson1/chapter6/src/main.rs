@@ -16,7 +16,8 @@ pub fn main() {
 
     let which_lesson: &str = &args().nth(1).unwrap();
     let which_chapter: &str = &args().nth(2).unwrap();
-    let volume_path: &str = &env::var("BASE_VOLUME_DIR").unwrap();
+    // let volume_path: &str = &env::var("BASE_VOLUME_DIR").unwrap();
+    let volume_path: &str = "/Users/ogsang-yun/Documents/IdeaProjects/cosmonaut-contract";
 
     let mut app = init_app(ADDR1);
 
@@ -32,6 +33,7 @@ pub fn main() {
     execute_cw721_all_msg(&mut app, cw721_contract_addr.as_ref(), ADDR1, ADDR2, ADDR3)
         .check_answer(
             which_lesson,
+            which_chapter,
             &format!(
                 "{}/answers/lesson{}/chapter{}/execute_result.json",
                 volume_path, which_lesson, which_chapter,
@@ -46,6 +48,7 @@ pub fn main() {
     query_all_cw721_msgs(&app, &cw721_contract_addr, ADDR1, ADDR2)
         .check_answer(
             which_lesson,
+            which_chapter,
             &format!(
                 "{}/answers/lesson{}/chapter{}/query_result.json",
                 volume_path, which_lesson, which_chapter,

@@ -38,6 +38,7 @@ pub fn main() {
     execute_cw20_all_msg(&mut app, &cw20_contract_addr.as_ref(), ADDR1, ADDR2)
         .check_answer(
             which_lesson,
+            which_chapter
             &format!(
                 "{}/answers/lesson{}/chapter{}/execute_result.json",
                 volume_path, which_lesson, which_chapter,
@@ -52,6 +53,7 @@ pub fn main() {
     query_all_cw20_msgs(&app, &cw20_contract_addr, ADDR1, ADDR2)
         .check_answer(
             which_lesson,
+            which_chapter
             &format!(
                 "{}/answers/lesson{}/chapter{}/query_result.json",
                 volume_path, which_lesson, which_chapter,

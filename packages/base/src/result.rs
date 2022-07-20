@@ -23,6 +23,7 @@ pub struct QueryAllResult<T> {
 pub struct AnswerCheck {
     pub answer_type: String,
     pub lesson: String,
+    pub chapter: String,
     pub result: String,
     pub errors: Vec<String>,
     pub differences: Vec<Difference>,
@@ -55,8 +56,8 @@ pub struct Metadata {
 pub trait Result {
     fn print_results(&self);
     fn write_answer_to_file(&self, path: &str)
-    where
-        Self: Serialize,
+        where
+            Self: Serialize,
     {
         let file = OpenOptions::new()
             .create(true)
@@ -65,7 +66,7 @@ pub trait Result {
             .unwrap();
         serde_json::to_writer_pretty(&file, &self).unwrap();
     }
-    fn check_answer(&self, lesson: &str, correct_answer_path: &str) -> AnswerCheck;
+    fn check_answer(&self, lesson: &str, chapter: &str, correct_answer_path: &str) -> AnswerCheck;
 }
 
 impl Result for ExecuteAllResult {
@@ -74,13 +75,14 @@ impl Result for ExecuteAllResult {
             println!("{}", serde_json::to_string(attr).unwrap());
         }
     }
-    fn check_answer(&self, lesson: &str, correct_answer_path: &str) -> AnswerCheck {
+    fn check_answer(&self, lesson: &str, chapter: &str, correct_answer_path: &str) -> AnswerCheck {
         let mut differences: Vec<Difference> = vec![];
 
         if !self.errors.is_empty() {
             return AnswerCheck {
                 answer_type: "execute".to_string(),
                 lesson: lesson.to_string(),
+                chapter: chapter.to_string(),
                 result: "error".to_string(),
                 errors: vec![],
                 differences: vec![],
@@ -106,6 +108,7 @@ impl Result for ExecuteAllResult {
             AnswerCheck {
                 answer_type: "execute".to_string(),
                 lesson: lesson.to_string(),
+                chapter: chapter.to_string(),
                 result: "success".to_string(),
                 errors: vec![],
                 differences: vec![],
@@ -114,6 +117,7 @@ impl Result for ExecuteAllResult {
             AnswerCheck {
                 answer_type: "execute".to_string(),
                 lesson: lesson.to_string(),
+                chapter: chapter.to_string(),
                 result: "incorrect".to_string(),
                 errors: self.errors.clone(),
                 differences,
@@ -123,8 +127,8 @@ impl Result for ExecuteAllResult {
 }
 
 impl<T> Result for QueryAllResult<T>
-where
-    T: Debug + DeserializeOwned + PartialEq + Serialize + Clone,
+    where
+        T: Debug + DeserializeOwned + PartialEq + Serialize + Clone,
 {
     fn print_results(&self) {
         for result in &self.responses {
@@ -132,13 +136,14 @@ where
         }
     }
 
-    fn check_answer(&self, lesson: &str, correct_answer_path: &str) -> AnswerCheck {
+    fn check_answer(&self, lesson: &str, chapter: &str, correct_answer_path: &str) -> AnswerCheck {
         let mut differences: Vec<Difference> = vec![];
 
         if !self.errors.is_empty() {
             return AnswerCheck {
                 answer_type: "query".to_string(),
                 lesson: lesson.to_string(),
+                chapter: chapter.to_string(),
                 result: "error".to_string(),
                 errors: vec![],
                 differences: vec![],
@@ -163,6 +168,7 @@ where
             AnswerCheck {
                 answer_type: "query".to_string(),
                 lesson: lesson.to_string(),
+                chapter: chapter.to_string(),
                 result: "success".to_string(),
                 errors: vec![],
                 differences: vec![],
@@ -171,6 +177,7 @@ where
             AnswerCheck {
                 answer_type: "query".to_string(),
                 lesson: lesson.to_string(),
+                chapter: chapter.to_string(),
                 result: "incorrect".to_string(),
                 errors: self.errors.clone(),
                 differences,

@@ -66,6 +66,7 @@ pub fn main() {
         ADDR2,
     ).check_answer(
         which_lesson,
+        which_chapter
         &format!(
             "{}/answers/lesson{}/chapter{}/execute_result.json",
             volume_path, which_lesson, which_chapter,
@@ -79,6 +80,7 @@ pub fn main() {
     query_all_main_contract_msgs(&app, &main_contract_addr, ADDR1)
         .check_answer(
             which_lesson,
+            which_chapter
             &format!(
                 "{}/answers/lesson{}/chapter{}/query_result.json",
                 volume_path, which_lesson, which_chapter,
