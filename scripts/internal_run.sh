@@ -19,5 +19,5 @@ echo cosmonaut-cw20 = {path= \"${CONTRACT_DIR}/contracts/cosmonaut-cw20\", featu
 echo cosmonaut-cw721 = {path= \"${CONTRACT_DIR}/contracts/cosmonaut-cw721\", features=[\"library\"]} >> ${BASE_VOLUME_DIR}/packages/main-contract/Cargo.toml
 echo cosmonaut-main = {path=\"${CONTRACT_DIR}/contracts/cosmonaut-main\", features=[\"library\"]} >> ${BASE_VOLUME_DIR}/packages/main-contract/Cargo.toml
 
-cargo run --manifest-path ${BASE_VOLUME_DIR}/lessons/lesson${WHICH_LESSON}/chapter${WHICH_CHAPTER}/Cargo.toml $3 $4
+cargo run --target-dir ${CONTRACT_DIR}/target/${WHICH_LESSON}/${WHICH_CHAPTER} --manifest-path ${BASE_VOLUME_DIR}/lessons/lesson${WHICH_LESSON}/chapter${WHICH_CHAPTER}/Cargo.toml $3 $4
 
