@@ -18,6 +18,6 @@ overflow-checks = true
 [workspace]
 
 [dependencies]
-cw721-spaceship = {path= "../../../packages/cw721-spaceship" }
-base = {path= "../../../packages/base" }
 cosmwasm-std = { version = "1.0.0" }
+base = {path= "/workspace/cargo-projects/cosm-base/packages/base" }
+cw721-spaceship = {path= "./cw721-spaceship" }
