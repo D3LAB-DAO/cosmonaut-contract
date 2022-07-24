@@ -18,8 +18,8 @@ overflow-checks = true
 [workspace]
 
 [dependencies]
-cw20-tokens = {path= "../../../packages/cw20-tokens" }
-cw721-spaceship = {path= "../../../packages/cw721-spaceship" }
-main-contract = {path= "../../../packages/main-contract" }
-base = {path= "../../../packages/base" }
+cw20-tokens = {path= "./cw20-tokens" }
+cw721-spaceship = {path= "./cw721-spaceship" }
+main-contract = {path= "./main-contract" }
+base = {path= "/workspace/cargo-projects/cosm-base/packages/base" }
 cosmwasm-std = { version = "1.0.0" }

@@ -1,4 +1,3 @@
-use std::env;
 use base::consts::*;
 use base::init::init_app;
 use base::result::Result;
@@ -10,20 +9,9 @@ use main_contract::execute::{execute_main_all_msg, FreightParams};
 use main_contract::init::mock_main_contract;
 use main_contract::instantiate::instantiate_main_contract;
 use main_contract::query::query_all_main_contract_msgs;
-use std::env::args;
 
 
 pub fn main() {
-    if args().count() != 3 {
-        println!("args are not sufficient");
-        std::process::exit(0);
-    }
-
-    let which_lesson: &str = &args().nth(1).unwrap();
-    let which_chapter: &str = &args().nth(2).unwrap();
-
-    let volume_path: &str = &env::var("BASE_VOLUME_DIR").unwrap();
-
     let mut app = init_app(ADDR1);
 
     let money_cw20_code_id = app.store_code(mock_cw20_contract());
@@ -52,7 +40,7 @@ pub fn main() {
         "ubullet",
         vec![],
         Uint128::new(2),
-        "cw20-tokens bullet",
+        "cw20-helper bullet",
     );
 
     execute_main_all_msg(
@@ -65,29 +53,17 @@ pub fn main() {
         ADDR1,
         ADDR2,
     ).check_answer(
-        which_lesson,
-        which_chapter
-        &format!(
-            "{}/answers/lesson{}/chapter{}/execute_result.json",
-            volume_path, which_lesson, which_chapter,
-        ),
+        "4",
+        "2",
+        "../../../answers/lesson4/chapter2/execute_result.json",
     ).print_serialized();
-    // .write_answer_to_file(&format!(
-    //     "{}/answers/lesson{}/chapter{}/execute_result.json",
-    //     volume_path, which_lesson, which_chapter,
-    // ));
+    // .write_answer_to_file("../../../answers/lesson4/chapter2/execute_result.json");
 
     query_all_main_contract_msgs(&app, &main_contract_addr, ADDR1)
         .check_answer(
-            which_lesson,
-            which_chapter
-            &format!(
-                "{}/answers/lesson{}/chapter{}/query_result.json",
-                volume_path, which_lesson, which_chapter,
-            ),
+            "4",
+            "2",
+            "../../../answers/lesson4/chapter2/query_result.json",
         ).print_serialized();
-    // .write_answer_to_file(&format!(
-    //     "{}/answers/lesson{}/chapter{}/query_result.json",
-    //     volume_path, which_lesson, which_chapter,
-    // ));
+    // .write_answer_to_file("../../../answers/lesson4/chapter2/query_result.json");
 }
