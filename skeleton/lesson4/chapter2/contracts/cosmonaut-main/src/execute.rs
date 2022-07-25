@@ -491,6 +491,7 @@ pub fn play_game(
         let total_health = nft_info.extension.health;
         let step = total_health.div(epoch);
         let random_number = _generate_random_number(timestamp_int_nanos);
+        // Decrease spaceship speed inversely sum of freight weight
         spaceship_speed = Uint128::new(MAX_FREIGHT_WEIGHT)
             - Uint128::new(MAX_FREIGHT_WEIGHT)
                 .multiply_ratio(total_freight_weight, MAX_FREIGHT_WEIGHT);

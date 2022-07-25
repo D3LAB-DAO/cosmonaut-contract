@@ -24,6 +24,9 @@ pub fn instantiate(
     msg: InstantiateMsg,
 ) -> StdResult<Response> {
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
+    // cw721_contract is constructed with <Extension, Empty>.
+    // Extension type is for IndexedMap as index.
+    // We wouldn't use custom reponse, passing cosmwasm_std::Empty is appropriate.
     let cw721_contract = Cw721Contract::<Extension, Empty>::default();
     // TODO: q5) instantiate cw721_contract with instantiate method
     Ok(Response::new()

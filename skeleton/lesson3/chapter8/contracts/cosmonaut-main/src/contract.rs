@@ -41,6 +41,9 @@ pub fn instantiate(
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
     CONFIG.save(deps.storage, &config)?;
 
+    // Submessage to instantiate cw20 money contract
+    // if instantiate successes, trigger reply function as callback
+    // https://docs.cosmwasm.com/docs/1.0/smart-contracts/message/submessage/#creating-a-submessage
     let instantiate_cw20_money_contract: SubMsg = SubMsg::reply_on_success(
         WasmMsg::Instantiate {
             admin: Some(info.sender.to_string()),
