@@ -28,7 +28,6 @@ impl<'a> BaseExecute for Cw721Contract<'a, Extension, Empty> {
     ) -> Result<Response, ContractError> {
         let cw721_msg = msg.try_into()?;
         // TODO: q6) execute converted msg with self.execute
-
         match execute_res {
             Ok(res) => Ok(res),
             Err(err) => Err(ContractError::try_from(err)?),
@@ -104,11 +103,11 @@ pub fn load_freight(
 
     // iterate freight to find target cw20-helper by denom
     // TODO: q7) Declare candidated_idx iterating extension.freights whose denom is same with parameter's denom
-
     // if there is token with given denom
     if let Some(idx) = candidate_idx {
         // update token amount
-        extension.freights[idx].amount = extension.freights[idx].amount.checked_add(amount).unwrap();
+        extension.freights[idx].amount =
+            extension.freights[idx].amount.checked_add(amount).unwrap();
     } else {
         // if not, push a new freight data
         extension.freights.push(Freight {
@@ -144,7 +143,6 @@ pub fn unload_freight(
         // TODO: q8) Remove freight from extension.freights if result amount is zero.
         // else, just decrease amount.
         // There can be multiple ways to handle it!
-
     } else {
         return Err(ContractError::NotFound {});
     }

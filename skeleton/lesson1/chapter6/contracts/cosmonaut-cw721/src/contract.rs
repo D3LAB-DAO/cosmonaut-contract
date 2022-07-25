@@ -24,9 +24,6 @@ pub fn instantiate(
     msg: InstantiateMsg,
 ) -> StdResult<Response> {
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
-    // cw721_contract is constructed with <Extension, Empty>.
-    // Extension type is for IndexedMap as index.
-    // We wouldn't use custom reponse, passing cosmwasm_std::Empty is appropriate.
     let cw721_contract = Cw721Contract::<Extension, Empty>::default();
     // TODO: q5) instantiate cw721_contract with instantiate method
     Ok(Response::new()
@@ -81,6 +78,17 @@ pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
             deps,
             env,
             token_id,
+            include_expired.unwrap_or(false),
+        )?),
+        QueryMsg::Approval {
+            token_id,
+            spender,
+            include_expired,
+        } => to_binary(&query::approval(
+            deps,
+            env,
+            token_id,
+            spender,
             include_expired.unwrap_or(false),
         )?),
         QueryMsg::Approvals {
