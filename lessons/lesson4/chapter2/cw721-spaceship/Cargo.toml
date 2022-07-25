@@ -15,4 +15,4 @@ anyhow = "1.0.57"
 serde = { version = "1.0.137", default-features = false, features = ["derive"] }
 schemars = "0.8.10"
 base = {path= "/workspace/cargo-projects/cosm-base/packages/base" }
-cosmonaut-cw721 = {path= "../contracts/cosmonaut-cw721", features=["library"]}
+cosmonaut-cw721 = {path= "/workspace/cargo-projects/cosm-base/packages/cosmonaut-cw721", features=["library"]}
