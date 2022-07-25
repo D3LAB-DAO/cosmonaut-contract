@@ -25,7 +25,6 @@ use serde::{Deserialize, Serialize};
 // TODO: q1) Declare TokenExtension struct witch implements Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema
 // TokenExtension has unit_weight: Uint128 as public field
 
-
 pub const TOKEN_EXTENSION: Item<TokenExtension> = Item::new("token_extension");
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -61,7 +60,6 @@ pub fn execute(
         // TODO: q2) Route ExecuteMsg::Transfer, ExecuteMsg::Burn
         // call execute_transfer for Transfer,
         // call execute_burn for Burn
-
         ExecuteMsg::Send {
             contract,
             amount,

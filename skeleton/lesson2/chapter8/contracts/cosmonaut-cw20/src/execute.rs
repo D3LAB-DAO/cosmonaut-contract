@@ -19,7 +19,7 @@ pub fn execute_update_minter(
 
     // TODO: q3) check if mint.minter is same as info.sender, else return ContractError::Unauthorized.
 
-    // validate new_minter address
+
     let minter = deps.api.addr_validate(&new_minter)?;
 
     let minter_data = MinterData {
