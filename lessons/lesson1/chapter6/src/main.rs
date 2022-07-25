@@ -22,7 +22,7 @@ pub fn main() {
         .check_answer(
             "1",
             "6",
-            "../../../answers/lesson1/chapter6/execute_result.json",
+            "/workspace/cargo-projects/cosm-base/answers/lesson1/chapter6/execute_result.json",
         ).print_serialized();
 
     // .write_answer_to_file(
@@ -35,7 +35,7 @@ pub fn main() {
         .check_answer(
             "1",
             "6",
-            "../../../answers/lesson1/chapter6/query_result.json",
+            "/workspace/cargo-projects/cosm-base/answers/lesson1/chapter6/query_result.json",
         ).print_serialized();
     // .write_answer_to_file(
     //     "1",
