@@ -167,6 +167,7 @@ pub fn load_freight_to_nft(
         .add_attribute("denom", &denom)
         .add_attribute("amount", amount.to_string())
         // TODO: q6) add messages (burn_cw20_token_msg_wrap, load_freight_msg_wrap)
+    )
 }
 
 pub fn unload_freight_from_nft(

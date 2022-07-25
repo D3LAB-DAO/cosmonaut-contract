@@ -51,7 +51,7 @@ if target_contract_addr.is_none() {
 
 q6)
 ```rust
-.add_messages([burn_cw20_token_msg_wrap, load_freight_msg_wrap]))
+.add_messages([burn_cw20_token_msg_wrap, load_freight_msg_wrap])
 ```
 
 q7)
