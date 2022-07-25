@@ -33,9 +33,9 @@ _ in 0..epoch.u128()
 q5)
 ```rust
 let burn_fuel_msg = Cw721ExecuteMsg::BurnFuel {
-token_id,
-amount: Uint128::new(FUEL_PER_GAME)
-.checked_mul(epoch)
-.map_err(StdError::overflow)?,
-};
+        token_id,
+        amount: Uint128::new(FUEL_PER_GAME)
+            .checked_mul(epoch)
+            .map_err(StdError::overflow)?,
+    };
 ```
