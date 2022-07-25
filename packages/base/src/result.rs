@@ -145,7 +145,7 @@ where
                 lesson: lesson.to_string(),
                 chapter: chapter.to_string(),
                 result: "error".to_string(),
-                errors: vec![],
+                errors: self.errors.clone(),
                 differences: vec![],
             };
         }
