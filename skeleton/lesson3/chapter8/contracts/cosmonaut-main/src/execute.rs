@@ -134,7 +134,7 @@ pub fn load_freight_to_nft(
 
     check_is_sender_owner_of_nft(deps.as_ref(), &info.sender, &token_id)?;
 
-    /// Load freight means burn freight token of sender, increment freight token amount of spaceship nft.
+    // Load freight means burn freight token of sender, increment freight token amount of spaceship nft.
     let burn_cw20_token_msg_wrap = CosmosMsg::Wasm(WasmMsg::Execute {
         contract_addr: target_contract_addr
             .ok_or(ContractError::TokenNotFound {})?
@@ -218,7 +218,7 @@ pub fn unload_freight_from_nft(
 }
 
 pub fn add_freight_contract(deps: DepsMut, address: String) -> Result<Response, ContractError> {
-    /// query ContractInfo from Cw20Contract
+    // query ContractInfo from Cw20Contract
     let contract_info: ContractInfoResponse =
         deps.as_ref()
             .querier
@@ -227,7 +227,7 @@ pub fn add_freight_contract(deps: DepsMut, address: String) -> Result<Response, 
             }))?;
     let code_id = contract_info.code_id;
 
-    /// query TokenInfo from Cw20Contract using query_wasm_smart
+    // query TokenInfo from Cw20Contract using query_wasm_smart
     let freight_info: TokenInfoResponse = deps
         .querier
         .query_wasm_smart(address.clone(), &cw20_base::msg::QueryMsg::TokenInfo {})?;
@@ -243,7 +243,7 @@ pub fn add_freight_contract(deps: DepsMut, address: String) -> Result<Response, 
         return Err(ContractError::DuplicatedContract {});
     }
 
-    /// update CONFIG
+    // update CONFIG
     CONFIG.update(deps.storage, |mut config| -> StdResult<_> {
         config.freight_contracts.push(FreightContractInfo {
             address: address.clone(),
@@ -291,7 +291,7 @@ pub fn buy_money_token(
     amount: Uint128,
 ) -> Result<Response, ContractError> {
     let config = CONFIG.load(deps.storage)?;
-    /// info.funds holds the income of native coins
+    // info.funds holds the income of native coins
     let income_asset = info.funds;
 
     // TODO q8) Find coin income whose denom is "uatom" iterating income_asset
@@ -359,9 +359,9 @@ pub fn buy_freight_token(
         funds: vec![],
     });
 
-    /// If the main contract add message burn_money_token_msg and mint_freight_token_msg to execute,
-    /// main contract is the info.sender of Cw20Contract.
-    /// Because the target of burn msg and sender is different, increase_allowance must be preceded.
+    // If the main contract add message burn_money_token_msg and mint_freight_token_msg to execute,
+    // main contract is the info.sender of Cw20Contract.
+    // Because the target of burn msg and sender is different, increase_allowance must be preceded.
     Ok(Response::new()
         .add_attribute("action", "buy_freight_token")
         .add_attribute("sender", info.sender.to_string())
